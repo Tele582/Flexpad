@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A4EDF8"
+    tools:context=".FactOrFakeActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_quiz"
+        android:id="@+id/startButton"
+
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:padding="15dp"
+        android:textSize="32sp"
+        android:fontFamily="casual"
+        android:background="@drawable/duolingable"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit"
+        android:id="@+id/exitButton"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:padding="8dp"
+        android:textSize="32sp"
+        android:fontFamily="casual"
+        android:background="@drawable/red_duolingable"
+        android:layout_marginTop="64dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/startButton"
+        android:textAllCaps="false"/>
+
+
+
+</RelativeLayout>

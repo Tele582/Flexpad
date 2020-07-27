@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "787349708314",
+    "firebase_url": "https://flexpad-app-project.firebaseio.com",
+    "project_id": "flexpad-app-project",
+    "storage_bucket": "flexpad-app-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787349708314:android:632cee255a93bd9a027ba3",
+        "android_client_info": {
+          "package_name": "fun.flexpad.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787349708314-a2plku4qdg97evjbub26rlfltobnpe6n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQpDMv775nq8efO0Tvb8StmkrESlhizPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "787349708314-a2plku4qdg97evjbub26rlfltobnpe6n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

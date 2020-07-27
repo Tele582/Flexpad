@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Flexpad</string>
+    <string name="create_a_new_account">Create a new account</string>
+    <string name="register">register</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="login">login</string>
+    <string name="chat">Chat</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello">hello</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="profile">Profile</string>
+    <string name="search">...Search...</string>
+    <string name="login_sign_in">Login (Sign In)</string>
+    <string name="online">online</string>
+    <string name="gamess_and_stuff">Games and Stuff</string>
+    <string name="start_quiz">Start Quiz</string>
+    <string name="fake">Fake</string>
+    <string name="fact">Fact</string>
+    <string name="zebra_stripes_act_as_natural_insect_repellent">Zebra stripes act as natural insect repellent</string>
+    <string name="score">Score:</string>
+    <string name="you_have_scored_138_out_of_138">You have scored 138 out of 138</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="retry_quiz">Retry Quiz</string>
+    <string name="exit">Exit</string>
+    <string name="games_and_fun">Games and Fun</string>
+    <string name="games_and_stuf">Games and Stuff</string>
+    <string name="logout">Logout</string>
+    <string name="feedback">FEEDBACK</string>
+    <string name="type_feedback_here">Type feedback here..</string>
+    <string name="send">Send</string>
+    <string name="view">View</string>
+    <string name="what_do_you_like_about_this_app_nwhat_don_t_you_like_nwhat_do_you_want">What do you like about this app?\nWhat don\'t you like?\nWhat feature would you like to have?</string>
+    <string name="flexpad">Flexpad</string>
+    <string name="contacts">Contacts</string>
+    <string name="phone">Phone</string>
+
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".FeedbackActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:text="@string/what_do_you_like_about_this_app_nwhat_don_t_you_like_nwhat_do_you_want"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:fontFamily="casual"/>
+
+    <EditText
+        android:id="@+id/appfeedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="120dp"
+        android:textColorHint="#8F8E8D"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:layout_gravity="center"
+        android:hint="@string/type_feedback_here" />
+
+    <Button
+        android:id="@+id/sendfeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/orange_duolingable"
+        android:layout_marginTop="48dp"
+        android:text="@string/send"
+        android:textColor="#fff"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/viewfeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/view"
+        android:background="@drawable/orange_duolingable"
+        android:textColor="#fff"
+        android:layout_gravity="center" />
+
+
+
+</LinearLayout>

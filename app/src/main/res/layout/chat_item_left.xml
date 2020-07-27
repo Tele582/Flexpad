@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/messageLayout"
+    android:layout_width="395dp"
+    android:layout_height="wrap_content"
+    android:padding="1dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:id="@+id/profile_image"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/show_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@+id/profile_image"
+        android:background="@drawable/white_duolingable"
+        android:maxWidth="245dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:text="@string/hello"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/btn_play"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="false"
+        android:layout_toEndOf="@+id/show_message"
+        android:background="@drawable/ic_play_ll" />
+
+    <ImageButton
+        android:id="@+id/btn_stop"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="false"
+        android:paddingStart="2dp"
+        android:paddingEnd="0dp"
+        android:layout_toEndOf="@+id/btn_play"
+        android:background="@drawable/ic_stop_ll"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_seen"
+        android:layout_below="@id/show_message"
+        android:visibility="gone"/>
+
+
+
+</RelativeLayout>

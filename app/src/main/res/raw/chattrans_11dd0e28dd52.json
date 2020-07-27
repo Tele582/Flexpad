@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "chattrans",
+  "private_key_id": "11dd0e28dd5259eb82d56c09d3f05d184ec59620",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDCV/mlm0FbBWaB\nvi470q58ln0ElBKGie25yS/LPHQILPN8L0zctqEk8l++SE1ECLz6qKwADhPqEC6s\nZpu9RRt180Se5IWAUtFJrAQdn3pcGDBfNx7wOPFV9gvYKnxtiHRZVQtKAks/7aGr\nFGl1I670MPtqNxFt6Vkj3gti/XnZm2jL0viS7490uk5IXSJPtYVTzXKA99QFHD/7\nPDsilOJycJGnhQkY2OD1HQqVHVM2FEfYYRiyN/6HnuGKb2trq5Jj0VDOztzoOO2j\neonLHG6tpEEb6qMfmSTVnfavKnNxV8gNeWRhd+bt//Un8/LC2u5hDMjcCJKxa4BX\nXMWrVPFtAgMBAAECgf8ryFokXA0dP0JZxoHnNznh1WTZMU6gAuXUTytaKfdiKeVi\nshnlVbS9gv/P9UO4XRQ2DXDvMseRWJygX0CwTprbvBy+6+6pwL2O4vhuMd3d/cTN\n/LgoFhh8tPCdOLhchADH+EoPinKXCyuLJcVoSu64QkO0Ngy4QAzLOsssssT8b3mY\nqCK/PNuEV5ceK1Qld+mwgNBLqSVrK2ULOr91GXM47eQJQvkIBeyT15j1vQz1jldO\nWHslALhZCXRdUpUljxs1J5OXUhKpRb8kdWd4xhxImggmVKzLkv2TXcz9HudC6LUN\n/jlNrv8HEwBc/GS4wUOdDOhQk+M6xfIiSwypTjECgYEA8vs3xXQJJwTPchESLIFh\n9rG7D+w0ozukWglOMY6Udwmvn7wX3YAext+WL9DFW3IiNZnMaYLJWr3urdJskaYh\nPm+6lweGDZCz+jKA9FOEh64t/gPie2y8pet9sP9uEIOAxT3BNBsz7tqXYGIcPL4e\ntAxyCN7gn9Hgbc3bjQ5nsFECgYEAzMGiDOWIOONERN+tymfzVZUlplaLoE59fDxP\nmVP6lfRlQpKYcjNP016UxFxY0uha98qlM+ccVWF6Tz13o/Jj6Hcdm73sUPSY05Tt\nml2LH6zy0jzZB0Jo/FcnRavL1jO30M+VLDGJMF87YzCKwWD4jXuqP8AYSTGV/hc3\nxO/WpF0CgYAvxY6IhrDJ+BslDRAqqeFt1DG4BrOuqCo+/XdfLO4pnUDnQd7bULY8\nWXc4vW4f9YeeTDexQuJ9sbv8dtObqzL8CJGB4hvMDPglp8pMvyLeXjNyrqbXp2BL\nqsoSg5XLL1+g5+xVZ0fFnTqH26I7mxGESrIc5lz5bxUV4ZRZ3kwqkQKBgQC6Ce1N\nPnhJB+WNlpZ3Y3+qcPtmaRgwLWDCsqG4NJ9oBEjE9iFhEdIjwLn2t9lUuB1/KzZz\nNDeANDNHMBg2dBPmsePLEANZgwQgqh5AtWGlBCUUdIjUmbh+HknmebOZCiCnrxRg\ntRlrQ/vXodFQ5uSu2H/VsJngVxdraHkZjLk/WQKBgQCKzDaQhthA1GQzZu9lKMqW\nxSodUF5kwsuNedN5kRR+u6OKQVWNoZ5Dof+5L5uH80b+m9zKmNj0ZxpaQ+8sQTg1\nP7xqsmocKCwbr83+uIomZ89KxTwQqYup7GoMXJO5OIXKzvSButsYPWZ+Oo/pB0I9\nZq+c+lhWf9N2bd9iCh/GSQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "teletranslate@chattrans.iam.gserviceaccount.com",
+  "client_id": "106059184095300573319",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/teletranslate%40chattrans.iam.gserviceaccount.com"
+}
