@@ -1,2 +1,2 @@
 # Flexpad
-The Everything App
+The Everything App!
