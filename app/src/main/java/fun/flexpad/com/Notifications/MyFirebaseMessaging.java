@@ -16,15 +16,22 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import fun.flexpad.com.MessageActivity;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -34,7 +41,16 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         super.onNewToken(s);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        String refreshToken = Objects.requireNonNull(FirebaseInstanceId.getInstance().getInstanceId().getResult()).getToken();//there's an issue here
+        //I think the issue here was that you were trying to call getResult before this task was complete.
+        //I might be wrong so test it.
+        Task<InstanceIdResult> tokenTask = FirebaseInstanceId.getInstance().getInstanceId();
+        try {
+            Tasks.await(tokenTask);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        @NotNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
+        String refreshToken = tokenResult.getToken();
         if (firebaseUser != null){
             updateToken(refreshToken);
         }
@@ -108,18 +124,16 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //assert noti != null;
         oreoNotification.getManager().notify(i, builder.build());
 
-
-
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
 
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
 
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
         assert user != null;
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, MessageActivity.class);
