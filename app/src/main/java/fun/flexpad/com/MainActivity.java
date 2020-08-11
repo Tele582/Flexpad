@@ -62,11 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
-        final String TWITTER_PACKAGE_NAME = "com.twitter.android";
-        final String INSTAGRAM_PACKAGE_NAME = "com.instagram.android";
-        final String PINTEREST_PACKAGE_NAME = "com.pinterest";
-
-
         FloatingActionButton floatingShareButton = (FloatingActionButton) findViewById(R.id.floatingShareButton);
         floatingShareButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -101,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(Intent.createChooser(a, "Share Using"));
                 //startActivity(a);
-
-
-
-
-
 
             }
         });

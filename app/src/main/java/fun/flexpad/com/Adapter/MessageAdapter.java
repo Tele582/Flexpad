@@ -40,6 +40,7 @@ import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -147,7 +148,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         });
     }
 
-    private void deleteReceivedMessage(final int position, final ViewHolder holder) {
+    public void deleteReceivedMessage (final int position, final ViewHolder holder) {
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("Chats")
                 .child(mChat.get(position).getReceiver())
@@ -217,6 +218,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Translate translate;
         String newmessage;
 
+        //RecyclerView recyclerView;
+
         RelativeLayout messageLAyout; // for click listener to show delete;
         public ImageView messageSenderPicture, messageReceiverPicture;
 
@@ -229,6 +232,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
             messageLAyout = itemView.findViewById(R.id.messageLayout);
+            //recyclerView = itemView.findViewById(R.id.recycler_view);
 
             //messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image);
             //messageSenderPicture = itemView.findViewById(R.id.message_sender_image);
@@ -299,30 +303,37 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item1:
-                    Toast.makeText(mContext.getApplicationContext(), "Message Deleted For You", Toast.LENGTH_SHORT).show();
+
+                    //deleteMessageForEveryone();
+                    //delete_message();             //////////////////////
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                    reference.child("Chats").push().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if (task.isSuccessful()) {
+                                Toast.makeText(mContext.getApplicationContext(), "Message Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                     return true;
                 case R.id.item2:
-                    Toast.makeText(mContext.getApplicationContext(), "Message Deleted For All", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.item3:
                     if (checkInternetConnection()) {
                         //If there is internet connection, get translate service and start translation:
                         getTranslateService();
                         translate();
                     } else {
                         //If not, display "no connection" warning:
-                        Toast.makeText(mContext.getApplicationContext(), "No Internet Connection.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext.getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     }
 
                     return true;
-                case R.id.item4:
+                case R.id.item3:
 
+                    mChat.clear();
 
-                    //////holder.messageSenderPicture.setImageResource(R.drawable.imag_30); // this mostly works though
-                    //holder.messageSenderPicture.setVisibility(View.GONE); //causes crash
-                    //holder.messageReceiverPicture.setVisibility(View.GONE); //causes crash
-
-                    //show_message.setText();
+                    //mChat.addAll(...);      //FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
 
 
                 default:
@@ -352,7 +363,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         String[] langList = new String[]{
                 "English", "Afrikaans", "French", "German", "Italian", "Japanese", "Yoruba", "Chinese"};
 
-
         public void translate() {
             String newmsg = show_message.getText().toString();
 
@@ -370,7 +380,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         //Translation translation = translate.translate(newmsg, Translate.TranslateOption.targetLanguage(selectedLang), Translate.TranslateOption.model("base"));
                         Translation translation = translate.translate(newmsg, Translate.TranslateOption.sourceLanguage(detectedLanguage), Translate.TranslateOption.targetLanguage(selectedLang), Translate.TranslateOption.model("base"));
 
-
                         newmessage = translation.getTranslatedText();
                         show_message.setText(newmessage);
                     }
@@ -384,6 +393,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
+    public void delete_message(final int position, final ViewHolder holder) {
+
+         DatabaseReference rootref = FirebaseDatabase.getInstance().getReference("Chats").child(fuser.getUid());
+         rootref.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+             @Override
+             public void onComplete(@NonNull Task<Void> task) {
+
+                 if (task.isSuccessful()) {
+                     Toast.makeText(holder.itemView.getContext(), "Message Deleted", Toast.LENGTH_SHORT).show();
+                 }
+             }
+         });
+
+
+    }
+
     @Override
     public int getItemViewType(int position) {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -392,6 +417,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else {
             return MSG_TYPE_LEFT;
         }
+
     }
 
 

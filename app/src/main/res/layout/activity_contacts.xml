@@ -45,15 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:hint="@string/search"
-                android:id="@+id/search_users" />
-
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_below="@id/search_users"
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

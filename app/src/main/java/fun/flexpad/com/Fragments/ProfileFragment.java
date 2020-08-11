@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+
+import fun.flexpad.com.FactOrFakeActivity;
+import fun.flexpad.com.GamesActivity;
 import fun.flexpad.com.Model.User;
+import fun.flexpad.com.PaymentActivity;
 import fun.flexpad.com.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -64,6 +69,14 @@ public class ProfileFragment extends Fragment {
 
         image_profile = view.findViewById(R.id.profile_image);
         username = view.findViewById(R.id.username);
+        Button group_payment = view.findViewById(R.id.group_pay);
+
+        group_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), PaymentActivity.class));
+            }
+        });
 
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
 

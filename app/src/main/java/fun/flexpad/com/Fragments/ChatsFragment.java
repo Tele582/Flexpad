@@ -1,5 +1,6 @@
 package fun.flexpad.com.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +32,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +53,9 @@ public class ChatsFragment extends Fragment {
 
     private EditText search_chats;
 
+    String userid;
+    Intent intent;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +70,9 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
         usersList1 = new ArrayList<>();
+
+        //intent = getIntent();
+        //final String userid = intent.getStringExtra("userid");
 
 
         search_chats = view.findViewById(R.id.search_chats);
@@ -82,14 +91,16 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid()); //maybe "Chats" instead of "Chatlist"...
+        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid()); //.child(userid) should be added. //maybe "Chats" instead of "Chatlist"...
 
+        //assert userid != null;
+        //reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid()).child(userid);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chatlist chatlist = snapshot.getValue(Chatlist.class);
                     assert chatlist != null;
                     usersList.add(chatlist);
@@ -103,8 +114,6 @@ public class ChatsFragment extends Fragment {
 
             }
         });
-
-
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
 

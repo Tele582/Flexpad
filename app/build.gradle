@@ -44,8 +44,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation 'co.paystack.android:paystack:3.1.2'
+    implementation 'co.paystack.android.design.widget:pinpad:1.0.4'
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.3.0-alpha02'
     implementation 'androidx.cardview:cardview:1.0.0'
 
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
@@ -54,10 +57,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.firebase:firebase-core:17.4.1'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
 
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
+
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
@@ -70,14 +74,18 @@ dependencies {
         exclude group: 'org.json', module: 'json'
         //exclude group: 'com.google.auto.value', module: 'auto-value'
     }
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
     annotationProcessor 'com.google.cloud:google-cloud-translate:1.95.0'
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
 
 
     //def camerax_version = "1.0.0-alpha05"
@@ -86,6 +94,5 @@ dependencies {
 
     //implementation 'org.pytorch:pytorch_android:1.6.0-SNAPSHOT'
     //implementation 'org.pytorch:pytorch_android_torchvision:1.6.0-SNAPSHOT'
-
 
 }

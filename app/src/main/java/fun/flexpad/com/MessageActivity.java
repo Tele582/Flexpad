@@ -450,7 +450,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String prevChildKey) {}
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            public void onCancelled(@NonNull DatabaseError databaseError){}
         });
 
         String message_num = Integer.toString(message_number);
@@ -634,5 +634,6 @@ public class MessageActivity extends AppCompatActivity {
 
 // you can't see image picture yet because i had issues making the view gone,
 // and also issues displaying picture, even though messages are actually sent, as shown in firebase.
+
 
 
