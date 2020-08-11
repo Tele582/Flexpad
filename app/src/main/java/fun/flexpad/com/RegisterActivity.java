@@ -185,9 +185,7 @@ public class RegisterActivity extends AppCompatActivity {
             /*for (String mail_address : emails) {
 
                 JavaMailAPI javaMailAPI = new JavaMailAPI(this, mail_address, mSubject, mMessage); //from mEmail
-
                 javaMailAPI.execute();
-
             }*/
         }
         cur.close();
@@ -214,15 +212,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         String mEmail = ("telelekan@gmail.com");
-        String mSubject = ("Flexpad Alerts (Hi)");
+        String mSubject = ("FlexAlerts (Hii)");
         String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. To sign up too, click here, " + strAppLink);
 
-        JavaMailAPI javaMailAPI = new JavaMailAPI(this, mEmail, mSubject, mMessage); //from mEmail
-
+        JavaMailAPI javaMailAPI = new JavaMailAPI(this, mEmail, mSubject, mMessage);
         javaMailAPI.execute();
 
     }
 
 }
-
 
