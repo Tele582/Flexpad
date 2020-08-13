@@ -35,7 +35,7 @@
     <string name="contacts">Contacts</string>
     <string name="phone">Phone</string>
     <string name="group_payment">Group Payment</string>
-    <string name="privacy_policy">"On Privacy:\nFlexpad does NOT track your activities on third-party applications. We only have access to data you provide us, your contacts and Google© information, which we might use to serve you better experiences. Please note that we notify your contacts when you register to encourage them to sign up. We hope you understand.\nEnjoy!\n\nMade In Nigeria 🇳🇬 "</string>
+    <string name="privacy_policy">"On Privacy:\nFlexpad does NOT track your activities on third-party applications. We only have access to data you provide us, your contacts (if you allow) and Google© information, which we might use to serve you better experiences. Please note that we will request permission to access your contacts, so you can see those who have also signed up among them and we can notify the few with attached email addresses (if any) to encourage them to also sign up. We hope you understand. Share with all your friends. \nEnjoy!\n\nMade In Nigeria 🇳🇬 "</string>
     <string name="add_money">Add Money To Wallet</string>
     <string name="send_money">Send Money With Friends</string>
     <string name="request_money">Request Money</string>

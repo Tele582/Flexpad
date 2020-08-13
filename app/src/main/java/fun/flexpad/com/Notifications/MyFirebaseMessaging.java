@@ -48,6 +48,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+
+
+
         @NonNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
         String refreshToken = tokenResult.getToken();
 

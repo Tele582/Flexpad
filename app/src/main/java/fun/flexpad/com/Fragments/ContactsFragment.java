@@ -1,5 +1,6 @@
 package fun.flexpad.com.Fragments;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -65,6 +66,21 @@ public class ContactsFragment extends Fragment {
 
         mUsers = new ArrayList<>();
 
+
+        /*String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+        ContentResolver cr = getContentResolver();
+        Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
+        ArrayList<String> phones = new ArrayList<>();
+        assert cur != null;
+        //cur.moveToFirst();
+        while (cur.moveToNext()) {
+            String number = cur.getString(0);
+            number = number.replaceAll(" ", "");
+            if (!phones.contains(number)) phones.add(number);
+        }
+        cur.close();*/
+
+
         //place this in MainActivity instead--or not..probably not
         /*Cursor contacts = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME.toString(),
@@ -81,6 +97,8 @@ public class ContactsFragment extends Fragment {
             }
             contacts.close();
         }
+
+
 
         //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users");
