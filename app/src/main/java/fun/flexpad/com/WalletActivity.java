@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import java.util.Objects;
 
 import co.paystack.android.Paystack;
@@ -31,6 +33,8 @@ public class WalletActivity extends AppCompatActivity {
     TextView mWallet;
     int new_wallet_bal, former_wallet_balance;
 
+    MaterialEditText eMAIL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,9 @@ public class WalletActivity extends AppCompatActivity {
         mCardCVV = findViewById(R.id.til_card_cvv);
         mPaymentAmount = findViewById(R.id.til_transfer_amount);
         mWallet = findViewById(R.id.wallet_balance);
+
+        eMAIL = findViewById(R.id.email);
+
 
         Objects.requireNonNull(mCardExpiry).addTextChangedListener(new TextWatcher() {
             @Override
@@ -100,7 +107,7 @@ public class WalletActivity extends AppCompatActivity {
 
         charge.setEmail("motelejesu@gmail.com");
         charge.setCard(card);
-
+        //////System.out.println(99);
         PaystackSdk.chargeCard(this, charge, new Paystack.TransactionCallback() { //change here to wallet top-up
             @Override
             public void onSuccess(Transaction transaction) {

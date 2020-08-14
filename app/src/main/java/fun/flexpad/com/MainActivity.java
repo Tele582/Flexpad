@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // this is the sharing part
                 a.setType("text/plain"); //text/plain for just text
-                String shareBody = "Hey! Download this app for free and have some fun." +
+                String shareBody = "Hey! Download this app for free and have fun. Sign up to find amazing podcasts, send money with friends, send anonymous messages and more." +
                         "\n"+""+strAppLink;
                 String shareSub = "APP NAME/TITLE";
                 a.putExtra(Intent.EXTRA_SUBJECT, shareSub);

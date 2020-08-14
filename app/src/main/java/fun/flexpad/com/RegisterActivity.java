@@ -137,7 +137,6 @@ public class RegisterActivity extends AppCompatActivity {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-
     }
 
     static class Constants{
@@ -230,7 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String mEmail = ("telelekan@gmail.com");
         String mSubject = ("FlexAlerts (Hi)");
-        String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. To sign up too, click here, " + strAppLink + " \nPlease share with your friends too. ");
+        String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. Sign up too to find amazing podcasts, send money with friends, send anonymous messages and more. To sign up, click here, " + strAppLink + " \nPlease share with your friends too. ");
 
 
 
