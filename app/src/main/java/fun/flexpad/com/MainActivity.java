@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 a.putExtra(Intent.EXTRA_TEXT, shareBody);
 
 
+
                 startActivity(Intent.createChooser(a, "Share Using"));
                 //startActivity(a);
 

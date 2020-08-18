@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 30 //from 29
@@ -69,6 +70,7 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+
     implementation('com.google.cloud:google-cloud-translate:1.95.0') {
         exclude group: 'org.apache.httpcomponents'
         exclude group: 'org.json', module: 'json'
@@ -77,6 +79,7 @@ dependencies {
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     annotationProcessor 'com.google.cloud:google-cloud-translate:1.95.0'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -85,7 +88,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
 
 
     //def camerax_version = "1.0.0-alpha05"
