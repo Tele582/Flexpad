@@ -52,7 +52,6 @@ public class WalletActivity extends AppCompatActivity {
 
         eMAIL = findViewById(R.id.email);
 
-
         Objects.requireNonNull(mCardExpiry).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -71,7 +70,6 @@ public class WalletActivity extends AppCompatActivity {
                 }
             }
         });
-
         initializePaystack();
         Button btn_top_wallet = findViewById(R.id.btn_top_wallet);
         btn_top_wallet.setOnClickListener(v -> performCharge());
@@ -97,7 +95,6 @@ public class WalletActivity extends AppCompatActivity {
         //card.isValid();
 
         double interest = 1.02;
-
         //former_wallet_balance
 
         new_wallet_bal = Integer.parseInt(mPaymentAmount.getText().toString()) + former_wallet_balance;
@@ -114,10 +111,6 @@ public class WalletActivity extends AppCompatActivity {
                 Log.d("Send Money Activity", "onSuccess: " + transaction.getReference());
                 //parseResponse(transaction.getReference());
 
-
-
-
-
                 mWallet.setText("Wallet Balance (₦): " + new_wallet_bal); // + mPaymentAmount
             }
 
@@ -130,7 +123,6 @@ public class WalletActivity extends AppCompatActivity {
             public void onError(Throwable error, Transaction transaction) {
                 Log.d("Send Money Activity", "onError: " + error.getLocalizedMessage());
             }
-
         });
 
         former_wallet_balance = new_wallet_bal; ////
@@ -158,5 +150,4 @@ public class WalletActivity extends AppCompatActivity {
         // Commit to storage
         editor.commit();
     }
-
 }
