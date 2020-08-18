@@ -151,3 +151,5 @@ public class WalletActivity extends AppCompatActivity {
         editor.commit();
     }
 }
+
+
