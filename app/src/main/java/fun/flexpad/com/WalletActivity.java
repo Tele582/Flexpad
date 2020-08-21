@@ -100,7 +100,7 @@ public class WalletActivity extends AppCompatActivity {
         new_wallet_bal = Integer.parseInt(mPaymentAmount.getText().toString()) + former_wallet_balance;
 
         charge.setAmount((int) (Double.parseDouble(mPaymentAmount.getText().toString()) * 100 * interest));
-        //This way, I get 0.47% of every transaction after Paystack fees.
+        //This way, I get 0.46078431372% of every transaction after Paystack fees.
 
         charge.setEmail("motelejesu@gmail.com");
         charge.setCard(card);
