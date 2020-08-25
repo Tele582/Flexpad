@@ -345,7 +345,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
 
-            try (InputStream is = mContext.getResources().openRawResource(R.raw.chattrans_11dd0e28dd52)) {
+            try (InputStream is = mContext.getResources().openRawResource(R.raw.flexpadtranslate_1e6ba6d8f137)) {
                 //Get credentials:
                 final GoogleCredentials myCredentials = GoogleCredentials.fromStream(is);
 
