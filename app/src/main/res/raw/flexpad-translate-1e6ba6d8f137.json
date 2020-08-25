@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "flexpad-translate",
+  "private_key_id": "1e6ba6d8f13741ade3e5491d76dbc08375538898",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC3R46pbY3BaP77\n5JtI1a1rsozLKlBLr9KK6NJaXaKYy0OEKmQePjBhuODwHwQNQ8TBtWm4U7BsDc9U\nb3PwEmwfDFWrsHm1dYB43SW8oimhWVzp2lx1BxzrlPlcvqUyNZ4XrR8KIFA44qJb\n8bDlIae7ZrVspxgpvWjEN/XhEGuwH3lphjoGOgfP6PIcgk2EiGtpK0UGhWRAw3Qb\nTlT1fJa5CyY6jtbx9yRUehAtdDjBWsJhRDCrwZvq5USqr88fvvRN8e5AVGTZQCpO\nG5/Jl6OTFQ6uaBhvWGry+5Tfi83Ws2US56AneqioGX8ngVRb94Kgiw62OYzjBPDc\nuLEP+5JNAgMBAAECggEAGi2XmCYcev1k/DQXJPRWQJ2AZC1vShw7KZmfIAajSIkx\n49ENO0+dJ/wY7tszQDTHh/aCOvCDMK/ZRwFjUS1EcbvYib0baTp3BuxpbTPJV/E0\nZveIQLPrItAEvQVDAbSsV8vjtNXQN4vRbmoLXvLrawY80B/ewOl7qxkmHscyZnWe\ngAH3Z5cPooIy0g+hoSqYHqN3ilxqoWAi3PV2qjo8XZSt6LaV/XfxuRqvgCK9LoPy\nMT3hWIBRCHhlfjJBncwX8Nu0vKba7PuznuyBQZJqw3T8cHccHX1CBxKv62HEZfHb\nYlvVk0qUf3vhyg8l6txl7BKozEXaHq3VUudgTSgL8QKBgQDfu55Q/VF/9fSlyzUh\ngzY/Fh/qQXQLFXHeSluCGc9a/UBvJuOfDZCAgtMCQiVZvzQLv5olx4sBtimanjJD\nr4NKnjc366vrLcaGiaSZ6leFTMtMF65qGNh76eutLZPCGRp5yCyakWl+6fTHe+yo\nn36BYTE2dxlwDYD7/xURGolJMQKBgQDRtl8AJjvAhZisKoJhJ7f4GLjMjMzJWbwr\nHw2RHVQvV84zy2h4KngKtWJBy/zhF/U8GXRQhfeCUPjX4APupIYjpbBDOdH0Hn+U\nCe0PUZv1SHLailJQ7yI7O3IEXjB4pi/mVEMkg3yLegyyv8k1Gy2F2J810EdofDmI\n+HLZuWTT3QKBgBddRH84tRYj3VSjD/1b8oJMETEpfLDboHSSV1QS1fCumdgBu6uU\ngw6omtiVh8kDiq/fZn2jhQS8vUOEWcNvxMo6E5InbmC0+xJ5tVLNgi5Ngr2Di5dQ\n2Oq31wDSzadrb7RgDyhlHxs9224ppuFFJrTkLXt+nI1zG5E1ZkHO/59BAoGAMwGs\ncZjbB6R20ck1FPRYJpu8tuO4G3Eb91ECN71ucGVm3eonarLJp7EeSOqYgxcUqp12\nUO+El8mh/L+btTuG9Lyj9nXlvv58AUG4yvUKfco1RTpHcy/2n3mB7dYK7A1fsSHl\ngsgITtRMql1DTwthMyDQ+IHEHIG6bLohFRumjnECgYBATiV5MhYJftZTiAChRDIT\nKqnnSS110nkMbGu9NtBxbhkYV9Phlkptz4DqIw0KxqFexmlVmwUSWDJ5SpL5/TX/\n+mVXIx5/fCNoZ0E4J8DfJ409LEIfH3H1g5cJDBQVtGRJ0OOiR1XPZUQwf0OM3oT0\nrZ7EQRPZKonh/31slbH0Sg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "flexpadtrans@flexpad-translate.iam.gserviceaccount.com",
+  "client_id": "116517909105045349385",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/flexpadtrans%40flexpad-translate.iam.gserviceaccount.com"
+}
