@@ -335,7 +335,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                     //mChat.addAll(...);      //FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
 
-
                 default:
                     return false;
             }

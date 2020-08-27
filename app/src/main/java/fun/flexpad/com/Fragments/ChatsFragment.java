@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,14 +164,17 @@ public class ChatsFragment extends Fragment {
         mUsers = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
+            private static final String TAG = "Tagg"; ///////
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
+                    assert user != null;
+                    Log.d(TAG, "onDataChange: (QUERY METHOD) found user: " + user.toString()); //temporary
 
                     for (Chatlist chatlist : usersList) {
-                        assert user != null;
                         if (user.getId().equals(chatlist.getId())) {
                             mUsers.add(user);
 

@@ -1,5 +1,7 @@
 package fun.flexpad.com.Model;
 
+import org.jetbrains.annotations.NotNull;
+
 public class User {
 
     private String id;
@@ -9,7 +11,7 @@ public class User {
     private String search;
     private String phone_number;
 
-    public User(String id, String username, String imageURI, String status, String search, String phone_number) {
+    public User (String id, String username, String imageURI, String status, String search, String phone_number) {
         this.id = id;
         this.username = username;
         this.imageURI = imageURI;
@@ -19,7 +21,7 @@ public class User {
 
     }
 
-    public User() {
+    public User () {
 
     }
 
@@ -69,5 +71,18 @@ public class User {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", imageURI='" + imageURI + '\'' +
+                ", status='" + status + '\'' +
+                ", search='" + search + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                '}';
     }
 }
