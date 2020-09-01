@@ -65,7 +65,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-
         auth = FirebaseAuth.getInstance();
 
         btn_register.setOnClickListener(new View.OnClickListener() {
