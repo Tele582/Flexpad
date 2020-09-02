@@ -34,6 +34,8 @@ import java.util.concurrent.ExecutionException;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
+    private static final String TAG = "MyFirebaseMessagingServ";
+
     ////////////I copied this from MyFirebaseIdService before deleting it (in case of need to reverse).
     @Override
     public void onNewToken(@NonNull String s) {
@@ -93,6 +95,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         assert sented != null;
         if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
 
+            assert currentUser != null;
             if (!currentUser.equals(user)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                     sendOreoNotification(remoteMessage);
@@ -103,14 +106,19 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         }
     }
 
+
+
     private void sendOreoNotification(RemoteMessage remoteMessage) {
 
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
+        //String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
         String body = remoteMessage.getData().get("body");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
+
+
         assert user != null;
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, MessageActivity.class);
@@ -145,6 +153,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String body = remoteMessage.getData().get("body");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
+
+
         assert user != null;
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, MessageActivity.class);
