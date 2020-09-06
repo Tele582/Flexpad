@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -19,18 +18,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
 import fun.flexpad.com.Fragments.ChatsFragment;
 import fun.flexpad.com.Fragments.ContactsFragment;
 import fun.flexpad.com.Fragments.ProfileFragment;
+import fun.flexpad.com.Fragments.RoomsFragment;
 import fun.flexpad.com.Fragments.UsersFragment;
 import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -145,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
                         unread++;
                     }
                 }
+
+                viewPagerAdapter.addFragment(new RoomsFragment(), "Rooms");
 
                 // might need to do this for number of users instead of just messages(chats)
                 if (unread == 0){

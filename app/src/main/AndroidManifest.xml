@@ -3,14 +3,12 @@
     package="fun.flexpad.com">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +17,7 @@
         android:roundIcon="@drawable/ic_beenhere"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WalletActivity"></activity>
+        <activity android:name=".WalletActivity" />
         <activity android:name=".SendMoneyActivity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".ContactsActivity" />
@@ -45,7 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".MainActivity" />
 
         <service
