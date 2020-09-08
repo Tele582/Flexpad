@@ -38,31 +38,28 @@ public class FeedbackActivity extends AppCompatActivity {
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        send_feedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = app_feedback.getText().toString();
+        send_feedback.setOnClickListener(v -> {
+            String message = app_feedback.getText().toString();
 
-                if (!message.trim().isEmpty()){
-                    send_feedback.setEnabled(true);
-                    sendMessage(fuser.getUid(), message);
-                    Toast.makeText(FeedbackActivity.this, "Sending..", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(FeedbackActivity.this, "You can't send an empty message.", Toast.LENGTH_SHORT).show();
-                }
-                app_feedback.setText("");
-
-                view_feedback.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder(FeedbackActivity.this)
-                                .setTitle("Sent:")
-                                .setMessage(message)
-                                .show();
-                    }
-                });
+            if (!message.trim().isEmpty()){
+                send_feedback.setEnabled(true);
+                sendMessage(fuser.getUid(), message);
+                Toast.makeText(FeedbackActivity.this, "Sending..", Toast.LENGTH_SHORT).show();
             }
+            else {
+                Toast.makeText(FeedbackActivity.this, "You can't send an empty message.", Toast.LENGTH_SHORT).show();
+            }
+            app_feedback.setText("");
+
+            view_feedback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(FeedbackActivity.this)
+                            .setTitle("Sent:")
+                            .setMessage(message)
+                            .show();
+                }
+            });
         });
     }
 

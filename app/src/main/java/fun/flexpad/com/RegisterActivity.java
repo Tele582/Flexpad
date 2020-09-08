@@ -67,35 +67,32 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        btn_register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btn_register.setOnClickListener(view -> {
 
-                //sendEmail();
+            //sendEmail();
 
-                String txt_username = Objects.requireNonNull(username.getText()).toString();
-                String txt_email = Objects.requireNonNull(email.getText()).toString();
-                String txt_password = Objects.requireNonNull(password.getText()).toString();
-                String contact_no = Objects.requireNonNull(phone_number.getText()).toString(); //Everyone's phone number
+            String txt_username = Objects.requireNonNull(username.getText()).toString();
+            String txt_email = Objects.requireNonNull(email.getText()).toString();
+            String txt_password = Objects.requireNonNull(password.getText()).toString();
+            String contact_no = Objects.requireNonNull(phone_number.getText()).toString(); //Everyone's phone number
 
-                if (TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(contact_no)){
-                    Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
-                } else if (txt_password.length() < 6) {
-                    Toast.makeText(RegisterActivity.this, "Password must have at least 6 characters", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(contact_no)){
+                Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
+            } else if (txt_password.length() < 6) {
+                Toast.makeText(RegisterActivity.this, "Password must have at least 6 characters", Toast.LENGTH_SHORT).show();
+            } else {
+
+                if (ContextCompat.checkSelfPermission(
+                        RegisterActivity.this, Manifest.permission.READ_CONTACTS) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    // You can use the API that requires the permission.
+                    register(txt_username, txt_email, txt_password, contact_no);
+                    getEmailAddresses();
                 } else {
-
-                    if (ContextCompat.checkSelfPermission(
-                            RegisterActivity.this, Manifest.permission.READ_CONTACTS) ==
-                            PackageManager.PERMISSION_GRANTED) {
-                        // You can use the API that requires the permission.
-                        register(txt_username, txt_email, txt_password, contact_no);
-                        getEmailAddresses();
-                    } else {
-                        // You can directly ask for the permission.
-                        ActivityCompat.requestPermissions(RegisterActivity.this,
-                                new String[] { Manifest.permission.READ_CONTACTS },
-                                Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                    }
+                    // You can directly ask for the permission.
+                    ActivityCompat.requestPermissions(RegisterActivity.this,
+                            new String[] { Manifest.permission.READ_CONTACTS },
+                            Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 }
             }
         });

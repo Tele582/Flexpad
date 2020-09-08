@@ -1,32 +1,22 @@
-package fun.flexpad.com.Fragments;
+package fun.flexpad.com;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import com.bumptech.glide.Glide;
-
-import fun.flexpad.com.FactOrFakeActivity;
-import fun.flexpad.com.GamesActivity;
-import fun.flexpad.com.Model.User;
-import fun.flexpad.com.PaymentActivity;
-import fun.flexpad.com.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,13 +34,14 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fun.flexpad.com.Model.Room;
+import fun.flexpad.com.Model.User;
 
-import static android.app.Activity.RESULT_OK;
+public class RoomDesignActivity extends AppCompatActivity {
 
-public class ProfileFragment extends Fragment {
-
-    private CircleImageView image_profile;
-    private TextView username;
+    private CircleImageView room_image;
+    EditText room_name;
+    Button ok;
 
     private DatabaseReference reference;
     private FirebaseUser fuser;
@@ -61,41 +52,48 @@ public class ProfileFragment extends Fragment {
     private StorageTask uploadTask;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_room_design);
 
-
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        image_profile = view.findViewById(R.id.profile_image);
-        username = view.findViewById(R.id.username);
-        Button group_payment = view.findViewById(R.id.group_pay);
-
-        group_payment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), PaymentActivity.class));
-            }
-        });
-
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
+        ok = findViewById(R.id.ok);
+        //room_image = findViewById(R.id.room_image);
+        room_name = findViewById(R.id.room_name);
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+        storageReference = FirebaseStorage.getInstance().getReference("room_uploads");
+
+        ok.setOnClickListener(view -> {
+
+            String room = room_name.getText().toString();
+
+            if (!room.trim().isEmpty()){
+                saveroom(room, fuser.getUid());
+                Toast.makeText(RoomDesignActivity.this, "Creating..", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(RoomDesignActivity.this, RoomChatActivity.class));
+            }
+            else {
+                Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        /*reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                assert user != null;
-                username.setText(user.getUsername());
-                if (user.getImageURI().equals("default")){
-                    image_profile.setImageResource(R.mipmap.ic_launcher);
+                //User user = dataSnapshot.getValue(User.class);
+                Room room = dataSnapshot.getValue(Room.class);
+                //assert user != null;
+                assert room != null;
+                //username.setText(user.getUsername());
+                if (room.getImageURI().equals("default")){
+                    room_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    if (isAdded()) {
-                        Glide.with(Objects.requireNonNull(getContext())).load(user.getImageURI()).into(image_profile);
-                    } //else {
-                    //image_profile.setImageResource(R.mipmap.ic_launcher);
+                    //if (isAdded()) {
+                        Glide.with(RoomDesignActivity.this).load(room.getImageURI()).into(room_image);
                     //}
                 }
             }
@@ -104,36 +102,36 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
-        image_profile.setOnClickListener(v -> openImage());
+        //room_image.setOnClickListener(v -> openImage());
 
-        return view;
     }
 
-    private void openImage() {
+    /*private void openImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, IMAGE_REQUEST);
 
     }
+
     private String getFileExtension(Uri uri){
-        ContentResolver contentResolver = Objects.requireNonNull(getContext()).getContentResolver();
+        ContentResolver contentResolver = RoomDesignActivity.this.getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void uploadImage(){
-        final ProgressDialog pd = new ProgressDialog(getContext());
+        final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Uploading...");
         pd.show();
 
         if (imageUri != null){
-            final StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+            final StorageReference fileRef = storageReference.child(System.currentTimeMillis()
                     + "." + getFileExtension(imageUri));
 
-            uploadTask = fileReference.putFile(imageUri);
+            uploadTask = fileRef.putFile(imageUri);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -142,7 +140,7 @@ public class ProfileFragment extends Fragment {
                     }
 
 
-                    return fileReference.getDownloadUrl();
+                    return fileRef.getDownloadUrl();
                 }
             }).addOnCompleteListener((OnCompleteListener<Uri>) task -> {
                 if (task.isSuccessful()){
@@ -150,26 +148,40 @@ public class ProfileFragment extends Fragment {
                     assert downloadUri != null;
                     String mUri = downloadUri.toString();
 
-                    reference = FirebaseDatabase.getInstance().getReference().child("Users");
+                    reference = FirebaseDatabase.getInstance().getReference("Rooms").child(fuser.getUid());
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("imageURI", mUri);
                     reference.updateChildren(map);
 
                     pd.dismiss();
                 } else {
-                    Toast.makeText(getContext(), "Failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RoomDesignActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                     pd.dismiss();
                 }
             }).addOnFailureListener(e -> {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomDesignActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 pd.dismiss();
             });
         } else {
-            Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RoomDesignActivity.this, "No image selected", Toast.LENGTH_SHORT).show();
         }
+    }*/
+
+    //Create and save the room
+    public void saveroom(String room, String creator) {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
+
+        HashMap<String, Object> nmap = new HashMap<>();
+        nmap.put("roomname", room);
+        nmap.put("creator", creator);
+
+        DatabaseReference dataref = reference.child(fuser.getUid()).push();
+        String aa = dataref.getKey();
+        dataref.setValue(nmap);
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -178,10 +190,13 @@ public class ProfileFragment extends Fragment {
             imageUri = data.getData();
 
             if (uploadTask != null && uploadTask.isInProgress()){
-                Toast.makeText(getContext(), "Upload in progress", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Upload in progress", Toast.LENGTH_SHORT).show();
             } else {
                 uploadImage();
             }
         }
-    }
+    }*/
+
+
+
 }

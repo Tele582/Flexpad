@@ -17,6 +17,8 @@
         android:roundIcon="@drawable/ic_beenhere"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".RoomDesignActivity"></activity>
+        <activity android:name=".RoomChatActivity" />
         <activity android:name=".WalletActivity" />
         <activity android:name=".SendMoneyActivity" />
         <activity android:name=".PaymentActivity" />
