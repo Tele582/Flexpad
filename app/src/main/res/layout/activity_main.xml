@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
+        android:layout_margin="28dp"
         android:src="@drawable/ic_share"
         app:backgroundTint="@color/colorPrimaryDark" />
 

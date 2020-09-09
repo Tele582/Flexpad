@@ -61,42 +61,36 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
         FloatingActionButton floatingShareButton = (FloatingActionButton) findViewById(R.id.floatingShareButton);
-        floatingShareButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-                //add the sharing option to the floating action button
+        floatingShareButton.setOnClickListener(v -> {
+            //add the sharing option to the floating action button
 
-                Intent a = new Intent(Intent.ACTION_SEND);
+            Intent a = new Intent(Intent.ACTION_SEND);
 
-                //this is to get the app link in the Play Store without launching your app.
-                final String appPackageName = getApplicationContext().getPackageName();
-                String strAppLink = "";
+            //this is to get the app link in the Play Store without launching your app.
+            final String appPackageName = getApplicationContext().getPackageName();
+            String strAppLink = "";
 
-                try
-                {
-                    strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
-                }
-                catch (android.content.ActivityNotFoundException anfe)
-                {
-                    strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
-                }
-
-                // this is the sharing part
-                a.setType("text/plain"); //text/plain for just text
-                String shareBody = "Hey! Download this app for free and have fun. Sign up to find amazing podcasts, send money with friends, send anonymous messages and more." +
-                        "\n"+""+strAppLink;
-                String shareSub = "APP NAME/TITLE";
-                a.putExtra(Intent.EXTRA_SUBJECT, shareSub);
-                //a.putExtra(android.content.Intent.EXTRA_TITLE, shareSub);
-                a.putExtra(Intent.EXTRA_TEXT, shareBody);
-
-
-
-                startActivity(Intent.createChooser(a, "Share Using"));
-                //startActivity(a);
-
+            try {
+                strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
             }
+            catch (android.content.ActivityNotFoundException anfe) {
+                strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
+            }
+
+            // this is the sharing part
+            a.setType("text/plain"); //text/plain for just text
+            String shareBody = "Hey! Download to sign up for live chats, convenient messaging, and more." +
+                    "\n"+""+strAppLink;
+            String shareSub = "APP NAME/TITLE";
+            a.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+            //a.putExtra(android.content.Intent.EXTRA_TITLE, shareSub);
+            a.putExtra(Intent.EXTRA_TEXT, shareBody);
+
+
+
+            startActivity(Intent.createChooser(a, "Share Using"));
+            //startActivity(a);
+
         });
 
         profile_image = findViewById(R.id.profile_image);
@@ -197,12 +191,12 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    static class  ViewPagerAdapter extends FragmentPagerAdapter {
+    public static class  ViewPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<Fragment> fragments;
         private ArrayList<String> titles;
 
-        ViewPagerAdapter (FragmentManager fm) {
+        public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
             this.fragments = new ArrayList<>();
             this.titles = new ArrayList<>();
@@ -219,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
             return fragments.size();
         }
 
-        void addFragment(Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String title) {
             fragments.add(fragment);
             titles.add(title);
         }
