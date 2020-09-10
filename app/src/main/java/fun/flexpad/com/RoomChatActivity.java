@@ -12,5 +12,9 @@ public class RoomChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_chat);
 
 
+
     }
 }
+
+
+
