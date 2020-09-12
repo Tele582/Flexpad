@@ -2,6 +2,7 @@ package fun.flexpad.com.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,16 +13,29 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import fun.flexpad.com.Adapter.RoomAdapter;
 import fun.flexpad.com.Adapter.UserAdapter;
+import fun.flexpad.com.Model.Room;
+import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
 public class ForYouFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
+    //private UserAdapter userAdapter;
+    private RoomAdapter roomAdapter;
 
     private FirebaseUser fuser;
+    private List<Room> mRooms;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,12 +49,43 @@ public class ForYouFragment extends Fragment {
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
+        mRooms = new ArrayList<>();
+
+        readRooms();
+
 
 
         return view;
     }
-}
 
+    private void readRooms() {
+
+        //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    mRooms.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        //User user = snapshot.getValue(User.class);
+                        Room room = snapshot.getValue(Room.class);
+
+                        assert room != null;
+                        mRooms.add(room);//    //
+                    }
+                    roomAdapter = new RoomAdapter(getContext(), mRooms);
+                    recyclerView.setAdapter(roomAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+}
 
 
 

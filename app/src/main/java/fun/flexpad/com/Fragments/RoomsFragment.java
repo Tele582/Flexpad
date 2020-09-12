@@ -70,8 +70,8 @@ public class RoomsFragment extends Fragment {
                 ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
                 ViewPagerAdapter vpA = new ViewPagerAdapter(getChildFragmentManager());
 
-                viewPagerAdapter.addFragment(new FollowingFragment(), "Following");
                 viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
+                viewPagerAdapter.addFragment(new FollowingFragment(), "Following");
 
                 viewPager.setAdapter(viewPagerAdapter);
                 tabLayout.setupWithViewPager(viewPager);

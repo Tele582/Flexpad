@@ -53,7 +53,7 @@ public class UsersFragment extends Fragment {
 
         search_users = view.findViewById(R.id.search_users);
         search_users.addTextChangedListener(new TextWatcher() {
-            //args different from koddev's
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -135,3 +135,5 @@ public class UsersFragment extends Fragment {
         });
     }
 }
+
+

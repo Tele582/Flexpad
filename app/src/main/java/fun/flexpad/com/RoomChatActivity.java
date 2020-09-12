@@ -2,19 +2,23 @@ package fun.flexpad.com;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class RoomChatActivity extends AppCompatActivity {
@@ -26,10 +30,25 @@ public class RoomChatActivity extends AppCompatActivity {
 
     final int REQUEST_PERMISSION_CODE = 1000;
 
+    TextView roomTextview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
+
+        String roomtitle = getIntent().getStringExtra("room_key");
+        roomTextview = findViewById(R.id.room_title);
+        roomTextview.setText(roomtitle);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> {
+            //might cause app to crash;
+            startActivity(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        });
 
         mic_live = findViewById(R.id.mic_live);
 

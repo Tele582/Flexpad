@@ -71,7 +71,9 @@ public class RoomDesignActivity extends AppCompatActivity {
             if (!room.trim().isEmpty()){
                 saveroom(room, fuser.getUid());
                 Toast.makeText(RoomDesignActivity.this, "Creating..", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(RoomDesignActivity.this, RoomChatActivity.class));
+                Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
+                intent.putExtra("room_key", room);
+                startActivity(intent);
             }
             else {
                 Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
@@ -176,8 +178,8 @@ public class RoomDesignActivity extends AppCompatActivity {
         nmap.put("roomname", room);
         nmap.put("creator", creator);
 
-        DatabaseReference dataref = reference.child(fuser.getUid()).push();
-        String aa = dataref.getKey();
+        DatabaseReference dataref = reference.push(); //.child(fuser.getUid())
+        String ama = dataref.getKey();
         dataref.setValue(nmap);
     }
 
