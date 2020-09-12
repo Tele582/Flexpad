@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".RoomChatActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -26,14 +27,66 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-
-
-
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:id="@+id/users_list"
+        android:layout_margin="8dp"
+        android:layout_below="@id/bar_layout"
+        android:layout_above="@id/mic_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/in_room_people"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="16dp"
+            android:src="@mipmap/ic_launcher" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/in_room_people2"
+            android:layout_toEndOf="@id/in_room_people"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="16dp"
+            android:src="@mipmap/ic_launcher" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/in_room_people3"
+            android:layout_toEndOf="@id/in_room_people2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="16dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/in_room_people4"
+            android:layout_below="@id/in_room_people"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="16dp"
+            android:src="@mipmap/ic_launcher" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mic_layout"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/mic_live"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_mic_foreground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
