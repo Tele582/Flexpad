@@ -79,17 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
             // this is the sharing part
             a.setType("text/plain"); //text/plain for just text
-            String shareBody = "Hey! Download to sign up for live chats, convenient messaging, and more." +
+            String shareBody = "Download now to get live conversations at your convenience." +
                     "\n"+""+strAppLink;
             String shareSub = "APP NAME/TITLE";
             a.putExtra(Intent.EXTRA_SUBJECT, shareSub);
             //a.putExtra(android.content.Intent.EXTRA_TITLE, shareSub);
             a.putExtra(Intent.EXTRA_TEXT, shareBody);
 
-
-
             startActivity(Intent.createChooser(a, "Share Using"));
-            //startActivity(a);
+
+            //Give users incentive to share. Maybe free flexcoins.
 
         });
 

@@ -49,7 +49,7 @@ public class ForYouFragment extends Fragment {
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        mRooms = new ArrayList<>();
+        //mRooms = new ArrayList<>();
 
         readRooms();
 
@@ -59,6 +59,7 @@ public class ForYouFragment extends Fragment {
     }
 
     private void readRooms() {
+        mRooms = new ArrayList<>();
 
         //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");

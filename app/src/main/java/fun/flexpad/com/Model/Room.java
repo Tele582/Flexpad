@@ -5,7 +5,7 @@ public class Room {
     private String id;
     private String roomname;
 
-    public Room(String id, String roomname, String imageURI) {
+    public Room (String id, String roomname) {
         this.id = id;
         this.roomname = roomname;
     }
@@ -29,5 +29,6 @@ public class Room {
     public void setRoomname(String roomname) {
         this.roomname = roomname;
     }
-
 }
+
+

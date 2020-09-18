@@ -33,7 +33,7 @@ public class ResultsActivity extends AppCompatActivity {
         } else if (score == Math.round(QuizBook.questions.length * 0.9)){
             mGrade.setText("Good Work");
         } else if (score >= Math.round(QuizBook.questions.length * 0.7)){
-            mGrade.setText("Good Effect");
+            mGrade.setText("Nice Attempt");
         } else {
             mGrade.setText("Study more...");
         }
@@ -49,3 +49,7 @@ public class ResultsActivity extends AppCompatActivity {
     }
 }
 
+
+// Ask for Reviews here
+
+// Also, provide link/button back to Rooms Fragment(or engaging rooms in particular)

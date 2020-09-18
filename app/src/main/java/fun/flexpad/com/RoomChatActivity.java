@@ -37,7 +37,7 @@ public class RoomChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
 
-        String roomtitle = getIntent().getStringExtra("room_key");
+        final String roomtitle = getIntent().getStringExtra("room_key");
         roomTextview = findViewById(R.id.room_title);
         roomTextview.setText(roomtitle);
 

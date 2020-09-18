@@ -4,7 +4,7 @@
     <string name="register">register</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
-    <string name="username">Username</string>
+    <string name="username">Name</string>
     <string name="login">login</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello">hello</string>
@@ -35,7 +35,7 @@
     <string name="contacts">Contacts</string>
     <string name="phone">Phone</string>
     <string name="group_payment">Group Payment</string>
-    <string name="privacy_policy">"On Privacy:\nFlexpad only gets access to your contacts and Google© Account information, which is used to provide you with better experiences. Please note that we will request permission to access your contacts, so you can see those who have also signed up among them and we can notify the few with attached email addresses (if any) to encourage them to also sign up. Also, please share with all your friends. \nEnjoy!\n\nMade In Nigeria 🇳🇬 "</string>
+    <string name="privacy_policy">"On Privacy:\nFlexpad only gets access to your contacts and Google© Account information, to provide a better experience. Please note that we request permission to access your contacts so you can see those who have also signed up and we can notify those with attached email addresses (if any) to encourage them to join too. Please share this app with your friends. \nThank you"</string>
     <string name="add_money">Add Money To Wallet</string>
     <string name="send_money">Send Money With Friends</string>
     <string name="request_money">Request Money</string>

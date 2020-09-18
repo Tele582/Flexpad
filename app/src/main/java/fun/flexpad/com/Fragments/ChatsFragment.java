@@ -75,7 +75,6 @@ public class ChatsFragment extends Fragment {
         //intent = getIntent();
         //final String userid = intent.getStringExtra("userid");
 
-
         search_chats = view.findViewById(R.id.search_chats);
         search_chats.addTextChangedListener(new TextWatcher() {
             @Override
@@ -115,9 +114,7 @@ public class ChatsFragment extends Fragment {
 
             }
         });
-
         updateToken(FirebaseInstanceId.getInstance().getToken());
-
         return view;
     }
 
@@ -182,7 +179,6 @@ public class ChatsFragment extends Fragment {
 
                         }
                     }
-
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, true);
                 recyclerView.setAdapter(userAdapter);
