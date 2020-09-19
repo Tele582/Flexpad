@@ -2,6 +2,8 @@ package fun.flexpad.com.Adapter;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
@@ -303,7 +305,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item1:
-
                     //deleteMessageForEveryone();
                     //delete_message();             //////////////////////
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -330,10 +331,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                     return true;
                 case R.id.item3:
-
                     mChat.clear();
+                    //mChat.addAll(...);  //FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
 
-                    //mChat.addAll(...);      //FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
+                case R.id.item4:
+                    final String text = show_message.getText().toString();
+                    ClipboardManager clipboardmgr = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("String", text);
+                    clipboardmgr.setPrimaryClip(clip);
+                    clip.getDescription(); ////confirm meaning of line
 
                 default:
                     return false;
