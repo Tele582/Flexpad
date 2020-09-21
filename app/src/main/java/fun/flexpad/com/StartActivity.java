@@ -22,7 +22,7 @@ public class StartActivity extends AppCompatActivity {
 
         //checking if user is null
         if (firebaseUser != null){
-            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+            Intent intent = new Intent(StartActivity.this, WelcomeActivity.class);
             startActivity(intent);
             finish();
         }

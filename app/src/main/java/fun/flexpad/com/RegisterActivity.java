@@ -166,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
 
-                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                        Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
 
@@ -226,8 +226,6 @@ public class RegisterActivity extends AppCompatActivity {
         String mEmail = ("telelekan@gmail.com");
         String mSubject = ("FlexAlerts (Hi)");
         String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. Sign up too to find amazing podcasts, send money with friends, send anonymous messages and more. To sign up, click here, " + strAppLink + " \nPlease share with your friends too. ");
-
-
 
         assert cur != null;
         while (cur.moveToNext()) {
