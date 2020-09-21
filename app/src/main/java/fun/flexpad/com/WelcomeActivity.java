@@ -10,17 +10,13 @@ import android.widget.ImageView;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    ImageView imageView;
-    private  static  int FLEX_LOGO_TIME = 3000;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_welcome);
 
+        int FLEX_LOGO_TIME = 2000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -29,6 +25,5 @@ public class WelcomeActivity extends AppCompatActivity {
                 finish();
             }
         }, FLEX_LOGO_TIME);
-
     }
 }
