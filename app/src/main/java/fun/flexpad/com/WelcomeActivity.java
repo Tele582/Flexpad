@@ -17,13 +17,10 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         int FLEX_LOGO_TIME = 2000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent (WelcomeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent (WelcomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }, FLEX_LOGO_TIME);
     }
 }
