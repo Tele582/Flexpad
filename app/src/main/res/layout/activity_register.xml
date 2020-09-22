@@ -15,6 +15,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:padding="16dp"
+        android:id="@+id/reg_lin_lay"
         android:layout_below="@id/toolbar"
         android:layout_height="wrap_content" >
 
@@ -77,12 +78,17 @@
             android:layout_marginTop="16dp"
             android:text="@string/privacy_policy"
             android:textColor="@color/colorPrimaryDark"
-            android:gravity="center"
-
-            />
-
+            android:gravity="center" />
 
     </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingShareButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/reg_lin_lay"
+        android:src="@drawable/ic_share"
+        app:backgroundTint="@color/colorPrimaryDark" />
 
 </RelativeLayout>

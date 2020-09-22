@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -79,5 +80,38 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        FloatingActionButton floatingShareButton = (FloatingActionButton) findViewById(R.id.floatingShareButton3);
+        floatingShareButton.setOnClickListener(v -> {
+            //add the sharing option to the floating action button
+
+            Intent a = new Intent(Intent.ACTION_SEND);
+
+            //this is to get the app link in the Play Store without launching your app.
+            final String appPackageName = getApplicationContext().getPackageName();
+            String strAppLink = "";
+
+            try {
+                strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
+            }
+            catch (android.content.ActivityNotFoundException anfe) {
+                strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
+            }
+
+            // this is the sharing part
+            a.setType("text/plain"); //text/plain for just text
+            String shareBody = "Download now to have live conversations at your convenience." +
+                    "\n"+""+strAppLink;
+            String shareSub = "APP NAME/TITLE";
+            a.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+            //a.putExtra(android.content.Intent.EXTRA_TITLE, shareSub);
+            a.putExtra(Intent.EXTRA_TEXT, shareBody);
+
+            startActivity(Intent.createChooser(a, "Share Using"));
+
+            //Give users incentive to share. Maybe free flexcoins.
+
+        });
+
     }
 }

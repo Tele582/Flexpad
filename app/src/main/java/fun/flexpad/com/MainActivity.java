@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             // this is the sharing part
             a.setType("text/plain"); //text/plain for just text
-            String shareBody = "Download now to get live conversations at your convenience." +
+            String shareBody = "Download now to have live conversations at your convenience." +
                     "\n"+""+strAppLink;
             String shareSub = "APP NAME/TITLE";
             a.putExtra(Intent.EXTRA_SUBJECT, shareSub);

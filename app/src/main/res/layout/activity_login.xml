@@ -15,6 +15,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:padding="16dp"
+        android:id="@+id/login_lin_lay"
         android:layout_below="@id/toolbar"
         android:layout_height="wrap_content" >
 
@@ -61,12 +62,19 @@
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Forgot your password?"
+            android:text="@string/forgot_your_password"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
-
     </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingShareButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/login_lin_lay"
+        android:src="@drawable/ic_share"
+        app:backgroundTint="@color/colorPrimaryDark" />
 
 </RelativeLayout>

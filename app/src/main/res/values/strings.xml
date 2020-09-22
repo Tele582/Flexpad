@@ -35,7 +35,7 @@
     <string name="contacts">Contacts</string>
     <string name="phone">Phone</string>
     <string name="group_payment">Group Payment</string>
-    <string name="privacy_policy">"On Privacy:\nFlexpad only gets access to your contacts and Google© Account information, to provide a better experience. Please note that we request permission to access your contacts so you can see those who have also signed up and we can notify those with attached email addresses (if any) to encourage them to join too. Please share this app with your friends. \nThank you"</string>
+    <string name="privacy_policy">"On Privacy:\nFlexpad only gets access to your contacts and Google© Account information, to provide a better experience. Note that we request permission to access your contacts so you can see those who have also signed up and we can notify those with attached email addresses (if any) to encourage them to join too. \n\nPlease share this app with your friends now with the button below.⬇️👇🏾\nThank you!😊"</string>
     <string name="add_money">Add Money To Wallet</string>
     <string name="send_money">Send Money With Friends</string>
     <string name="request_money">Request Money</string>
@@ -43,5 +43,6 @@
     <string name="copy">Copy</string>
     <string name="translate_message">Translate Message</string>
     <string name="delete_message">Delete Message</string>
+    <string name="forgot_your_password">Forgot your password?</string>
 
 </resources>
