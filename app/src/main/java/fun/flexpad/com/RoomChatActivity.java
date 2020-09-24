@@ -24,12 +24,10 @@ import java.util.UUID;
 public class RoomChatActivity extends AppCompatActivity {
 
     Button mic_live;
-
     MediaRecorder mediaRecorder;
     String pathSave = "";
 
     final int REQUEST_PERMISSION_CODE = 1000;
-
     TextView roomTextview;
 
     @Override

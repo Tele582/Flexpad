@@ -41,13 +41,11 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         final Room room = mRooms.get(position); //or remove 'final'
         holder.roomname.setText(room.getRoomname());
 
-
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, RoomChatActivity.class);
             intent.putExtra("room_key", room.getRoomname());
             mContext.startActivity(intent);
         });
-
     }
 
     @Override
@@ -56,14 +54,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-
         public TextView roomname;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             roomname = itemView.findViewById(R.id.roomIname);
         }
     }
-
 }

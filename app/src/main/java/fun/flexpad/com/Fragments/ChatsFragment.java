@@ -167,17 +167,20 @@ public class ChatsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    assert user != null;
-                    Log.d(TAG, "onDataChange: (QUERY METHOD) found user: " + user.toString()); //temporary
 
-                    for (Chatlist chatlist : usersList) {
-                        if (user.getId().equals(chatlist.getId())) {
-                            mUsers.add(user);
+                    try {
+                        User user = snapshot.getValue(User.class);
+                        assert user != null;
+                        Log.d(TAG, "onDataChange: (QUERY METHOD) found user: " + user.toString()); //temporary
 
+                        for (Chatlist chatlist : usersList) {
+                            if (user.getId().equals(chatlist.getId())) {
+                                mUsers.add(user);
 
-
+                            }
                         }
+                    } catch (Exception e) {
+                        e.getStackTrace();
                     }
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, true);

@@ -31,10 +31,7 @@ import fun.flexpad.com.R;
 public class ForYouFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    //private UserAdapter userAdapter;
     private RoomAdapter roomAdapter;
-
-    private FirebaseUser fuser;
     private List<Room> mRooms;
 
     @Override
@@ -42,19 +39,13 @@ public class ForYouFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_for_you, container, false);
-
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-
+        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         //mRooms = new ArrayList<>();
-
         readRooms();
-
-
-
         return view;
     }
 
@@ -71,7 +62,6 @@ public class ForYouFragment extends Fragment {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                         //User user = snapshot.getValue(User.class);
                         Room room = snapshot.getValue(Room.class);
-
                         assert room != null;
                         mRooms.add(room);//    //
                     }
