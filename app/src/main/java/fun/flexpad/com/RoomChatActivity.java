@@ -30,10 +30,18 @@ public class RoomChatActivity extends AppCompatActivity {
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
 
+    static {
+        System.loadLibrary("cpp_code");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
+
+        // Example of a call to a native method --C++
+        TextView tv = findViewById(R.id.sample_text);
+        tv.setText(stringFromJNI());
 
         final String roomtitle = getIntent().getStringExtra("room_key");
         roomTextview = findViewById(R.id.room_title);
@@ -73,8 +81,9 @@ public class RoomChatActivity extends AppCompatActivity {
                 requestPermission();
             }
         });
-
     }
+
+    public native String stringFromJNI();
 
     private void setupMediaRecorder() {
         mediaRecorder = new MediaRecorder();
