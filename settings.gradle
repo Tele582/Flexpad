@@ -1,2 +1,3 @@
+include ':oboe-1.4.3'
 rootProject.name='Flexpad'
 include ':app'
