@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/flexpad_fourth_actual_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomeActivity"/>
+        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".WelcomeActivity" />
         <activity android:name=".RoomDesignActivity" />
         <activity android:name=".RoomChatActivity" />
         <activity android:name=".WalletActivity" />
