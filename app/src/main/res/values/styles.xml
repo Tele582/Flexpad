@@ -13,7 +13,7 @@
     </style>
 
     <style name="WelcomeTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/welcome_drawable</item>
+        <item name="android:windowBackground">@drawable/welcome</item>
     </style>
 
     <style name="TabTextAppearanceLowerCase" parent="TextAppearance.MaterialComponents.Headline1">
