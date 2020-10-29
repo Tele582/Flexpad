@@ -19,12 +19,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import fun.flexpad.com.Adapter.MessageAdapter;
 import fun.flexpad.com.Fragments.APIService;
+import fun.flexpad.com.Fragments.RoomsFragment;
 import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Notifications.Client;
@@ -91,6 +93,7 @@ public class MessageActivity extends AppCompatActivity {
     boolean notify = false;
 
     int message_number = 0;
+    private Object RoomsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

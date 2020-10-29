@@ -68,7 +68,7 @@ public class RoomsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-                ViewPagerAdapter vPA = new ViewPagerAdapter(getChildFragmentManager());
+                //ViewPagerAdapter vPA = new ViewPagerAdapter(getChildFragmentManager());
 
                 viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
                 viewPagerAdapter.addFragment(new FollowingFragment(), "Following");

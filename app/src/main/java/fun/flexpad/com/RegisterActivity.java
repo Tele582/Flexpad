@@ -64,8 +64,6 @@ public class RegisterActivity extends AppCompatActivity {
         btn_register = findViewById(R.id.btn_register);
         phone_number = findViewById(R.id.phone_number);
 
-
-
         auth = FirebaseAuth.getInstance();
 
         btn_register.setOnClickListener(view -> {
@@ -127,9 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(a, "Share Using"));
 
             //Give users incentive to share. Maybe free flexcoins.
-
         });
-
     }
 
     @Override
@@ -166,7 +162,6 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
     }
 
     static class Constants{
@@ -187,6 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
                             reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
 
                             HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("email", email);
                             hashMap.put("id", userid);
                             hashMap.put("username", username);
                             hashMap.put("contact", phone_number);
@@ -203,8 +199,6 @@ public class RegisterActivity extends AppCompatActivity {
                                         Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
-
-
 
                                         finish();
                                     }
@@ -223,8 +217,7 @@ public class RegisterActivity extends AppCompatActivity {
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
         ArrayList<String> phones = new ArrayList<>();
-        assert cur != null;
-        //cur.moveToFirst();
+        assert cur != null; //cur.moveToFirst();
         while (cur.moveToNext()) {
             String number = cur.getString(0);
             number = number.replaceAll(" ", "");
@@ -241,13 +234,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
-
         String txt_username = Objects.requireNonNull(username.getText()).toString();
         String txt_email = Objects.requireNonNull(email.getText()).toString();
-
         final String appPackageName = getApplicationContext().getPackageName();
         String strAppLink = "";
-
         try
         {
             strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
@@ -256,7 +246,6 @@ public class RegisterActivity extends AppCompatActivity {
         {
             strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
         }
-
         String mEmail = ("telelekan@gmail.com");
         String mSubject = ("FlexAlerts (Hi)");
         String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. Sign up too to find amazing podcasts, send money with friends, send anonymous messages and more. To sign up, click here, " + strAppLink + " \nPlease share with your friends too. ");
@@ -266,20 +255,16 @@ public class RegisterActivity extends AppCompatActivity {
             String number = cur.getString(0);
             number = number.replaceAll(" ", "");
             if (!emails.contains(number)) emails.add(number);
-
         }
 
         for (String mail_address : emails) {
-
             JavaMailAPI javaMailAPI = new JavaMailAPI(this, mail_address, mSubject, mMessage); //or mEmail
             javaMailAPI.execute();
         }
-
-
         cur.close();
     }
 
-    private void sendEmail() {
+    /*private void sendEmail() {
 
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
@@ -306,8 +291,7 @@ public class RegisterActivity extends AppCompatActivity {
         JavaMailAPI javaMailAPI = new JavaMailAPI(this, mEmail, mSubject, mMessage);
         javaMailAPI.execute();
 
-    }
-
+    }*/
 }
 
 

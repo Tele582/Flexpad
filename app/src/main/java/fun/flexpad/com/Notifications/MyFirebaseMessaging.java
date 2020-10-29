@@ -53,18 +53,20 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
 
 
-        @NonNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
-        String refreshToken = tokenResult.getToken();
+        try {
+            @NonNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
+            String refreshToken = tokenResult.getToken();
 
-        //String refreshToken = Objects.requireNonNull(FirebaseInstanceId.getInstance().getInstanceId().getResult()).getToken();//there's an issue here
+            //String refreshToken = Objects.requireNonNull(FirebaseInstanceId.getInstance().getInstanceId().getResult()).getToken();//there's an issue here
 
-        if (firebaseUser != null){
-            updateToken(refreshToken);
+            if (firebaseUser != null){
+                updateToken(refreshToken);
+            }
+        } catch (Exception e) {
+            e.getStackTrace();
         }
         //Log.e("NEW_TOKEN",s);
     }
-
-
 
 
 

@@ -1,6 +1,5 @@
 package fun.flexpad.com.Adapter;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -38,8 +37,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         this.mContext = mContext;
         this.ischat = ischat;
     }
-
-
 
     @NonNull
     @Override
@@ -121,7 +118,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
                     assert chat != null;
-                    assert firebaseUser != null;
+                    //assert firebaseUser != null; //causing crash on logout
 
                     try {
 

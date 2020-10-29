@@ -9,15 +9,15 @@ public class User {
     private String imageURI;
     private String status;
     private String search;
-    private String phone_number;
+    private String contact;
 
-    public User (String id, String username, String imageURI, String status, String search, String phone_number) {
+    public User (String id, String username, String imageURI, String status, String search, String contact) {
         this.id = id;
         this.username = username;
         this.imageURI = imageURI;
         this.status = status;
         this.search = search;
-        this.phone_number = phone_number;
+        this.contact = contact;
 
     }
 
@@ -65,12 +65,12 @@ public class User {
         this.search = search;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getContact() {
+        return contact;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     @NotNull
@@ -82,7 +82,7 @@ public class User {
                 ", imageURI='" + imageURI + '\'' +
                 ", status='" + status + '\'' +
                 ", search='" + search + '\'' +
-                ", phone_number='" + phone_number + '\'' +
+                ", contact='" + contact + '\'' +
                 '}';
     }
 }

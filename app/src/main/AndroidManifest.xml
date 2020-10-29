@@ -30,7 +30,6 @@
         <activity android:name=".WalletActivity" />
         <activity android:name=".SendMoneyActivity" />
         <activity android:name=".PaymentActivity" />
-        <activity android:name=".ContactsActivity" />
         <activity android:name=".ResultsActivity" />
         <activity android:name=".QuizActivity" />
         <activity android:name=".GamesActivity" />

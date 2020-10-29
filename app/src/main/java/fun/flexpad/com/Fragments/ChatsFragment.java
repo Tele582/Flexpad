@@ -167,8 +167,6 @@ public class ChatsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                    try {
                         User user = snapshot.getValue(User.class);
                         assert user != null;
                         Log.d(TAG, "onDataChange: (QUERY METHOD) found user: " + user.toString()); //temporary
@@ -179,9 +177,6 @@ public class ChatsFragment extends Fragment {
 
                             }
                         }
-                    } catch (Exception e) {
-                        e.getStackTrace();
-                    }
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, true);
                 recyclerView.setAdapter(userAdapter);

@@ -1,10 +1,15 @@
 package fun.flexpad.com.Fragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +18,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,9 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fun.flexpad.com.Adapter.UserAdapter;
-import fun.flexpad.com.ContactsActivity;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
@@ -38,6 +44,7 @@ public class ContactsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
+    FirebaseUser fuser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,19 +52,24 @@ public class ContactsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
-
-
-
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         mContacts = new ArrayList<>();
 
-        addContacts();
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-
-
+        if (ContextCompat.checkSelfPermission(
+                Objects.requireNonNull(getContext()), Manifest.permission.READ_CONTACTS) ==
+                PackageManager.PERMISSION_GRANTED) {
+            // You can use the API that requires the permission.
+            addContacts();
+        } else {
+            // You can directly ask for the permission.
+            ActivityCompat.requestPermissions((Activity) getContext(),
+                    new String[] { Manifest.permission.READ_CONTACTS },
+                    Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+        }
 
         return view;
     }
@@ -66,9 +78,8 @@ public class ContactsFragment extends Fragment {
 
         mUsers = new ArrayList<>();
 
-
-        /*String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        ContentResolver cr = getContentResolver();
+        String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+        ContentResolver cr = getActivity().getContentResolver();
         Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
         ArrayList<String> phones = new ArrayList<>();
         assert cur != null;
@@ -78,45 +89,23 @@ public class ContactsFragment extends Fragment {
             number = number.replaceAll(" ", "");
             if (!phones.contains(number)) phones.add(number);
         }
-        cur.close();*/
+        cur.close();
 
-
-        //place this in MainActivity instead--or not..probably not
-        /*Cursor contacts = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{
-                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME.toString(),
-                        ContactsContract.CommonDataKinds.Phone.NUMBER.toString()},
-                null, null, null
-
-        );
-
-        if (contacts != null) {
-
-            while (contacts.moveToNext()){
-                mContacts.add(contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-
-            }
-            contacts.close();
-        }
-
-
-
-        //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users"); //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         contacts_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    User user = snapshot.getValue(User.class);
-
-                    for (String number : mContacts) {
-                        assert user != null;
-                        if (user.getPhone_number().equals(number)){
-                            mUsers.add(user);
+                        User user = snapshot.getValue(User.class);
+                        for (String num : phones) {
+                            assert user != null;
+                            assert fuser != null;
+                            if (user.getContact().equals(num) && !user.getId().equals(fuser.getUid())){
+                                mUsers.add(user);
+                            }
                         }
-                    }
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, false);
                 recyclerView.setAdapter(userAdapter);
@@ -126,7 +115,26 @@ public class ContactsFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });//*/
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Permission is granted. Continue the action or workflow in your app.
+                addContacts();
+            } else {
+                Toast.makeText(getContext(), "Contacts not available'. ", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    static class Constants{
+        public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     }
 }
 

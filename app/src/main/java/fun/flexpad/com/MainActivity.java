@@ -175,10 +175,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             return true;
         }
-        else if (item.getItemId() == R.id.contacts) {
-            startActivity(new Intent(MainActivity.this, ContactsActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            return true;
-        }
         else if (item.getItemId() == R.id.games) {
             startActivity(new Intent(MainActivity.this, GamesActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             return true;
