@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -27,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import fun.flexpad.com.MainActivity;
 import fun.flexpad.com.Model.Chat;
@@ -54,12 +56,15 @@ public class RoomsFragment extends Fragment {
         //recyclerView = view.findViewById(R.id.recycler_view);
         //recyclerView.setHasFixedSize(true);
         //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         create_room.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
 
-
+        String message_to_main = "messageToMain";
+        final String textFromPrevActivity = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("textFromMessageToMainActivity");
+//        if (textFromPrevActivity.equals(message_to_main)) {
+//            Navigation.findNavController(requireView()).navigate(R.id.action_roomsFragment_to_chatsFragment);
+//        }
         final TabLayout tabLayout = view.findViewById(R.id.room_tab_layout);
         final ViewPager viewPager = view.findViewById(R.id.room_view_pager);
 
@@ -67,8 +72,7 @@ public class RoomsFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-                //ViewPagerAdapter vPA = new ViewPagerAdapter(getChildFragmentManager());
+                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager()); //ViewPagerAdapter vPA = new ViewPagerAdapter(getFragmentManager());
 
                 viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
                 viewPagerAdapter.addFragment(new FollowingFragment(), "Following");
@@ -83,9 +87,6 @@ public class RoomsFragment extends Fragment {
 
             }
         });
-
-
-
         return view;
     }
 

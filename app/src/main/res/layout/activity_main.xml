@@ -53,12 +53,22 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+<!--        <fragment-->
+<!--            android:id="@+id/nav_host_fragment"-->
+<!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:defaultNavHost="true"-->
+<!--            app:navGraph="@navigation/frag_navigation">-->
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:background="@drawable/white_duolingable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+<!--        </fragment>-->
 
     </LinearLayout>
 

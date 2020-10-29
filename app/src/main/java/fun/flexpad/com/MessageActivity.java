@@ -99,6 +99,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        String textFromMessageToMainActivity = "messageToMain";
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -106,7 +107,9 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
             //might cause app to crash;
-            startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            Intent intent = new Intent(MessageActivity.this, MainActivity.class);
+            intent.putExtra("textFromMessageToMainActivity", textFromMessageToMainActivity);
+            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
