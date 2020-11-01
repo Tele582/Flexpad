@@ -14,10 +14,9 @@
         android:id="@+id/roomIname"
         android:layout_marginStart="20dp"
         android:layout_centerVertical="true"
+        android:textStyle="bold"
         android:textSize="20sp"
         tools:ignore="HardcodedText" />
-
-
 
     <TextView
         android:id="@+id/last_msg"

@@ -52,9 +52,6 @@ public class RoomsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_rooms, container, false);
 
         create_room = view.findViewById(R.id.create_room);
-        //recyclerView = view.findViewById(R.id.recycler_view);
-        //recyclerView.setHasFixedSize(true);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         create_room.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
