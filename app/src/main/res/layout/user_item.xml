@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
+    android:background="#ffffff"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -28,7 +29,7 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         app:civ_border_width="10dp"
-        app:civ_border_color="#CF5E3B"
+        app:civ_border_color="@color/colorPrimaryDark"
         android:visibility="gone"
         android:layout_below="@+id/username"
         android:layout_marginTop="10dp"
@@ -55,9 +56,52 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/username"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/profile_image"
         android:maxLines="1"
         android:textColor="@color/colorPrimaryDark" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="10dp"
+        android:layout_alignParentEnd="true"
+        app:cardBackgroundColor="#ffffff"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/unread_msg_no"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="invisible"
+            android:background="@color/colorPrimaryDark"
+            android:textAlignment="center"
+            android:textStyle="italic"
+            android:textColor="#ffff">
+
+        </TextView>
+
+    </androidx.cardview.widget.CardView>
+
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        app:cardCornerRadius="12dp"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        app:cardBackgroundColor="#ffff"-->
+<!--        android:layout_centerVertical="true">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/unread_msg_no_off"-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:textColor="#ffff">-->
+
+<!--        </TextView>-->
+
+<!--    </androidx.cardview.widget.CardView>-->
 
 </RelativeLayout>

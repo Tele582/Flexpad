@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,8 +45,6 @@ public class RoomsFragment extends Fragment {
     Button create_room;
     DatabaseReference reference;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,8 +59,8 @@ public class RoomsFragment extends Fragment {
 
         create_room.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
 
-        String message_to_main = "messageToMain";
-        final String textFromPrevActivity = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("textFromMessageToMainActivity");
+//        String message_to_main = "messageToMain";
+//        final String textFromPrevActivity = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("textFromMessageToMainActivity");
 //        if (textFromPrevActivity.equals(message_to_main)) {
 //            Navigation.findNavController(requireView()).navigate(R.id.action_roomsFragment_to_chatsFragment);
 //        }
@@ -123,5 +122,4 @@ public class RoomsFragment extends Fragment {
             return titles.get(position);
         }
     }
-
 }

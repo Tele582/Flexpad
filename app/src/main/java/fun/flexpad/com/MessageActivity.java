@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import fun.flexpad.com.Adapter.MessageAdapter;
 import fun.flexpad.com.Fragments.APIService;
+import fun.flexpad.com.Fragments.ChatsFragment;
 import fun.flexpad.com.Fragments.RoomsFragment;
 import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
@@ -485,6 +487,23 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()){
                     chatRef.child("id").setValue(userid);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        final DatabaseReference chatSenderRef = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(userid)
+                .child(fuser.getUid());
+
+        chatSenderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    chatSenderRef.child("id").setValue(fuser.getUid());
                 }
             }
             @Override

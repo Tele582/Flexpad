@@ -101,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
 
-        //
-
-        //String userid = firebaseUser.getUid();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
@@ -145,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
                 viewPagerAdapter.addFragment(new RoomsFragment(), "Rooms");
 
-                // might need to do this for number of users instead of just messages(chats)
                 if (unread == 0){
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
 

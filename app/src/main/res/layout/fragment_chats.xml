@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.ChatsFragment">
+    tools:context=".Fragments.ChatsFragment"
+    android:orientation="vertical">
 
     <EditText
         android:layout_width="match_parent"
@@ -13,9 +14,13 @@
         android:id="@+id/search_chats"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/search_chats"
-        android:id="@+id/recycler_view"
+        android:id="@+id/chats_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/chats_recycler_view_sender"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+</LinearLayout>

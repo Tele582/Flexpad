@@ -400,7 +400,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public void delete_message(final int position, final ViewHolder holder) {
 
-         DatabaseReference rootref = FirebaseDatabase.getInstance().getReference("Chats").child(fuser.getUid());
+         DatabaseReference rootref = FirebaseDatabase.getInstance().getReference("Chats").child(fuser.getUid()); //probably wrong at child...
          rootref.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
              @Override
              public void onComplete(@NonNull Task<Void> task) {
@@ -410,8 +410,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                  }
              }
          });
-
-
     }
 
     @Override
@@ -422,7 +420,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else {
             return MSG_TYPE_LEFT;
         }
-
     }
 
 
