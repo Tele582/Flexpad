@@ -69,14 +69,14 @@ public class ProfileFragment extends Fragment {
 
         image_profile = view.findViewById(R.id.profile_image);
         username = view.findViewById(R.id.username);
-        Button group_payment = view.findViewById(R.id.group_pay);
-
-        group_payment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), PaymentActivity.class));
-            }
-        });
+//        Button group_payment = view.findViewById(R.id.group_pay);
+//
+//        group_payment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getContext(), PaymentActivity.class));
+//            }
+//        });
 
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment {
                     image_profile.setImageResource(R.mipmap.ic_launcher);
                 } else {
                     if (isAdded()) {
-                        Glide.with(Objects.requireNonNull(getContext())).load(user.getImageURI()).into(image_profile);
+                        Glide.with(requireContext()).load(user.getImageURI()).into(image_profile);
                     } //else {
                     //image_profile.setImageResource(R.mipmap.ic_launcher);
                     //}
@@ -119,7 +119,7 @@ public class ProfileFragment extends Fragment {
 
     }
     private String getFileExtension(Uri uri){
-        ContentResolver contentResolver = Objects.requireNonNull(getContext()).getContentResolver();
+        ContentResolver contentResolver = requireContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
@@ -150,7 +150,7 @@ public class ProfileFragment extends Fragment {
                     assert downloadUri != null;
                     String mUri = downloadUri.toString();
 
-                    reference = FirebaseDatabase.getInstance().getReference().child("Users");
+                    reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("imageURI", mUri);
                     reference.updateChildren(map);

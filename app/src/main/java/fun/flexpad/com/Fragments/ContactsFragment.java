@@ -36,7 +36,6 @@ import fun.flexpad.com.Adapter.UserAdapter;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
-
 public class ContactsFragment extends Fragment {
 
     private List<User> mUsers;
@@ -60,7 +59,7 @@ public class ContactsFragment extends Fragment {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (ContextCompat.checkSelfPermission(
-                Objects.requireNonNull(getContext()), Manifest.permission.READ_CONTACTS) ==
+                requireContext(), Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_GRANTED) {
             // You can use the API that requires the permission.
             addContacts();
@@ -70,7 +69,6 @@ public class ContactsFragment extends Fragment {
                     new String[] { Manifest.permission.READ_CONTACTS },
                     Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }
-
         return view;
     }
 
@@ -79,7 +77,7 @@ public class ContactsFragment extends Fragment {
         mUsers = new ArrayList<>();
 
         String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        ContentResolver cr = getActivity().getContentResolver();
+        ContentResolver cr = requireContext().getContentResolver();
         Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
         ArrayList<String> phones = new ArrayList<>();
         assert cur != null;
@@ -98,14 +96,18 @@ public class ContactsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        User user = snapshot.getValue(User.class);
-                        for (String num : phones) {
-                            assert user != null;
-                            assert fuser != null;
+                    User user = snapshot.getValue(User.class);
+                    for (String num : phones) {
+                        assert user != null;
+                        assert fuser != null;
+                        try {
                             if (user.getContact().equals(num) && !user.getId().equals(fuser.getUid())){
                                 mUsers.add(user);
                             }
+                        } catch (Exception e) {
+                            e.getStackTrace();
                         }
+                    }
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, false);
                 recyclerView.setAdapter(userAdapter);

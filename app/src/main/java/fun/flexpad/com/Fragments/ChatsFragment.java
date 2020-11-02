@@ -191,10 +191,15 @@ public class ChatsFragment extends Fragment {
                         Log.d(TAG, "onDataChange: (QUERY METHOD) found user: " + user.toString()); //temporary
 
                         for (Chatlist chatlist : usersList) {
-                            if (user.getId().equals(chatlist.getId())) {
-                                mUsers.add(user);
+                            try {
+                                if (user.getId().equals(chatlist.getId())) {
+                                    mUsers.add(user);
 
+                                }
+                            } catch (Exception e) {
+                                e.getStackTrace();
                             }
+
                         }
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers, true);
