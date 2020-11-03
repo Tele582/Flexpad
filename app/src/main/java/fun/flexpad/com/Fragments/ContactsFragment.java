@@ -39,7 +39,6 @@ import fun.flexpad.com.R;
 public class ContactsFragment extends Fragment {
 
     private List<User> mUsers;
-    private List<String> mContacts;
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
@@ -54,7 +53,6 @@ public class ContactsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mContacts = new ArrayList<>();
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -65,7 +63,7 @@ public class ContactsFragment extends Fragment {
             addContacts();
         } else {
             // You can directly ask for the permission.
-            ActivityCompat.requestPermissions((Activity) getContext(),
+            ActivityCompat.requestPermissions((Activity) requireContext(),
                     new String[] { Manifest.permission.READ_CONTACTS },
                     Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }
