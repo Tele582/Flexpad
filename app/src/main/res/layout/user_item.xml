@@ -85,23 +85,4 @@
 
     </androidx.cardview.widget.CardView>
 
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        app:cardCornerRadius="12dp"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        app:cardBackgroundColor="#ffff"-->
-<!--        android:layout_centerVertical="true">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/unread_msg_no_off"-->
-<!--            android:layout_width="24dp"-->
-<!--            android:layout_height="24dp"-->
-<!--            android:textColor="#ffff">-->
-
-<!--        </TextView>-->
-
-<!--    </androidx.cardview.widget.CardView>-->
-
 </RelativeLayout>
