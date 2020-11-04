@@ -64,17 +64,17 @@
         <LinearLayout
             android:id="@+id/back_from_pic_bg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/back_from_pic"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="24dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/icon_arrow_back"
-                app:tint="@color/colorPrimaryDark" />
+                app:tint="@color/colorBlack" />
         </LinearLayout>
         <ImageView
             android:id="@+id/full_screen_container"
