@@ -75,7 +75,7 @@
             android:id="@+id/unread_msg_no"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:background="@color/colorPrimaryDark"
             android:textAlignment="center"
             android:textStyle="italic"

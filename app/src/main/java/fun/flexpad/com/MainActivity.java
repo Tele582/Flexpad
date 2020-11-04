@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -53,7 +55,19 @@ public class MainActivity extends AppCompatActivity {
     TextView username;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    ImageView fullScreenContainer, backFromPic;
+    LinearLayout backFromPicBg;
 
+    @Override
+    public void onBackPressed() {
+        if (fullScreenContainer.getVisibility() == View.VISIBLE) {
+            fullScreenContainer.setImageDrawable(null);
+            fullScreenContainer.setVisibility(View.GONE);
+            backFromPicBg.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
+        fullScreenContainer = findViewById(R.id.full_screen_container);
+        backFromPic = findViewById(R.id.back_from_pic);
+        backFromPicBg = findViewById(R.id.back_from_pic_bg);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
@@ -115,6 +132,24 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Glide.with(getApplicationContext()).load(user.getImageURI()).into(profile_image);
                 }
+                profile_image.setOnClickListener(v -> {
+                    if (user.getImageURI().equals("default")){
+                        fullScreenContainer.setImageResource(R.mipmap.ic_launcher);
+                        fullScreenContainer.setVisibility(View.VISIBLE);
+                        backFromPicBg.setVisibility(View.VISIBLE);
+                        fullScreenContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                    } else {
+                        Glide.with(getApplicationContext()).load(user.getImageURI()).into(fullScreenContainer);
+                        fullScreenContainer.setVisibility(View.VISIBLE);
+                        backFromPicBg.setVisibility(View.VISIBLE);
+                        fullScreenContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                    }
+                });
+                backFromPic.setOnClickListener(v -> {
+                    fullScreenContainer.setImageDrawable(null);
+                    fullScreenContainer.setVisibility(View.GONE);
+                    backFromPicBg.setVisibility(View.GONE);
+                });
             }
 
             @Override

@@ -61,12 +61,35 @@
 <!--            app:defaultNavHost="true"-->
 <!--            app:navGraph="@navigation/frag_navigation">-->
 
+        <LinearLayout
+            android:id="@+id/back_from_pic_bg"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/back_from_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/icon_arrow_back"
+                app:tint="@color/colorPrimaryDark" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/full_screen_container"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:visibility="gone"/>
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:background="@drawable/white_duolingable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
 
 <!--        </fragment>-->
 
