@@ -64,7 +64,7 @@
         <LinearLayout
             android:id="@+id/back_from_pic_bg"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:visibility="gone">
 
             <ImageView
@@ -79,7 +79,7 @@
         <ImageView
             android:id="@+id/full_screen_container"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="wrap_content"
             android:visibility="gone"/>
 
         <androidx.viewpager.widget.ViewPager
