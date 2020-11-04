@@ -64,7 +64,7 @@
         <LinearLayout
             android:id="@+id/back_from_pic_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="gone">
 
             <ImageView
