@@ -1,10 +1,13 @@
 package fun.flexpad.com.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -15,6 +18,8 @@ import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
+
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
@@ -87,6 +94,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             intent.putExtra("userid", user.getId());
             mContext.startActivity(intent);
         });
+
+        checkFollowingStatus(user.getId(), holder.btnFollow);
+
+        updateFollowList(holder.btnFollow, user.getId());
+
     }
 
     @Override
@@ -102,6 +114,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private final ImageView img_off;
         private final TextView last_msg;
         private final TextView unread_msg_no;
+        public Button btnFollow;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -112,6 +125,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             img_off = itemView.findViewById(R.id.img_off);
             last_msg = itemView.findViewById(R.id.last_msg);
             unread_msg_no = itemView.findViewById(R.id.unread_msg_no);
+            btnFollow = itemView.findViewById(R.id.btn_follow);
 
         }
     }
@@ -192,5 +206,120 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             }
         });
+    }
+
+    public void checkFollowingStatus(String uid, Button followButton) {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("FollowList")
+                .child(firebaseUser.getUid())
+                .child("following");
+
+        followingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(uid).exists()) {
+                    followButton.setText(R.string.following);
+                    int dr = (R.drawable.ic_baseline_check_circle_24);
+//                    followButton.setPointerIcon(dr);
+                } else {
+                    followButton.setText(R.string.follow);
+//                    followButton.setI(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void updateFollowList (Button followButton, String userString) {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        followButton.setOnClickListener(view -> {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm,\ndd MMMM");
+            Calendar currentCal = Calendar.getInstance();
+            String currentDate = dateFormat.format(currentCal.getTime());
+            if (followButton.getText().equals("Follow")) {
+                FirebaseDatabase.getInstance().getReference()
+                        .child("FollowList")
+                        .child(firebaseUser.getUid())
+                        .child("following")
+                        .child(userString)
+                        .setValue(currentDate).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("FollowList")
+                                .child(userString)
+                                .child("followers")
+                                .child(firebaseUser.getUid())
+                                .setValue(currentDate).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                FirebaseDatabase.getInstance().getReference()
+                                        .child("FollowList")
+                                        .child(firebaseUser.getUid())
+                                        .child("following").child("unfollowed")
+                                        .child(userString)
+                                        .removeValue().addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()) {
+                                        FirebaseDatabase.getInstance().getReference()
+                                                .child("FollowList")
+                                                .child(userString)
+                                                .child("followers").child("unfollowed")
+                                                .child(firebaseUser.getUid())
+                                                .removeValue().addOnCompleteListener(task3 -> {
+                                            if (task3.isSuccessful()) {
+
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else {
+                FirebaseDatabase.getInstance().getReference()
+                        .child("FollowList")
+                        .child(firebaseUser.getUid())
+                        .child("following")
+                        .child(userString)
+                        .removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("FollowList")
+                                .child(userString)
+                                .child("followers")
+                                .child(firebaseUser.getUid())
+                                .removeValue().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                FirebaseDatabase.getInstance().getReference()
+                                        .child("FollowList")
+                                        .child(firebaseUser.getUid())
+                                        .child("following").child("unfollowed")
+                                        .child(userString)
+                                        .setValue(currentDate).addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()) {
+                                        FirebaseDatabase.getInstance().getReference()
+                                                .child("FollowList")
+                                                .child(userString)
+                                                .child("followers").child("unfollowed")
+                                                .child(firebaseUser.getUid())
+                                                .setValue(currentDate).addOnCompleteListener(task3 -> {
+                                            if (task3.isSuccessful()) {
+
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
     }
 }

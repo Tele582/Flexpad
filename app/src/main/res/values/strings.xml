@@ -46,5 +46,6 @@
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="room_name_hint">Room Name:</string>
     <string name="follow">Follow</string>
+    <string name="following">Following</string>
 
 </resources>
