@@ -220,11 +220,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(uid).exists()) {
                     followButton.setText(R.string.following);
-                    int dr = (R.drawable.ic_baseline_check_circle_24);
-//                    followButton.setPointerIcon(dr);
+                    Drawable dr = followButton.getContext().getResources().getDrawable(R.drawable.ic_baseline_check_circle_24);
+                    followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(dr, null, null, null);
                 } else {
                     followButton.setText(R.string.follow);
-//                    followButton.setI(null);
+                    followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
                 }
             }
 
