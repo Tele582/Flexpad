@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
     android:background="#ffffff"
+    app:backgroundTint="#ffffff"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -18,9 +19,13 @@
         android:layout_height="wrap_content"
         android:text="username"
         android:id="@+id/username"
-        android:layout_toEndOf="@+id/profile_image"
-        android:layout_marginStart="10dp"
+        android:paddingEnd="4dp"
+        android:paddingStart="0dp"
+        android:layout_toEndOf="@id/profile_image"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_centerVertical="true"
+        android:textColor="@color/colorBlack"
         android:textSize="20sp"
         tools:ignore="HardcodedText" />
 
@@ -31,7 +36,7 @@
         app:civ_border_width="10dp"
         app:civ_border_color="@color/colorPrimaryDark"
         android:visibility="gone"
-        android:layout_below="@+id/username"
+        android:layout_below="@id/username"
         android:layout_marginTop="10dp"
         android:layout_marginStart="-15dp"
         android:layout_toEndOf="@id/profile_image"
@@ -44,7 +49,7 @@
         app:civ_border_width="10dp"
         app:civ_border_color="#bfbfbf"
         android:visibility="gone"
-        android:layout_below="@+id/username"
+        android:layout_below="@id/username"
         android:layout_marginTop="10dp"
         android:layout_marginStart="-15dp"
         android:layout_toEndOf="@id/profile_image"
@@ -62,7 +67,23 @@
         android:maxLines="1"
         android:textColor="@color/colorPrimaryDark" />
 
+    <Button
+        android:id="@+id/btn_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@id/unread_msg_view"
+        android:minWidth="48dp"
+        android:maxLines="1"
+        android:text="@string/follow"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        app:backgroundTint="#ffffff"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="2dp" />
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/unread_msg_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -79,9 +100,7 @@
             android:background="@color/colorPrimaryDark"
             android:textAlignment="center"
             android:textStyle="italic"
-            android:textColor="#ffff">
-
-        </TextView>
+            android:textColor="#ffff"/>
 
     </androidx.cardview.widget.CardView>
 
