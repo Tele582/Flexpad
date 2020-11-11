@@ -39,7 +39,7 @@
     <string name="add_money">Add Money To Wallet</string>
     <string name="send_money">Send Money With Friends</string>
     <string name="request_money">Request Money</string>
-    <string name="show_original_messages">Show Original Messages</string>
+    <string name="show_original_message">Show Original Message</string>
     <string name="copy">Copy</string>
     <string name="translate_message">Translate Message</string>
     <string name="delete_message">Delete Message</string>

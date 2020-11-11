@@ -65,8 +65,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private final List<Chat> mChat;
     private String imageuri;
 
-    public String original_message;
-
     private FirebaseUser fuser;
 
     public MessageAdapter(Context mContext, List<Chat> mChat, String imageuri) {
@@ -139,10 +137,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         TextToSpeech textToSpeech;
         Translate translate;
         String newmessage;
-
-        //RecyclerView recyclerView;
-
-        RelativeLayout messageLAyout; // for click listener to show delete;
+        RelativeLayout messageLAyout;
         public ImageView messageSenderPicture, messageReceiverPicture;
 
         public ViewHolder(View itemView) {
@@ -154,8 +149,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
             messageLAyout = itemView.findViewById(R.id.messageLayout);
-            //recyclerView = itemView.findViewById(R.id.recycler_view);
-
             //messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image);
             //messageSenderPicture = itemView.findViewById(R.id.message_sender_image);
 
@@ -223,11 +216,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+            DatabaseReference message_delete_reference = FirebaseDatabase.getInstance().getReference().child("Chats");
+            final Chat chat = mChat.get(getAdapterPosition());
             switch (item.getItemId()) {
-
                 case R.id.item1:
-                    DatabaseReference message_delete_reference = FirebaseDatabase.getInstance().getReference().child("Chats");
-                    message_delete_reference.child(mChat.get(getAdapterPosition()).getMessagekey()).removeValue().addOnSuccessListener(aVoid ->
+                    message_delete_reference.child(chat.getMessagekey()).removeValue().addOnSuccessListener(aVoid ->
                             Toast.makeText(mContext.getApplicationContext(), "Message Completely Deleted!", Toast.LENGTH_SHORT).show());
                     return true;
 
@@ -243,9 +236,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return true;
 
                 case R.id.item3:
-//                    mChat.clear();
-                    //mChat.addAll(...);  //
-//                    FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
+                    message_delete_reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            final String original_message = (String) snapshot.child(chat.getMessagekey()).child("message").getValue();
+                            show_message.setText(original_message);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
 
                 case R.id.item4:
                     final String text = show_message.getText().toString();
@@ -307,7 +311,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 }
             });
             builder.show();
-
         }
     }
 

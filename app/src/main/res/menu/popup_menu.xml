@@ -8,7 +8,7 @@
         android:title="@string/translate_message"/>
 
     <item android:id="@+id/item3"
-        android:title="@string/show_original_messages"/>
+        android:title="@string/show_original_message"/>
 
     <item android:id="@+id/item4"
         android:title="@string/copy"/>

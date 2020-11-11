@@ -60,21 +60,12 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             mContext.startActivity(intent);
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                holder.showPopup(v);
-
-                return true;
-            }
+        holder.itemView.setOnLongClickListener(v -> {
+            holder.showPopup(v);
+            return true;
         });
 
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if ((room.getCreatorId()).equals(firebaseUser.getUid())) {
-//            holder.mine.setVisibility(View.VISIBLE);
-//        }
-//        mineShowView(holder.mine);
-
+        holder.mineShowView(holder.mine);
     }
 
     @Override
@@ -114,8 +105,29 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                     return false;
             }
         }
-    }
 
-    
+        public void mineShowView (TextView mineView) {
+            final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String roomCreator = (String) snapshot.child(mRooms.get(getAdapterPosition()).getRoomKey()).child("creator").getValue();
+//                    or,
+//                    String roomCreator = snapshot.child(mRooms.get(getAdapterPosition()).getRoomKey()).child("creator").getValue(String.class);
+                    if (roomCreator != null && roomCreator.equals(firebaseUser.getUid())) {
+                        mineView.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+    }
 
 }

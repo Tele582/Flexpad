@@ -72,7 +72,7 @@ public class FollowingFragment extends Fragment {
                             roomFollowList.clear();
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Room room = dataSnapshot1.getValue(Room.class);
-                                String roomCreator = snapshot.child(dataSnapshot1.getKey()).child("creator").getValue(String.class);
+                                String roomCreator = snapshot.child(room.getRoomKey()).child("creator").getValue(String.class); // or //String roomCreator = snapshot.child(room.getRoomKey()).child("creator").getValue(String.class);
 
                                 if (followingList.contains(roomCreator) || roomCreator.equals(firebaseUser.getUid()))
                                     roomFollowList.add(room);

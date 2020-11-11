@@ -68,14 +68,15 @@ public class RoomsFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager()); //ViewPagerAdapter vPA = new ViewPagerAdapter(getFragmentManager());
+                try { ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager()); //ViewPagerAdapter vPA = new ViewPagerAdapter(getFragmentManager());
 
                 viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
                 viewPagerAdapter.addFragment(new FollowingFragment(), "Following");
                 viewPagerAdapter.addFragment(new GeneralFragment(), "General");
 
-                viewPager.setAdapter(viewPagerAdapter);
-                tabLayout.setupWithViewPager(viewPager);
+                    viewPager.setAdapter(viewPagerAdapter);
+                    tabLayout.setupWithViewPager(viewPager);
+                } catch (Exception e) {e.getStackTrace();}
             }
 
             @Override
