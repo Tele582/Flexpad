@@ -109,7 +109,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.txt_seen.setVisibility(View.GONE);
         }
 
-        //here, I try delete again (either use holder.show_message or holder.messageLAyout
+        //either use holder.show_message or holder.messageLAyout
         holder.messageLAyout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

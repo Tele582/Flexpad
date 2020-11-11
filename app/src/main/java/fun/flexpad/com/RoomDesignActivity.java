@@ -79,9 +79,8 @@ public class RoomDesignActivity extends AppCompatActivity {
             String room = room_name.getText().toString();
             if (!room.trim().isEmpty()){
                 saveroom(room, fuser.getUid());
-                Toast.makeText(RoomDesignActivity.this, "Creating..", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
-                intent.putExtra("room_key", room);
+                intent.putExtra("Room_Name", room);
                 startActivity(intent);
             }
             else {
@@ -117,6 +116,20 @@ public class RoomDesignActivity extends AppCompatActivity {
 
         //room_image.setOnClickListener(v -> openImage());
 
+    }
+
+    //Create and save the room
+    public void saveroom(String roomname, String creatorId) {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference room_reference = reference.child("Rooms").push();
+        String roomKey = room_reference.getKey();
+
+        HashMap<String, Object> nmap = new HashMap<>();
+        nmap.put("roomname", roomname);
+        nmap.put("creator", creatorId);
+        nmap.put("roomKey", roomKey);
+        room_reference.setValue(nmap);
     }
 
     /*private void openImage() {
@@ -177,20 +190,6 @@ public class RoomDesignActivity extends AppCompatActivity {
             Toast.makeText(RoomDesignActivity.this, "No image selected", Toast.LENGTH_SHORT).show();
         }
     }*/
-
-    //Create and save the room
-    public void saveroom(String roomname, String creatorId) {
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
-
-        HashMap<String, Object> nmap = new HashMap<>();
-        nmap.put("roomname", roomname);
-        nmap.put("creator", creatorId);
-
-        DatabaseReference dataref = reference.push(); //.child(fuser.getUid())
-        String ama = dataref.getKey();
-        dataref.setValue(nmap);
-    }
 
     /*@Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

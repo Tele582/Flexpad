@@ -48,5 +48,6 @@
     <string name="follow">Follow</string>
     <string name="following">Following</string>
     <string name="mine">Mine</string>
+    <string name="delete_room">Delete Room</string>
 
 </resources>

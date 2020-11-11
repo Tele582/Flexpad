@@ -43,9 +43,11 @@ public class RoomChatActivity extends AppCompatActivity {
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
 
-        final String roomtitle = getIntent().getStringExtra("room_key");
+        final String roomtitle = getIntent().getStringExtra("Room_Name");
         roomTextview = findViewById(R.id.room_title);
         roomTextview.setText(roomtitle);
+
+        Toast.makeText(this, "Room Created!", Toast.LENGTH_SHORT).show();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

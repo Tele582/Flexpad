@@ -5,11 +5,13 @@ public class Room {
     private String id;
     private String roomname;
     public String creatorId;
+    private String roomKey;
 
-    public Room (String id, String roomname, String creatorId) {
+    public Room (String id, String roomname, String creatorId, String roomKey) {
         this.id = id;
         this.roomname = roomname;
         this.creatorId = creatorId;
+        this.roomKey = roomKey;
     }
 
     public Room() {
@@ -38,6 +40,14 @@ public class Room {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getRoomKey() {
+        return roomKey;
+    }
+
+    public void setRoomKey(String roomKey) {
+        this.roomKey = roomKey;
     }
 }
 

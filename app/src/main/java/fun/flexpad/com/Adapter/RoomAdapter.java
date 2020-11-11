@@ -3,14 +3,27 @@ package fun.flexpad.com.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.Room;
@@ -46,6 +59,22 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             intent.putExtra("room_key", room.getRoomname());
             mContext.startActivity(intent);
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                holder.showPopup(v);
+
+                return true;
+            }
+        });
+
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if ((room.getCreatorId()).equals(firebaseUser.getUid())) {
+//            holder.mine.setVisibility(View.VISIBLE);
+//        }
+//        mineShowView(holder.mine);
+
     }
 
     @Override
@@ -53,11 +82,40 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         return mRooms.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
         public TextView roomname;
+        public TextView mine;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             roomname = itemView.findViewById(R.id.roomIname);
+            mine = itemView.findViewById(R.id.mine_view);
+        }
+
+        private void showPopup(View view) {
+            PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), view);
+            popup.setOnMenuItemClickListener(this);
+            popup.inflate(R.menu.room_popup_menu);
+            popup.show();
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.item1:
+                    try {
+                        final DatabaseReference room_delete_reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+                        room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
+                                Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
+                    } catch (Exception exception) {exception.getStackTrace();}
+                    return true;
+
+                default:
+                    return false;
+            }
         }
     }
+
+    
+
 }
