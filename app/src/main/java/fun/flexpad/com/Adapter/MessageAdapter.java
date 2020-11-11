@@ -33,6 +33,7 @@ import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.Chatlist;
 import fun.flexpad.com.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.translate.Detection;
@@ -43,8 +44,10 @@ import com.google.cloud.translate.Translation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -59,7 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private static final int MSG_TYPE_RIGHT = 1;
 
     private Context mContext;
-    private List<Chat> mChat;
+    private final List<Chat> mChat;
     private String imageuri;
 
     public String original_message;
@@ -75,27 +78,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @NonNull
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
         if (viewType == MSG_TYPE_RIGHT) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
-            return new ViewHolder(view);
+            view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
         } else {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_left, parent, false);
-            return new ViewHolder(view);
+            view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_left, parent, false);
         }
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, final int position) {
 
-        //////holder.messageSenderPicture.setImageResource(R.drawable.imag_30); // this mostly works though
-        //holder.messageSenderPicture.setVisibility(View.GONE); //causes crash
-        //holder.messageReceiverPicture.setVisibility(View.GONE); //causes crash
-
         Chat chat = mChat.get(position);
-
         holder.show_message.setText(chat.getMessage());
-
-        //original_message = chat.getMessage();
 
         if (imageuri.equals("default")){
             holder.profile_image.setImageResource(R.mipmap.ic_launcher);
@@ -113,89 +109,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.txt_seen.setVisibility(View.GONE);
         }
 
-        //holder.messageSenderPicture.setVisibility(View.VISIBLE);
-        //Picasso.
-
         //here, I try delete again (either use holder.show_message or holder.messageLAyout
         holder.messageLAyout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if (mChat.get(position).getType().equals("pdf") || mChat.get(position).getType().equals("docx")){
-                ///
-
-                if (mChat.get(position).getType().equals("text")){
-                    holder.showPopup(v);
-                }
-            }
-        });
-    }
-
-    private void deleteSentMessage(final int position, final ViewHolder holder) {
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("Chats")
-                .child(mChat.get(position).getSender())
-                .child(mChat.get(position).getReceiver())
-                .child(mChat.get(position).getMessageid())
-                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(holder.itemView.getContext(), "Message Successfully Deleted!", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(holder.itemView.getContext(), "Error Occurred!", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-    }
-
-    public void deleteReceivedMessage (final int position, final ViewHolder holder) {
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("Chats")
-                .child(mChat.get(position).getReceiver())
-                .child(mChat.get(position).getSender())
-                .child(mChat.get(position).getMessageid())
-                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(holder.itemView.getContext(), "Message Successfully Deleted!", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(holder.itemView.getContext(), "Error Occurred!", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-    }
-
-    private void deleteMessageForEveryone(final int position, final ViewHolder holder) {
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("Chats")
-                .child(mChat.get(position).getReceiver())
-                .child(mChat.get(position).getSender())
-                .child(mChat.get(position).getMessageid())
-                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    rootRef.child("Chats")
-                            .child(mChat.get(position).getSender())
-                            .child(mChat.get(position).getReceiver())
-                            .child(mChat.get(position).getMessageid())
-                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(holder.itemView.getContext(), "Message Successfully Deleted!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-                } else {
-                    Toast.makeText(holder.itemView.getContext(), "Error Occurred!", Toast.LENGTH_SHORT).show();
-                }
+                //if (mChat.get(position).getType().equals("pdf") || mChat.get(position).getType().equals("docx")){}
+                 try {if (mChat.get(position).getType().equals("text")) {holder.showPopup(v);
+                 }} catch (Exception exception) {exception.getStackTrace();}
             }
         });
     }
@@ -205,7 +125,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return mChat.size();
     }
 
-    private abstract class runnable implements Runnable {
+    private abstract static class runnable implements Runnable {
 
     }
 
@@ -304,21 +224,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
+
                 case R.id.item1:
-                    //deleteMessageForEveryone();
-                    //delete_message();             //////////////////////
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                    reference.child("Chats").push().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                            if (task.isSuccessful()) {
-                                Toast.makeText(mContext.getApplicationContext(), "Message Deleted", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
+                    DatabaseReference message_delete_reference = FirebaseDatabase.getInstance().getReference().child("Chats");
+                    message_delete_reference.child(mChat.get(getAdapterPosition()).getMessagekey()).removeValue().addOnSuccessListener(aVoid ->
+                            Toast.makeText(mContext.getApplicationContext(), "Message Completely Deleted!", Toast.LENGTH_SHORT).show());
                     return true;
+
                 case R.id.item2:
                     if (checkInternetConnection()) {
                         //If there is internet connection, get translate service and start translation:
@@ -328,11 +240,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         //If not, display "no connection" warning:
                         Toast.makeText(mContext.getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     }
-
                     return true;
+
                 case R.id.item3:
-                    mChat.clear();
-                    //mChat.addAll(...);  //FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
+//                    mChat.clear();
+                    //mChat.addAll(...);  //
+//                    FirebaseDatabase.getInstance().getReference().child("Chats").setValue(mChat);
 
                 case R.id.item4:
                     final String text = show_message.getText().toString();
@@ -396,20 +309,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             builder.show();
 
         }
-    }
-
-    public void delete_message(final int position, final ViewHolder holder) {
-
-         DatabaseReference rootref = FirebaseDatabase.getInstance().getReference("Chats").child(fuser.getUid()); //probably wrong at child...
-         rootref.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-             @Override
-             public void onComplete(@NonNull Task<Void> task) {
-
-                 if (task.isSuccessful()) {
-                     Toast.makeText(holder.itemView.getContext(), "Message Deleted", Toast.LENGTH_SHORT).show();
-                 }
-             }
-         });
     }
 
     @Override

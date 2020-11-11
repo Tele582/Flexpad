@@ -4,6 +4,7 @@ public class Chat {
 
     private String sender;
     private String receiver;
+    private String messagelabel;
     private String message;
     private boolean isseen;
 
@@ -11,19 +12,21 @@ public class Chat {
     private String type;
 
     private String userid;
-    private String messageid;
+    private String messagekey;
 
 
 
-    public Chat(String sender, String receiver, String message, boolean isseen, String name, String type, String userid, String messageid){
+
+    public Chat(String sender, String receiver, String messagelabel, String message, boolean isseen, String name, String type, String userid, String messageid, String messagekey){
         this.sender = sender;
         this.receiver = receiver;
+        this.messagelabel = messagelabel;
         this.message = message;
         this.isseen = isseen;
         this.name = name;
         this.type = type;
         this.userid = userid;
-        this.messageid = messageid;
+        this.messagekey = messagekey;
 
     }
 
@@ -52,14 +55,6 @@ public class Chat {
         this.userid = userid;
     }
 
-    public String getMessageid() {
-        return messageid;
-    }
-
-    public void setMessageid(String messageid) {
-        this.messageid = messageid;
-    }
-
     public String getSender() {
         return sender;
     }
@@ -82,6 +77,22 @@ public class Chat {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getMessagelabel() {
+        return messagelabel;
+    }
+
+    public void setMessagelabel(String messagelabel) {
+        this.messagelabel = messagelabel;
+    }
+
+    public String getMessagekey() {
+        return messagekey;
+    }
+
+    public void setMessagekey(String messagekey) {
+        this.messagekey = messagekey;
     }
 
     public Chat() {

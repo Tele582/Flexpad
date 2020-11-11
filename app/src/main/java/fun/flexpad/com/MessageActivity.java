@@ -462,18 +462,22 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         String message_num = Integer.toString(message_number);
-        String messageid = sender + message_num + receiver;
+        String messagelabel = sender + message_num + receiver;
         //Still needs a fix, message_number starts from zero at every app restart..
+
+        DatabaseReference message_reference = reference.child("Chats").push();
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
         hashMap.put("receiver", receiver);
-        hashMap.put("messageid", messageid);
+        hashMap.put("messagelabel", messagelabel);
         hashMap.put("type", "text");
         hashMap.put("message", message);
         hashMap.put("isseen", false);
+        hashMap.put("messagekey", message_reference.getKey());
 
-        reference.child("Chats").push().setValue(hashMap);
+//        reference.child("Chats").push().setValue(hashMap);
+        message_reference.setValue(hashMap);
 
         //assert userid != null;
 

@@ -47,5 +47,6 @@
     <string name="room_name_hint">Room Name:</string>
     <string name="follow">Follow</string>
     <string name="following">Following</string>
+    <string name="mine">Mine</string>
 
 </resources>
