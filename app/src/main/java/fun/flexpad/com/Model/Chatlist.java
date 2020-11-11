@@ -3,7 +3,7 @@ package fun.flexpad.com.Model;
 public class Chatlist {
 
     public String id;
-    public String idSender;
+//    public String idSender;
 
     public Chatlist(String id, String idSender) {
         this.id = id;

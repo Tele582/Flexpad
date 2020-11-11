@@ -210,29 +210,34 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public void checkFollowingStatus(String uid, Button followButton) {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-                .child("FollowList")
-                .child(firebaseUser.getUid())
-                .child("following");
+//        assert firebaseUser != null;
+        try {
+            DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                    .child("FollowList")
+                    .child(firebaseUser.getUid())
+                    .child("following");
 
-        followingRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(uid).exists()) {
-                    followButton.setText(R.string.following);
-                    Drawable dr = followButton.getContext().getResources().getDrawable(R.drawable.ic_baseline_check_circle_24);
-                    followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(dr, null, null, null);
-                } else {
-                    followButton.setText(R.string.follow);
-                    followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+            followingRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.child(uid).exists()) {
+                        followButton.setText(R.string.following);
+                        Drawable dr = followButton.getContext().getResources().getDrawable(R.drawable.ic_baseline_check_circle_24);
+                        followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(dr, null, null, null);
+                    } else {
+                        followButton.setText(R.string.follow);
+                        followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
     }
 
     public void updateFollowList (Button followButton, String userString) {

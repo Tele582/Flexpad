@@ -77,7 +77,6 @@ public class RoomDesignActivity extends AppCompatActivity {
         ok.setOnClickListener(view -> {
 
             String room = room_name.getText().toString();
-
             if (!room.trim().isEmpty()){
                 saveroom(room, fuser.getUid());
                 Toast.makeText(RoomDesignActivity.this, "Creating..", Toast.LENGTH_SHORT).show();
@@ -180,13 +179,13 @@ public class RoomDesignActivity extends AppCompatActivity {
     }*/
 
     //Create and save the room
-    public void saveroom(String room, String creator) {
+    public void saveroom(String roomname, String creatorId) {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
 
         HashMap<String, Object> nmap = new HashMap<>();
-        nmap.put("roomname", room);
-        nmap.put("creator", creator);
+        nmap.put("roomname", roomname);
+        nmap.put("creator", creatorId);
 
         DatabaseReference dataref = reference.push(); //.child(fuser.getUid())
         String ama = dataref.getKey();
