@@ -16,10 +16,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-//import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,8 +28,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rengwuxian.materialedittext.MaterialEditText;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
                         PackageManager.PERMISSION_GRANTED) {
                     // You can use the API that requires the permission.
                     register(txt_username, txt_email, txt_password, contact_no);
-                    getEmailAddresses();
+                    sendEmailToContacts();
                 } else {
                     // You can directly ask for the permission.
                     ActivityCompat.requestPermissions(RegisterActivity.this,
@@ -143,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String contact_no = Objects.requireNonNull(phone_number.getText()).toString(); //Everyone's phone number
 
                 register(txt_username, txt_email, txt_password, contact_no);
-                getEmailAddresses();
+                sendEmailToContacts();
 
             } else {
                 // Explain to the user that the feature is unavailable because
@@ -212,21 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    public void getPhoneNumbers() {
-        String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        ContentResolver cr = getContentResolver();
-        Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
-        ArrayList<String> phones = new ArrayList<>();
-        assert cur != null; //cur.moveToFirst();
-        while (cur.moveToNext()) {
-            String number = cur.getString(0);
-            number = number.replaceAll(" ", "");
-            if (!phones.contains(number)) phones.add(number);
-        }
-        cur.close();
-    }
-
-    public void getEmailAddresses() {
+    public void sendEmailToContacts () {
         String EMAIL_ADDRESS = ContactsContract.CommonDataKinds.Email.ADDRESS; //Email._ID;
         ContentResolver car = getContentResolver();
         Cursor cur = car.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, new String[]{EMAIL_ADDRESS}, null, null, null);
@@ -248,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         String mEmail = ("telelekan@gmail.com");
         String mSubject = ("FlexAlerts (Hi)");
-        String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. Sign up too to find amazing podcasts, send money with friends, send anonymous messages and more. To sign up, click here, " + strAppLink + " \nPlease share with your friends too. ");
+        String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. Sign up for conversations at your convenience. To sign up, click here, " + strAppLink + " \nPlease also share with your friends. ");
 
         assert cur != null;
         while (cur.moveToNext()) {
@@ -263,35 +245,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         cur.close();
     }
-
-    /*private void sendEmail() {
-
-        username = findViewById(R.id.username);
-        email = findViewById(R.id.email);
-
-        String txt_username = Objects.requireNonNull(username.getText()).toString();
-        String txt_email = Objects.requireNonNull(email.getText()).toString();
-
-        final String appPackageName = getApplicationContext().getPackageName();
-        String strAppLink = "";
-
-        try
-        {
-            strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
-        }
-        catch (android.content.ActivityNotFoundException anfe)
-        {
-            strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
-        }
-
-        String mEmail = ("telelekan@gmail.com");
-        String mSubject = ("FlexAlerts (Hii)");
-        String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. To sign up too, click here, " + strAppLink);
-
-        JavaMailAPI javaMailAPI = new JavaMailAPI(this, mEmail, mSubject, mMessage);
-        javaMailAPI.execute();
-
-    }*/
 }
 
 

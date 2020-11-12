@@ -112,8 +112,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 //if (mChat.get(position).getType().equals("pdf") || mChat.get(position).getType().equals("docx")){}
-                 try {if (mChat.get(position).getType().equals("text")) {holder.showPopup(v);
-                 }} catch (Exception exception) {exception.getStackTrace();}
+                 try {if (mChat.get(position).getType().equals("text")) {holder.showPopup(v);}
+                 else {holder.showNonTextPopup(v);} }
+                 catch (Exception exception) {exception.getStackTrace();}
             }
         });
     }
@@ -213,6 +214,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             popup.show();
         }
 
+        private void showNonTextPopup(View view) {
+            PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), view);
+            popup.setOnMenuItemClickListener(this);
+            popup.inflate(R.menu.non_text_msg_popup_menu);
+            popup.show();
+        }
+
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             DatabaseReference message_delete_reference = FirebaseDatabase.getInstance().getReference().child("Chats");
@@ -225,8 +233,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return true;
 
                 case R.id.item2:
-                    if (checkInternetConnection()) {
-                        //If there is internet connection, get translate service and start translation:
+                    if (checkInternetConnection()) { //If there is internet connection, get translate service and start translation:
                         getTranslateService();
                         translate();
                     } else {

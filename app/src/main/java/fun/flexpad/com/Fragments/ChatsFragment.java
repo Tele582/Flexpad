@@ -48,12 +48,8 @@ public class ChatsFragment extends Fragment {
 
     private FirebaseUser fuser;
     private DatabaseReference reference;
-//    private DatabaseReference ref2;
 
     private List<Chatlist> usersList;
-//    private List<Chatlist> usersListSender;
-
-    private EditText search_chats;
 
     String userid;
     Intent intent;
@@ -72,7 +68,7 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
 
-        search_chats = view.findViewById(R.id.search_chats);
+        EditText search_chats = view.findViewById(R.id.search_chats);
         search_chats.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

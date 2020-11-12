@@ -95,6 +95,8 @@ public class MessageActivity extends AppCompatActivity {
     boolean notify = false;
 
     int message_number = 0;
+    int image_message_number = 0;
+    int doc_message_number = 0;
     private Object RoomsFragment;
 
     @Override
@@ -279,6 +281,23 @@ public class MessageActivity extends AppCompatActivity {
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 final String userid = intent.getStringExtra("userid");
 
+                reference.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String prevChildKey) { //just added @NotNull..check if issues
+                        doc_message_number++;
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String prevChildKey) {}
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String prevChildKey) {}
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError){}
+                });
+
+                String message_num = Integer.toString(doc_message_number);
+                String messagelabel = fuser.getUid() + message_num + userid;
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
@@ -289,17 +308,19 @@ public class MessageActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()){
 
+                            final DatabaseReference message_reference = reference.child("Chats").push();
+
                             HashMap<String, Object> hashMap = new HashMap<>();
+
+                            hashMap.put("sender", fuser.getUid());
+                            hashMap.put("receiver", userid);
+                            hashMap.put("messagelabel", messagelabel);
+                            hashMap.put("type", checker);
                             hashMap.put("message", Objects.requireNonNull(task.getResult()).toString()); //or leave as myUrl
                             hashMap.put("name", fileUri.getLastPathSegment());
-                            hashMap.put("type", checker);
-
-                            hashMap.put("sender", fuser.getUid());//check, sender might be userid, or not..probably is though
-                            hashMap.put("receiver", userid);
-                            ////hashMap.put("userid", userid);// needs to be changed to messageID
-
                             hashMap.put("isseen", false);
-                            reference.child("Chats").push().setValue(hashMap);
+                            hashMap.put("messagekey", message_reference.getKey());
+                            message_reference.setValue(hashMap);
 
                             final DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chatlist")
                                     .child(fuser.getUid())
@@ -318,8 +339,25 @@ public class MessageActivity extends AppCompatActivity {
 
                                 }
                             });
-                            loadingBar.dismiss();
 
+                            final DatabaseReference chatSenderRef = FirebaseDatabase.getInstance().getReference("Chatlist")
+                                    .child(userid)
+                                    .child(fuser.getUid());
+
+                            chatSenderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.exists()){
+                                        chatSenderRef.child("id").setValue(fuser.getUid());
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            loadingBar.dismiss();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -341,11 +379,26 @@ public class MessageActivity extends AppCompatActivity {
             } else if (checker.equals("image")){ //sending image
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files"); //create separate image folder
 
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 final String userid = intent.getStringExtra("userid");
 
-                // generate random key so previous file will not be replaced
-                //final String messagePushID = reference.getKey();
+                reference.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String prevChildKey) { //just added @NotNull..check if issues
+                        image_message_number++;
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String prevChildKey) {}
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String prevChildKey) {}
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError){}
+                });
+
+                String message_num = Integer.toString(image_message_number);
+                String messagelabel = fuser.getUid() + message_num + userid;
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
@@ -353,15 +406,12 @@ public class MessageActivity extends AppCompatActivity {
 
                 uploadTask = filePath.putFile(fileUri);
 
-                uploadTask.continueWithTask(new Continuation() {
-                    @Override
-                    public Object then(@NonNull Task task) throws Exception {
-                        if (!task.isSuccessful()){
-                            throw Objects.requireNonNull(task.getException());
-                        }
-
-                        return filePath.getDownloadUrl();
+                uploadTask.continueWithTask((Continuation) task -> {
+                    if (!task.isSuccessful()){
+                        throw Objects.requireNonNull(task.getException());
                     }
+
+                    return filePath.getDownloadUrl();
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
@@ -371,17 +421,19 @@ public class MessageActivity extends AppCompatActivity {
                             myUrl = downloadUrl.toString();
 
                             loadingBar.dismiss();
+                            final DatabaseReference message_reference = reference.child("Chats").push();
 
                             HashMap<String, Object> hashMap = new HashMap<>();
                             hashMap.put("sender", fuser.getUid());//check, sender might be userid, or not..probably is though
                             hashMap.put("receiver", userid);
-                            //hashMap.put("userid", userid); // needs to be changed to messageID
+                            hashMap.put("messagelabel", messagelabel);
                             hashMap.put("type", checker);
                             hashMap.put("message", myUrl);
                             hashMap.put("name", fileUri.getLastPathSegment());
                             hashMap.put("isseen", false);
+                            hashMap.put("messagekey", message_reference.getKey());
 
-                            reference.child("Chats").push().setValue(hashMap);
+                            message_reference.setValue(hashMap);
 
                             final DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chatlist")
                                     .child(fuser.getUid())
@@ -401,6 +453,25 @@ public class MessageActivity extends AppCompatActivity {
 
                                 }
                             });
+
+                            final DatabaseReference chatSenderRef = FirebaseDatabase.getInstance().getReference("Chatlist")
+                                    .child(userid)
+                                    .child(fuser.getUid());
+
+                            chatSenderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.exists()){
+                                        chatSenderRef.child("id").setValue(fuser.getUid());
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            loadingBar.dismiss();
                         }
                     }
                 });
@@ -439,8 +510,7 @@ public class MessageActivity extends AppCompatActivity {
     // for sent messages
     private void sendMessage(String sender, final String receiver, String message) {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        //reference here is RootRef in tutorial
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         final String userid = intent.getStringExtra("userid");
 
         assert userid != null;
@@ -462,8 +532,7 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         String message_num = Integer.toString(message_number);
-        String messagelabel = sender + message_num + receiver;
-        //Still needs a fix, message_number starts from zero at every app restart..
+        String messagelabel = sender + message_num + receiver; //Still needs a fix, message_number starts from zero at every app restart..
 
         DatabaseReference message_reference = reference.child("Chats").push();
 
@@ -476,7 +545,6 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("isseen", false);
         hashMap.put("messagekey", message_reference.getKey());
 
-//        reference.child("Chats").push().setValue(hashMap);
         message_reference.setValue(hashMap);
 
         //assert userid != null;
@@ -518,8 +586,8 @@ public class MessageActivity extends AppCompatActivity {
 
         final String msg = message;
 
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference referenceNotify = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        referenceNotify.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
@@ -554,7 +622,7 @@ public class MessageActivity extends AppCompatActivity {
                     Sender sender = new Sender(data, token.getToken());
                     //Sender sender = new Sender(data, token);
 
-                    // I don't even fully grasp how the f*** this apiService works exactly
+                    // I don't even fully yet grasp how the f*** this apiService works exactly
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<MyResponse> call, @NonNull Response<MyResponse> response) {
