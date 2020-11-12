@@ -21,11 +21,11 @@ android {
                 arguments "-DANDROID_STL=c++_shared"
             }
         }
-        //sourceSets {
-            //main {
-             //   jniLibs.srcDirs = ['libs']
-            //}
-        //}
+//        sourceSets {
+//            main {
+//                jniLibs.srcDirs = ['libs']
+//            }
+//        }
     }
 
     compileOptions {
@@ -39,6 +39,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
@@ -62,7 +63,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //implementation 'com.google.oboe:oboe:1.4.3' //implementation 'com.android.ndk.thirdparty:curl:7.68.0-alpha-1' //implementation 'com.android.ndk.thirdparty:jsoncpp:1.8.4-alpha-1'
+//    implementation 'com.google.oboe:oboe:1.4.3' //implementation 'com.android.ndk.thirdparty:curl:7.68.0-alpha-1' //implementation 'com.android.ndk.thirdparty:jsoncpp:1.8.4-alpha-1'
     implementation 'co.paystack.android:paystack:3.1.2' //implementation 'co.paystack.android.design.widget:pinpad:1.2'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -90,6 +91,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
         //exclude group: 'com.google.auto.value', module: 'auto-value'
     }
+
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
@@ -98,7 +100,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.1'
     implementation 'androidx.navigation:navigation-ui:2.3.1'
     annotationProcessor 'com.google.cloud:google-cloud-translate:1.95.2'
-    implementation files('oboe-1.4.3')
+//    implementation files('oboe-1.4.3')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -108,5 +110,4 @@ dependencies {
 
     //def camerax_version = "1.0.0-alpha05" //implementation "androidx.camera:camera-core:$camerax_version" //implementation "androidx.camera:camera-camera2:$camerax_version"
     //implementation 'org.pytorch:pytorch_android:1.5.0' //implementation 'org.pytorch:pytorch_android_torchvision:1.5.0'
-
 }
