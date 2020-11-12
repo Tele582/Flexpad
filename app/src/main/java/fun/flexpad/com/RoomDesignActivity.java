@@ -76,7 +76,7 @@ public class RoomDesignActivity extends AppCompatActivity {
                 ok.setOnClickListener(view -> {
                     String room = room_name.getText().toString();
                     if (!room.trim().isEmpty()){
-                        saveroom(room, user.getId(), user.getUsername());
+                        saveroom(room, user.getId(), user.getUsername(), user.getVerified());
                         Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
                         intent.putExtra("Room_Name", room);
                         startActivity(intent);
@@ -121,7 +121,7 @@ public class RoomDesignActivity extends AppCompatActivity {
     }
 
     //Create and save room
-    public void saveroom(String roomname, String creatorId, String creatorName) {
+    public void saveroom(String roomname, String creatorId, String creatorName, String creatorVerified) {
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         DatabaseReference room_reference = reference.child("Rooms").push();
@@ -132,6 +132,7 @@ public class RoomDesignActivity extends AppCompatActivity {
         nmap.put("creator", creatorId);
         nmap.put("creatorUsername", creatorName);
         nmap.put("roomKey", roomKey);
+        nmap.put("creatorVerified", creatorVerified);
         room_reference.setValue(nmap);
     }
 

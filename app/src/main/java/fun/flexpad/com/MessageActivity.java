@@ -27,8 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import fun.flexpad.com.Adapter.MessageAdapter;
 import fun.flexpad.com.Fragments.APIService;
-import fun.flexpad.com.Fragments.ChatsFragment;
-import fun.flexpad.com.Fragments.RoomsFragment;
 import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Notifications.Client;
@@ -67,7 +65,7 @@ import retrofit2.Response;
 
 public class MessageActivity extends AppCompatActivity {
 
-    CircleImageView profile_image;
+    CircleImageView profile_image, verification_image;
     TextView username;
     TextView userstatus;
     FirebaseUser fuser;
@@ -75,29 +73,24 @@ public class MessageActivity extends AppCompatActivity {
 
     ImageButton btn_send, btn_send_files;
     EditText text_send;
-
     MessageAdapter messageAdapter;
     List<Chat> mChat;
     RecyclerView recyclerView;
 
     String userid;
     Intent intent;
-
     ValueEventListener seenListener;
     APIService apiService;
 
     private String checker = "", myUrl="";
     private StorageTask uploadTask;
     private Uri fileUri;
-
     private ProgressDialog loadingBar;
-
     boolean notify = false;
 
     int message_number = 0;
     int image_message_number = 0;
     int doc_message_number = 0;
-    private Object RoomsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +118,7 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         profile_image = findViewById(R.id.profile_image);
+        verification_image = findViewById(R.id.verification_image);
         btn_send = findViewById(R.id.btn_send);
         text_send = findViewById(R.id.text_send); // text_send here is the EditText box, supposed to be "type_message" or so..
         username = findViewById(R.id.username);
@@ -256,6 +250,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         seenMessage(userid);
+        showVerification(userid);
     }
 
     //for selecting file from storage
@@ -677,8 +672,25 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+    public void showVerification (String chatReceiver) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(chatReceiver);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                assert user != null;
+                if (user.getVerified().equals("true")) {verification_image.setVisibility(View.VISIBLE);}
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     // ..fix current user identity, I think
-    private void currentUser(String userid){
+    private void currentUser (String userid){
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
         editor.putString("currentuser", userid);
         editor.apply();

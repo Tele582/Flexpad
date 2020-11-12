@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context mContext;
@@ -62,6 +64,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         } else {
             Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
+        }
+
+        if (user.getVerified().equals("true")) {
+            holder.verification_image.setVisibility(View.VISIBLE);
         }
 
         if (ischat){
@@ -109,7 +115,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public static class  ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView username;
-        public ImageView profile_image;
+        public CircleImageView profile_image;
+        public CircleImageView verification_image;
         private final ImageView img_on;
         private final ImageView img_off;
         private final TextView last_msg;
@@ -121,6 +128,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             username = itemView.findViewById(R.id.username);
             profile_image = itemView.findViewById(R.id.profile_image);
+            verification_image = itemView.findViewById(R.id.verification_image);
             img_on = itemView.findViewById(R.id.img_on);
             img_off = itemView.findViewById(R.id.img_off);
             last_msg = itemView.findViewById(R.id.last_msg);
@@ -213,9 +221,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 //        assert firebaseUser != null;
         try {
             DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-                    .child("FollowList")
-                    .child(firebaseUser.getUid())
-                    .child("following");
+                    .child("FollowList").child(firebaseUser.getUid()).child("following");
 
             followingRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -223,7 +229,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     if (snapshot.child(uid).exists()) {
                         followButton.setText(R.string.following);
                         Drawable dr = followButton.getContext().getResources().getDrawable(R.drawable.ic_baseline_check_circle_24);
-                        followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(dr, null, null, null);
+                        followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, dr,null);
                     } else {
                         followButton.setText(R.string.follow);
                         followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
@@ -327,4 +333,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         });
 
     }
+
+
 }

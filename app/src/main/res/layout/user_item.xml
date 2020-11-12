@@ -20,15 +20,24 @@
         android:layout_height="wrap_content"
         android:text="username"
         android:id="@+id/username"
-        android:paddingEnd="4dp"
+        android:paddingEnd="0dp"
         android:paddingStart="0dp"
         android:layout_toEndOf="@id/profile_image"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_centerVertical="true"
         android:textColor="@color/colorBlack"
         android:textSize="20sp"
         tools:ignore="HardcodedText" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/verification_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        android:layout_toEndOf="@id/username"
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_check_verified_foreground"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_on"

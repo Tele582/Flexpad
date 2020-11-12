@@ -51,7 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    CircleImageView profile_image;
+    CircleImageView profile_image, verification_image;
     TextView username;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         profile_image = findViewById(R.id.profile_image);
+        verification_image = findViewById(R.id.verification_image);
         username = findViewById(R.id.username);
         fullScreenContainer = findViewById(R.id.full_screen_container);
         backFromPic = findViewById(R.id.back_from_pic);
@@ -131,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
                     Glide.with(getApplicationContext()).load(user.getImageURI()).into(profile_image);
+                }
+                if (user.getVerified().equals("true")) {
+                    verification_image.setVisibility(View.VISIBLE);
                 }
                 profile_image.setOnClickListener(v -> {
                     if (user.getImageURI().equals("default")){

@@ -38,6 +38,14 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/verification_image"
+                    android:src="@drawable/ic_baseline_check_circle_24"
+                    android:visibility="gone"
+                    android:layout_marginStart="2dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+
             </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout

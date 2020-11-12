@@ -10,14 +10,16 @@ public class User {
     private String status;
     private String search;
     private String contact;
+    private String verified;
 
-    public User (String id, String username, String imageURI, String status, String search, String contact) {
+    public User (String id, String username, String imageURI, String status, String search, String contact, String verified) {
         this.id = id;
         this.username = username;
         this.imageURI = imageURI;
         this.status = status;
         this.search = search;
         this.contact = contact;
+        this.verified = verified;
 
     }
 
@@ -73,6 +75,14 @@ public class User {
         this.contact = contact;
     }
 
+    public String getVerified() {
+        return verified;
+    }
+
+    public void setVerified(String verified) {
+        this.verified = verified;
+    }
+
     @NotNull
     @Override
     public String toString() {
@@ -83,6 +93,7 @@ public class User {
                 ", status='" + status + '\'' +
                 ", search='" + search + '\'' +
                 ", contact='" + contact + '\'' +
+                ", verified='" + verified + '\'' +
                 '}';
     }
 }

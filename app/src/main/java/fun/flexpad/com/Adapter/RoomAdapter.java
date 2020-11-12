@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
@@ -51,7 +52,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         final Room room = mRooms.get(position);
         holder.roomname.setText(room.getRoomname());
         holder.mineShowView(holder.mine, holder.creator);
-        holder.showPopupClass();
+        holder.showPopupAndVerification();
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, RoomChatActivity.class);
@@ -69,12 +70,14 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         public TextView roomname;
         public TextView mine;
         public TextView creator;
+        public CircleImageView verification;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             roomname = itemView.findViewById(R.id.roomIname);
             mine = itemView.findViewById(R.id.mine_view);
             creator = itemView.findViewById(R.id.creator_view);
+            verification = itemView.findViewById(R.id.verification_image);
         }
 
         private void showPopup(View view) {
@@ -126,7 +129,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             });
         }
 
-        public void showPopupClass () {
+        public void showPopupAndVerification () {
             final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
             final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
             final Room roomP = mRooms.get(getAdapterPosition());
@@ -135,6 +138,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     final String boundRoomCreator = (String) snapshot.child(roomP.getRoomKey()).child("creator").getValue();
+                    final String creatorVerifiedStatus = (String) snapshot.child(roomP.getRoomKey()).child("creatorVerified").getValue();
                     itemView.setOnLongClickListener(v -> {
                         if ((boundRoomCreator != null)) {
                             assert fUser != null;
@@ -142,6 +146,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                         }
                         return false;
                     });
+                    assert creatorVerifiedStatus != null;
+                    if (creatorVerifiedStatus.equals("true")) {verification.setVisibility(View.VISIBLE);}
                 }
 
                 @Override

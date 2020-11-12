@@ -33,6 +33,14 @@
                 android:textColor="#fff"
                 android:textStyle="bold" />
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/verification_image"
+                android:src="@drawable/ic_baseline_check_circle_24"
+                android:visibility="gone"
+                android:layout_marginStart="2dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+
             <TextView
                 android:id="@+id/userstatus"
                 android:layout_width="wrap_content"
