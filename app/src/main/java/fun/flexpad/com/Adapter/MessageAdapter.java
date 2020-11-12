@@ -138,7 +138,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Translate translate;
         String newmessage;
         RelativeLayout messageLAyout;
-        public ImageView messageSenderPicture, messageReceiverPicture;
+//        public ImageView messageSenderPicture, messageReceiverPicture;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -178,8 +178,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             //text to speech button
             btn_play.setOnClickListener(v -> {
                 //Get text form message bar
-                String text = show_message
-                        .getText().toString();
+                String text = show_message.getText().toString();
 
                 getTranslateService();
                 Detection detection = translate.detect(text);
@@ -222,6 +221,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 case R.id.item1:
                     message_delete_reference.child(chat.getMessagekey()).removeValue().addOnSuccessListener(aVoid ->
                             Toast.makeText(mContext.getApplicationContext(), "Message Completely Deleted!", Toast.LENGTH_SHORT).show());
+                    messageLAyout.setVisibility(View.GONE);
                     return true;
 
                 case R.id.item2:
@@ -230,7 +230,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         getTranslateService();
                         translate();
                     } else {
-                        //If not, display "no connection" warning:
                         Toast.makeText(mContext.getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     }
                     return true;
@@ -248,8 +247,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                         }
                     });
-
-
 
                 case R.id.item4:
                     final String text = show_message.getText().toString();

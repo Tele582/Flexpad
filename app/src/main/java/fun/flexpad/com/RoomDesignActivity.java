@@ -43,10 +43,6 @@ public class RoomDesignActivity extends AppCompatActivity {
     private CircleImageView room_image;
     EditText room_name;
     Button ok;
-
-    private DatabaseReference reference;
-    private FirebaseUser fuser;
-
     StorageReference storageReference;
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
@@ -67,26 +63,34 @@ public class RoomDesignActivity extends AppCompatActivity {
         });
 
         ok = findViewById(R.id.ok);
-        //room_image = findViewById(R.id.room_image);
         room_name = findViewById(R.id.room_name);
+        //room_image = findViewById(R.id.room_image);
 
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-
+        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference("room_uploads");
-
-        ok.setOnClickListener(view -> {
-
-            String room = room_name.getText().toString();
-            if (!room.trim().isEmpty()){
-                saveroom(room, fuser.getUid());
-                Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
-                intent.putExtra("Room_Name", room);
-                startActivity(intent);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                ok.setOnClickListener(view -> {
+                    String room = room_name.getText().toString();
+                    if (!room.trim().isEmpty()){
+                        saveroom(room, user.getId(), user.getUsername());
+                        Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
+                        intent.putExtra("Room_Name", room);
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-            else {
-                Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
-            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
 
         /*reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
@@ -115,19 +119,19 @@ public class RoomDesignActivity extends AppCompatActivity {
         });*/
 
         //room_image.setOnClickListener(v -> openImage());
-
     }
 
-    //Create and save the room
-    public void saveroom(String roomname, String creatorId) {
+    //Create and save room
+    public void saveroom(String roomname, String creatorId, String creatorName) {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         DatabaseReference room_reference = reference.child("Rooms").push();
         String roomKey = room_reference.getKey();
 
         HashMap<String, Object> nmap = new HashMap<>();
         nmap.put("roomname", roomname);
         nmap.put("creator", creatorId);
+        nmap.put("creatorUsername", creatorName);
         nmap.put("roomKey", roomKey);
         room_reference.setValue(nmap);
     }
@@ -137,7 +141,6 @@ public class RoomDesignActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, IMAGE_REQUEST);
-
     }
 
     private String getFileExtension(Uri uri){
@@ -162,8 +165,6 @@ public class RoomDesignActivity extends AppCompatActivity {
                     if (!task.isSuccessful()){
                         throw task.getException();
                     }
-
-
                     return fileRef.getDownloadUrl();
                 }
             }).addOnCompleteListener((OnCompleteListener<Uri>) task -> {
@@ -206,7 +207,5 @@ public class RoomDesignActivity extends AppCompatActivity {
             }
         }
     }*/
-
-
 
 }

@@ -54,18 +54,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="casual"
         android:maxLines="1"
-        tools:text="Creator"
+        android:text="Creator"
+        android:textColor="@color/colorBlack"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:fontFamily="casual"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:strokeColor="@color/colorPrimaryDark"
-        app:strokeWidth="2dp" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

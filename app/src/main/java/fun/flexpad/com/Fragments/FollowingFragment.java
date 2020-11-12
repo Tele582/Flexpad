@@ -32,7 +32,7 @@ public class FollowingFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RoomAdapter roomAdapter;
-    private List<Room> mRooms;
+    private ArrayList<Room> mRooms;
 
     private FirebaseUser fuser;
 

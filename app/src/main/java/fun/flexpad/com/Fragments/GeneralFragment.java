@@ -30,7 +30,7 @@ public class GeneralFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RoomAdapter roomAdapter;
-    private List<Room> mRooms;
+    private ArrayList<Room> mRooms;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

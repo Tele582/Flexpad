@@ -68,14 +68,9 @@ public class ChatsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        recyclerSenderView = view.findViewById(R.id.chats_recycler_view_sender);
-//        recyclerSenderView.setHasFixedSize(true);
-//        recyclerSenderView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         usersList = new ArrayList<>();
-//        usersListSender = new ArrayList<>();
 
         search_chats = view.findViewById(R.id.search_chats);
         search_chats.addTextChangedListener(new TextWatcher() {
@@ -102,7 +97,6 @@ public class ChatsFragment extends Fragment {
                     Chatlist chatlist = snapshot.getValue(Chatlist.class);
                     assert chatlist != null;
                     usersList.add(chatlist);
-
                 }
                 chatList();
             }
@@ -112,26 +106,6 @@ public class ChatsFragment extends Fragment {
 
             }
         });
-
-//        ref2 = FirebaseDatabase.getInstance().getReference("ChatSenderlist").child(fuser.getUid());
-//        ref2.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                usersListSender.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
-//                    assert chatlist != null;
-//                    usersListSender.add(chatlist);
-//
-//                }
-//                chatListSenders();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
         return view;
@@ -156,7 +130,7 @@ public class ChatsFragment extends Fragment {
                         if (user.getId().equals(chatlist.getId())){
                             mUsers.add(user);
                         }
-                    } //duplicate for usersListSender
+                    }
                 }
 
                 userAdapter = new UserAdapter(getContext(), mUsers, true);
@@ -176,7 +150,6 @@ public class ChatsFragment extends Fragment {
     }
 
     private void chatList() {
-//        fuser = FirebaseAuth.getInstance().getCurrentUser();
         mUsers = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
@@ -194,7 +167,6 @@ public class ChatsFragment extends Fragment {
                             try {
                                 if (user.getId().equals(chatlist.getId())) {
                                     mUsers.add(user);
-
                                 }
                             } catch (Exception e) {
                                 e.getStackTrace();
@@ -212,38 +184,5 @@ public class ChatsFragment extends Fragment {
             }
         });
     }
-
-//    private void chatListSenders() {
-//        fuser = FirebaseAuth.getInstance().getCurrentUser();
-//        final List<User> mUsers = new ArrayList<>();
-//        ref2 = FirebaseDatabase.getInstance().getReference("Users");
-//        ref2.addValueEventListener(new ValueEventListener() {
-//            private static final String TAG = "Tagg";
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                mUsers.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    User user = snapshot.getValue(User.class);
-//                    assert user != null;
-//                    Log.d(TAG, "onDataChange: (QUERY METHOD) found user: " + user.toString()); //temporary
-//
-//                    for (Chatlist chatlist : usersListSender) {
-//                        if (user.getId().equals(chatlist.getIdSender())) {
-//                            mUsers.add(user);
-//
-//                        }
-//                    }
-//                }
-//                userAdapter = new UserAdapter(getContext(), mUsers, true);
-//                recyclerSenderView.setAdapter(userAdapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 }
 

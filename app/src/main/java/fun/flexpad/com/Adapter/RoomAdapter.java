@@ -28,15 +28,16 @@ import java.util.Objects;
 import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
+import fun.flexpad.com.Notifications.Data;
 import fun.flexpad.com.R;
 import fun.flexpad.com.RoomChatActivity;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Room> mRooms;
+    private ArrayList<Room> mRooms;
 
-    public RoomAdapter(Context mContext, List<Room> mRooms) {
+    public RoomAdapter(Context mContext, ArrayList<Room> mRooms) {
         this.mContext = mContext;
         this.mRooms = mRooms;
     }
@@ -52,20 +53,33 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final Room room = mRooms.get(position); //or remove 'final'
-        holder.roomname.setText(room.getRoomname());
+        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final String boundRoomCreator = (String) snapshot.child(room.getRoomKey()).child("creator").getValue();
+                holder.itemView.setOnLongClickListener(v -> {
+                    if ((boundRoomCreator != null) && (fUser.getUid() != null) && (boundRoomCreator.equals(fUser.getUid()))){
+                        holder.showPopup(v);
+                    }
+                    return false;
+                });
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        holder.roomname.setText(room.getRoomname());
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, RoomChatActivity.class);
-            intent.putExtra("room_key", room.getRoomname());
+            intent.putExtra("Room_Name", room.getRoomname());
             mContext.startActivity(intent);
         });
-
-        holder.itemView.setOnLongClickListener(v -> {
-            holder.showPopup(v);
-            return true;
-        });
-
-        holder.mineShowView(holder.mine);
+        holder.mineShowView(holder.mine, holder.creator);
     }
 
     @Override
@@ -76,11 +90,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
         public TextView roomname;
         public TextView mine;
+        public TextView creator;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             roomname = itemView.findViewById(R.id.roomIname);
             mine = itemView.findViewById(R.id.mine_view);
+            creator = itemView.findViewById(R.id.creator_view);
         }
 
         private void showPopup(View view) {
@@ -94,11 +110,9 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item1:
-                    try {
-                        final DatabaseReference room_delete_reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
-                        room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
-                                Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
-                    } catch (Exception exception) {exception.getStackTrace();}
+                    final DatabaseReference room_delete_reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+                    room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
+                            Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
                     return true;
 
                 default:
@@ -106,18 +120,26 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             }
         }
 
-        public void mineShowView (TextView mineView) {
+        public void mineShowView (TextView mineView, TextView creatorView) {
             final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+            final Room roomN = mRooms.get(getAdapterPosition()); //for roomN.getCreatorId();
 
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String roomCreator = (String) snapshot.child(mRooms.get(getAdapterPosition()).getRoomKey()).child("creator").getValue();
-//                    or,
-//                    String roomCreator = snapshot.child(mRooms.get(getAdapterPosition()).getRoomKey()).child("creator").getValue(String.class);
-                    if (roomCreator != null && roomCreator.equals(firebaseUser.getUid())) {
+                    ArrayList<String> usersList = new ArrayList<>();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        User user = dataSnapshot.getValue(User.class);
+                        usersList.add(user.getId());
+                    }
+                    String roomCreator = (String) snapshot.child(roomN.getRoomKey()).child("creator").getValue();
+//                     //or, String roomCreator = snapshot.child(mRooms.get(getAdapterPosition()).getRoomKey()).child("creator").getValue(String.class);
+                    if ((roomCreator != null) && (firebaseUser.getUid() != null) && (roomCreator.equals(firebaseUser.getUid()))) {
                         mineView.setVisibility(View.VISIBLE);
+                    } else if (usersList.contains(roomN.getCreatorId())) {
+                        creatorView.setText(roomN.getCreatorUsername());
+                        creatorView.setVisibility(View.VISIBLE);
                     }
                 }
 
