@@ -22,13 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
-import fun.flexpad.com.Notifications.Data;
 import fun.flexpad.com.R;
 import fun.flexpad.com.RoomChatActivity;
 
@@ -89,16 +85,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.item1:
-                    final DatabaseReference room_delete_reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
-                    room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
-                            Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
-                    return true;
-
-                default:
-                    return false;
+            if (item.getItemId() == R.id.item1) {
+                final DatabaseReference room_delete_reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+                room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
+                        Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
+                return true;
             }
+            return false;
         }
 
         public void mineShowView (TextView mineView, TextView creatorView) {
@@ -112,11 +105,12 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                     ArrayList<String> usersList = new ArrayList<>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         User user = dataSnapshot.getValue(User.class);
+                        assert user != null;
                         usersList.add(user.getId());
                     }
                     String roomCreator = (String) snapshot.child(roomN.getRoomKey()).child("creator").getValue();
-//                     //or, String roomCreator = snapshot.child(mRooms.get(getAdapterPosition()).getRoomKey()).child("creator").getValue(String.class);
-                    if ((roomCreator != null) && (firebaseUser.getUid() != null) && (roomCreator.equals(firebaseUser.getUid()))) {
+//                    //or, String roomCreator = snapshot.child(roomN.getRoomKey()).child("creator").getValue(String.class);
+                    if (roomCreator != null && roomCreator.equals(firebaseUser.getUid())) {
                         mineView.setVisibility(View.VISIBLE);
                     } else if (usersList.contains(roomN.getCreatorId())) {
                         creatorView.setText(roomN.getCreatorUsername());
@@ -141,8 +135,9 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     final String boundRoomCreator = (String) snapshot.child(roomP.getRoomKey()).child("creator").getValue();
                     itemView.setOnLongClickListener(v -> {
-                        if ((boundRoomCreator != null) && (fUser.getUid() != null) && (boundRoomCreator.equals(fUser.getUid()))){
-                            showPopup(v);
+                        if ((boundRoomCreator != null)) {
+                            assert fUser != null;
+                            if (boundRoomCreator.equals(fUser.getUid())) {showPopup(v);}
                         }
                         return false;
                     });
@@ -156,4 +151,3 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         }
     }
 }
-
