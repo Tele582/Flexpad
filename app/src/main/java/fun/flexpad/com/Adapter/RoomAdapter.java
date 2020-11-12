@@ -34,8 +34,8 @@ import fun.flexpad.com.RoomChatActivity;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
-    private Context mContext;
-    private ArrayList<Room> mRooms;
+    private final Context mContext;
+    private final ArrayList<Room> mRooms;
 
     public RoomAdapter(Context mContext, ArrayList<Room> mRooms) {
         this.mContext = mContext;
@@ -51,35 +51,16 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        final Room room = mRooms.get(position); //or remove 'final'
-        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String boundRoomCreator = (String) snapshot.child(room.getRoomKey()).child("creator").getValue();
-                holder.itemView.setOnLongClickListener(v -> {
-                    if ((boundRoomCreator != null) && (fUser.getUid() != null) && (boundRoomCreator.equals(fUser.getUid()))){
-                        holder.showPopup(v);
-                    }
-                    return false;
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
+        final Room room = mRooms.get(position);
         holder.roomname.setText(room.getRoomname());
+        holder.mineShowView(holder.mine, holder.creator);
+        holder.showPopupClass();
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, RoomChatActivity.class);
             intent.putExtra("Room_Name", room.getRoomname());
             mContext.startActivity(intent);
         });
-        holder.mineShowView(holder.mine, holder.creator);
     }
 
     @Override
@@ -148,8 +129,31 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
                 }
             });
+        }
 
+        public void showPopupClass () {
+            final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
+            final Room roomP = mRooms.get(getAdapterPosition());
+
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    final String boundRoomCreator = (String) snapshot.child(roomP.getRoomKey()).child("creator").getValue();
+                    itemView.setOnLongClickListener(v -> {
+                        if ((boundRoomCreator != null) && (fUser.getUid() != null) && (boundRoomCreator.equals(fUser.getUid()))){
+                            showPopup(v);
+                        }
+                        return false;
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
-
 }
+

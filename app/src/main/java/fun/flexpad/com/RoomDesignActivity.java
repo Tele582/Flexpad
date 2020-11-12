@@ -80,8 +80,7 @@ public class RoomDesignActivity extends AppCompatActivity {
                         Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
                         intent.putExtra("Room_Name", room);
                         startActivity(intent);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
                     }
                 });
