@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
@@ -110,7 +111,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                     }
                     String roomCreator = (String) snapshot.child(roomN.getRoomKey()).child("creator").getValue();
 //                    //or, String roomCreator = snapshot.child(roomN.getRoomKey()).child("creator").getValue(String.class);
-                    if (roomCreator != null && roomCreator.equals(firebaseUser.getUid())) {
+                    if (roomCreator != null && roomCreator.equals(Objects.requireNonNull(firebaseUser).getUid())) {
                         mineView.setVisibility(View.VISIBLE);
                     } else if (usersList.contains(roomN.getCreatorId())) {
                         creatorView.setText(roomN.getCreatorUsername());
