@@ -40,8 +40,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+
+import javax.crypto.AEADBadTagException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,6 +54,7 @@ public class ProfileFragment extends Fragment {
 
     private CircleImageView image_profile;
     private TextView username;
+    private TextView followersList, followingList;
 
     private DatabaseReference reference;
     private FirebaseUser fuser;
@@ -59,6 +63,9 @@ public class ProfileFragment extends Fragment {
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
     private StorageTask uploadTask;
+
+    int follower_count = 0;
+    int following_count = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +76,9 @@ public class ProfileFragment extends Fragment {
 
         image_profile = view.findViewById(R.id.profile_image);
         username = view.findViewById(R.id.username);
+        followersList = view.findViewById(R.id.followers_list);
+        followingList = view.findViewById(R.id.following_list);
+
 //        Button group_payment = view.findViewById(R.id.group_pay);
 //
 //        group_payment.setOnClickListener(new View.OnClickListener() {
@@ -94,9 +104,7 @@ public class ProfileFragment extends Fragment {
                 } else {
                     if (isAdded()) {
                         Glide.with(requireContext()).load(user.getImageURI()).into(image_profile);
-                    } //else {
-                    //image_profile.setImageResource(R.mipmap.ic_launcher);
-                    //}
+                    }
                 }
             }
 
@@ -106,8 +114,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        showFollowerShip(fuser.getUid());
         image_profile.setOnClickListener(v -> openImage());
-
         return view;
     }
 
@@ -183,5 +191,50 @@ public class ProfileFragment extends Fragment {
                 uploadImage();
             }
         }
+    }
+
+    public void showFollowerShip (String currentUserId) {
+        final DatabaseReference followRef = FirebaseDatabase.getInstance().getReference()
+                .child("FollowList").child(currentUserId);
+
+        ArrayList<String> underFollowersList = new ArrayList<>();
+        followRef.child("followers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.child("unfollowed").exists()) {
+                    final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
+                    followersList.setText("Followers: " + followersNumber);
+                } else {
+                    final String followersNumber = Long.toString(snapshot.getChildrenCount());
+                    followersList.setText("Followers: " + followersNumber);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        ArrayList<String> underFollowingList = new ArrayList<>();
+        followRef.child("following").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.child("unfollowed").exists()) {
+                    final String followingNumber = Long.toString(snapshot.getChildrenCount() - 1 );
+                    followingList.setText("Following: " + followingNumber);
+                } else {
+                    final String followingNumber = Long.toString(snapshot.getChildrenCount());
+                    followingList.setText("Following: " + followingNumber);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

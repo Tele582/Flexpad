@@ -49,5 +49,7 @@
     <string name="following">Following</string>
     <string name="mine">Mine</string>
     <string name="delete_room">Delete Room</string>
+    <string name="followers_number">Followers:</string>
+    <string name="following_number">Following:</string>
 
 </resources>
