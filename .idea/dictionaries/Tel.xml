@@ -14,7 +14,9 @@
       <w>newmessage</w>
       <w>nmap</w>
       <w>roomname</w>
+      <w>roomtitle</w>
       <w>rootref</w>
+      <w>textview</w>
       <w>unfollowed</w>
       <w>userid</w>
     </words>
