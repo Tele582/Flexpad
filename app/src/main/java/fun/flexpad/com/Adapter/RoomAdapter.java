@@ -146,8 +146,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                         }
                         return false;
                     });
-                    assert creatorVerifiedStatus != null;
-                    if (creatorVerifiedStatus.equals("true")) {verification.setVisibility(View.VISIBLE);}
+                    if (creatorVerifiedStatus != null && creatorVerifiedStatus.equals("true")) {verification.setVisibility(View.VISIBLE);}
                 }
 
                 @Override
