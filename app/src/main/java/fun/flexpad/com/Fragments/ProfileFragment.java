@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,15 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-
-import fun.flexpad.com.FactOrFakeActivity;
-import fun.flexpad.com.GamesActivity;
-import fun.flexpad.com.Model.User;
-import fun.flexpad.com.PaymentActivity;
-import fun.flexpad.com.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,11 +34,11 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
-
-import javax.crypto.AEADBadTagException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fun.flexpad.com.Model.User;
+import fun.flexpad.com.R;
+import fun.flexpad.com.PaymentActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -63,9 +55,6 @@ public class ProfileFragment extends Fragment {
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
     private StorageTask uploadTask;
-
-    int follower_count = 0;
-    int following_count = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -142,16 +131,13 @@ public class ProfileFragment extends Fragment {
                     + "." + getFileExtension(imageUri));
 
             uploadTask = fileReference.putFile(imageUri);
-            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()){
-                        throw task.getException();
-                    }
-
-
-                    return fileReference.getDownloadUrl();
+            uploadTask.continueWithTask((Continuation<UploadTask.TaskSnapshot, Task<Uri>>) task -> {
+                if (!task.isSuccessful()){
+                    throw task.getException();
                 }
+
+
+                return fileReference.getDownloadUrl();
             }).addOnCompleteListener((OnCompleteListener<Uri>) task -> {
                 if (task.isSuccessful()){
                     Uri downloadUri = task.getResult();
