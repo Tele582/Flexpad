@@ -47,13 +47,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:visibility="gone"
+        android:gravity="end"
+        android:textAlignment="viewEnd"
         android:layout_marginEnd="20dp"
         android:layout_centerVertical="true"
         android:fontFamily="casual"
-        android:maxLines="1"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/roomIname"
         tools:text="Creator"
         android:textColor="@color/colorBlack"
-        android:textAlignment="center"
         android:textAllCaps="false"
         android:textStyle="bold" />
 
