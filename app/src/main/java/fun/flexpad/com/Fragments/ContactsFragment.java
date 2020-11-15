@@ -15,9 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -33,12 +37,13 @@ import java.util.List;
 import java.util.Objects;
 
 import fun.flexpad.com.Adapter.UserAdapter;
+import fun.flexpad.com.Model.Chatlist;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
 public class ContactsFragment extends Fragment {
 
-    private List<User> mUsers;
+    private List<User> mContacts;
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
@@ -47,7 +52,6 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -67,13 +71,28 @@ public class ContactsFragment extends Fragment {
                     new String[] { Manifest.permission.READ_CONTACTS },
                     Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }
+
+        EditText search_contacts = view.findViewById(R.id.search_contacts);
+        search_contacts.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchUsers(s.toString().toLowerCase());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return view;
     }
 
     private void addContacts() {
 
-        mUsers = new ArrayList<>();
-
+        mContacts = new ArrayList<>();
         String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
         ContentResolver cr = requireContext().getContentResolver();
         Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
@@ -87,12 +106,11 @@ public class ContactsFragment extends Fragment {
         }
         cur.close();
 
-        DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users"); //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users");
         contacts_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsers.clear();
+                mContacts.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     User user = snapshot.getValue(User.class);
                     for (String num : phones) {
@@ -100,14 +118,65 @@ public class ContactsFragment extends Fragment {
                         assert fuser != null;
                         try {
                             if (user.getContact().equals(num) && !user.getId().equals(fuser.getUid())){
-                                mUsers.add(user);
+                                mContacts.add(user);
                             }
                         } catch (Exception e) {
                             e.getStackTrace();
                         }
                     }
                 }
-                userAdapter = new UserAdapter(getContext(), mUsers, false);
+                userAdapter = new UserAdapter(getContext(), mContacts, false);
+                recyclerView.setAdapter(userAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void searchUsers(String s) {
+
+        mContacts = new ArrayList<>();
+
+        final String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+        ContentResolver cr = requireContext().getContentResolver();
+        Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{PHONE_NUMBER}, null, null, null);
+        ArrayList<String> phones = new ArrayList<>();
+        assert cur != null;
+        //cur.moveToFirst();
+        while (cur.moveToNext()) {
+            String number = cur.getString(0);
+            number = number.replaceAll(" ", "");
+            if (!phones.contains(number)) phones.add(number);
+        }
+        cur.close();
+
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
+                .startAt(s)
+                .endAt(s+"\uf8ff");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mContacts.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    for (String num : phones) {
+                        assert user != null;
+                        assert fuser != null;
+                        try {
+                            if (user.getContact().equals(num) && !user.getId().equals(fuser.getUid())){
+                                mContacts.add(user);
+                            }
+                        } catch (Exception e) {
+                            e.getStackTrace();
+                        }
+                    }
+                }
+                userAdapter = new UserAdapter(getContext(), mContacts, false);
                 recyclerView.setAdapter(userAdapter);
             }
 

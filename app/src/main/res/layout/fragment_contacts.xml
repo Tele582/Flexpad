@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.ContactsFragment">
 
     <EditText
@@ -10,10 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:hint="@string/search"
-        android:id="@+id/search_users"/>
+        android:id="@+id/search_contacts" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/search_users"
+        android:layout_below="@id/search_contacts"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
