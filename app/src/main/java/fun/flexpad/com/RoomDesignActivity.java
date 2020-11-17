@@ -41,8 +41,8 @@ import fun.flexpad.com.Model.User;
 public class RoomDesignActivity extends AppCompatActivity {
 
     private CircleImageView room_image;
-    EditText room_name;
-    Button ok;
+    private EditText room_name;
+    private Button createBtn;
     StorageReference storageReference;
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
@@ -53,28 +53,29 @@ public class RoomDesignActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_design);
 
-        Toolbar toolbar = findViewById(R.id.room_design_toolbar);
+        final Toolbar toolbar = findViewById(R.id.room_design_toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Room Design");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Design and Create Room");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
             //might cause app to crash;
             startActivity(new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
 
-        ok = findViewById(R.id.ok);
+        createBtn = findViewById(R.id.create_btn);
         room_name = findViewById(R.id.room_name);
         //room_image = findViewById(R.id.room_image);
 
-        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference("room_uploads");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                ok.setOnClickListener(view -> {
-                    String room = room_name.getText().toString();
+                final User user = snapshot.getValue(User.class);
+                createBtn.setOnClickListener(view -> {
+
+                    final String room = room_name.getText().toString();
                     if (!room.trim().isEmpty()){
                         saveroom(room, user.getId(), user.getUsername(), user.getVerified());
                         Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);

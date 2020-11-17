@@ -38,12 +38,13 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/ok"
+        android:id="@+id/create_btn"
         android:layout_gravity="end"
         android:layout_marginTop="96dp"
         android:layout_margin="48dp"
         android:background="@drawable/orange_duolingable"
-        android:text="OK"
+        android:text="Create"
+        android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="22sp"
         android:paddingTop="12dp"
