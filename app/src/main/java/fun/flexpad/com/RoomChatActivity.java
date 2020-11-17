@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 public class RoomChatActivity extends AppCompatActivity {
@@ -42,6 +43,14 @@ public class RoomChatActivity extends AppCompatActivity {
         // Example of a call to a native method --C++
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
+
+        tv.setOnClickListener(v -> {
+            Random r = new Random();
+            int lowRange = 0;
+            int highRange = 99;
+            int result = r.nextInt(highRange - lowRange );
+            tv.setText(Integer.toString(result));
+        });
 
         final String roomtitle = getIntent().getStringExtra("Room_Name");
         roomTextview = findViewById(R.id.room_title);

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".RoomChatActivity">
 
@@ -49,47 +50,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/in_room_people"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="16dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/in_room_people2"
-            android:layout_toEndOf="@id/in_room_people"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="16dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/in_room_people3"
-            android:layout_toEndOf="@id/in_room_people2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="16dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/in_room_people4"
-            android:layout_below="@id/in_room_people"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="16dp"
-            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/sample_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hello World!"
-            android:layout_below="@id/in_room_people4"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

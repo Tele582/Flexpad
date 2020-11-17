@@ -52,7 +52,6 @@ public class ForYouFragment extends Fragment {
     private void readRooms() {
         mRooms = new ArrayList<>();
 
-        //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -60,10 +59,9 @@ public class ForYouFragment extends Fragment {
 
                     mRooms.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        //User user = snapshot.getValue(User.class);
                         Room room = snapshot.getValue(Room.class);
                         assert room != null;
-                        mRooms.add(room);//    //
+                        mRooms.add(room);
                     }
                     roomAdapter = new RoomAdapter(getContext(), mRooms);
                     recyclerView.setAdapter(roomAdapter);
