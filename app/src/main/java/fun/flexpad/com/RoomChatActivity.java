@@ -55,6 +55,9 @@ public class RoomChatActivity extends AppCompatActivity {
         final String roomtitle = getIntent().getStringExtra("Room_Name");
         roomTextview = findViewById(R.id.room_title);
         roomTextview.setText(roomtitle);
+//        final String randomRoomTitle = getIntent().getStringExtra("Random_Room_Name");
+//        roomTextview.setText(randomRoomTitle);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -129,6 +132,11 @@ public class RoomChatActivity extends AppCompatActivity {
                 record_audio_result == PackageManager.PERMISSION_GRANTED;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(RoomChatActivity.this, MainActivity.class));
+    }
 }
 
 
