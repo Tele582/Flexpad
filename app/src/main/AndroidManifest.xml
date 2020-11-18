@@ -26,7 +26,8 @@
         <activity
             android:name=".WelcomeActivity" />
         <activity android:name=".RoomDesignActivity" />
-        <activity android:name=".RoomChatActivity" />
+        <activity android:name=".RoomChatActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".WalletActivity" />
         <activity android:name=".SendMoneyActivity" />
         <activity android:name=".PaymentActivity" />
@@ -54,7 +55,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:launchMode="standard" />
 
         <service
             android:name=".Notifications.MyFirebaseMessaging"
