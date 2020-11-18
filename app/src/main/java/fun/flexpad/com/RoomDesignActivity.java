@@ -72,16 +72,15 @@ public class RoomDesignActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final User user = snapshot.getValue(User.class);
                 createBtn.setOnClickListener(view -> {
-
+                    final User user = snapshot.getValue(User.class);
                     final String room = room_name.getText().toString();
                     if (!room.trim().isEmpty()){
                         saveroom(room, user.getId(), user.getUsername(), user.getVerified());
-                        Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
+                        final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
                         intent.putExtra("Room_Name", room);
-                        startActivity(intent);
                         Toast.makeText(RoomDesignActivity.this, "Creating room..", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
                     } else {
                         Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
                     }
