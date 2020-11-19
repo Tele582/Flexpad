@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "612462577758",
-    "firebase_url": "https://flexpad-ecefc.firebaseio.com",
-    "project_id": "flexpad-ecefc",
-    "storage_bucket": "flexpad-ecefc.appspot.com"
+    "project_number": "362035220513",
+    "firebase_url": "https://flexpad-official.firebaseio.com",
+    "project_id": "flexpad-official",
+    "storage_bucket": "flexpad-official.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:612462577758:android:dc2fe5247dbeb4a7b74ccf",
+        "mobilesdk_app_id": "1:362035220513:android:9800c95ac2a2ea13ff9360",
         "android_client_info": {
           "package_name": "fun.flexpad.com"
         }
       },
       "oauth_client": [
         {
-          "client_id": "612462577758-mqhir2q472br0vf29vqds5ptd8tlecrd.apps.googleusercontent.com",
+          "client_id": "362035220513-nri0a9kcgd8psvfcq0e5fo3p5ei9aots.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDjYe2352JulNf-ZNBzDuV7J5BMFERGq_c"
+          "current_key": "AIzaSyBnx9Xz5e3nX92O3U1oKeBkjSLAClgQGL0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "612462577758-mqhir2q472br0vf29vqds5ptd8tlecrd.apps.googleusercontent.com",
+              "client_id": "362035220513-nri0a9kcgd8psvfcq0e5fo3p5ei9aots.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
