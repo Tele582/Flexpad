@@ -261,6 +261,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     ClipData clip = ClipData.newPlainText("String", text);
                     clipboardmgr.setPrimaryClip(clip);
                     clip.getDescription(); ////confirm meaning of line
+                    Toast.makeText(mContext.getApplicationContext(), "Message Copied!", Toast.LENGTH_SHORT).show();
 
                 default:
                     return false;
