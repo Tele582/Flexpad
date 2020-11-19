@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fun.flexpad.com.MainActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
@@ -93,7 +94,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 final DatabaseReference room_delete_reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
                 room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
                         Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
-                return true;
+                //this opens random roomChatActivity, which it should not
             }
             return false;
         }
@@ -116,9 +117,12 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 //                    //or, String roomCreator = snapshot.child(roomN.getRoomKey()).child("creator").getValue(String.class);
                     if (roomCreator != null && roomCreator.equals(Objects.requireNonNull(firebaseUser).getUid())) {
                         mineView.setVisibility(View.VISIBLE);
-                    } else if (usersList.contains(roomN.getCreatorId())) {
-                        creatorView.setText(roomN.getCreatorUsername());
-                        creatorView.setVisibility(View.VISIBLE);
+                    } else {
+                        mineView.setVisibility(View.GONE);
+                        if (usersList.contains(roomN.getCreatorId())) {
+                            creatorView.setText(roomN.getCreatorUsername());
+                            creatorView.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -147,6 +151,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                         return false;
                     });
                     if (creatorVerifiedStatus != null && creatorVerifiedStatus.equals("true")) {verification.setVisibility(View.VISIBLE);}
+                    else {verification.setVisibility(View.GONE);}
                 }
 
                 @Override

@@ -3,15 +3,11 @@ package fun.flexpad.com;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -67,39 +63,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     ImageView fullScreenContainer, backFromPic;
     LinearLayout backFromPicBg;
 
-    int roomsNumber = 0;
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
     private boolean isAccelerometerSensorAvailable, itIsNotFirstTime = false;
-    private float currentX, currentY, currentZ, lastX, lastY, lastZ;
-    private float xDifference, yDifference, zDifference;
-    private float shakeThreshold = 5f;
+    private float lastX;
+    private float lastY;
+    private float lastZ;
     private Vibrator vibrator;
 
-    @Override
-    public void onBackPressed() {
-        if (fullScreenContainer.getVisibility() == View.VISIBLE) {
-            fullScreenContainer.setImageDrawable(null);
-            fullScreenContainer.setVisibility(View.GONE);
-            backFromPicBg.setVisibility(View.GONE);
-        } else {
-            super.onBackPressed();
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupWithNavController();
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
-
-        showFloatingButton();
-        shakeToRoom();
 
         profile_image = findViewById(R.id.profile_image);
         verification_image = findViewById(R.id.verification_image);
@@ -108,32 +88,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         backFromPic = findViewById(R.id.back_from_pic);
         backFromPicBg = findViewById(R.id.back_from_pic_bg);
 
+        showFloatingButton();
+        shakeToRoom();
         showUserDetails();
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
         final ViewPager viewPager = findViewById(R.id.view_pager);
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
                 int unread = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
                     assert chat != null;
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isIsseen()){
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isIsseen()) {
                         unread++;
                     }
                 }
 
                 viewPagerAdapter.addFragment(new RoomsFragment(), "Rooms");
-
                 if (unread == 0){
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-
                 } else {
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats ( "+unread+" )");
                 }
@@ -177,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return false;
     }
 
-    public void shakeToRoom() {
+    private void shakeToRoom() { //throws Throwable
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -186,31 +165,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             isAccelerometerSensorAvailable = true;
         } else {
-            Toast.makeText(this, "Accelerometer Sensor Not Available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Accelerometer Sensor Not Available", Toast.LENGTH_SHORT).show();
             isAccelerometerSensorAvailable = false;
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        currentX = event.values[0];
-        currentY = event.values[1];
-        currentZ = event.values[2];
+        float currentX = event.values[0];
+        float currentY = event.values[1];
+        float currentZ = event.values[2];
+        final ArrayList<Room> randRooms = new ArrayList<>();
+        final int[] roomsNumber = {0};
 
         if (itIsNotFirstTime) {
-            xDifference  = Math.abs(lastX - currentX);
-            yDifference  = Math.abs(lastY - currentY);
-            zDifference  = Math.abs(lastZ - currentZ);
+            final float[] xDifference = {Math.abs(lastX - currentX)};
+            final float[] yDifference = {Math.abs(lastY - currentY)};
+            final float[] zDifference = {Math.abs(lastZ - currentZ)};
 
-            if ((xDifference > shakeThreshold && yDifference > shakeThreshold) ||
-                    (xDifference > shakeThreshold && zDifference > shakeThreshold) ||
-                    (yDifference > shakeThreshold && zDifference > shakeThreshold)) {
+            final float shakeThreshold = 5f;
+            if (((xDifference[0] > shakeThreshold && yDifference[0] > shakeThreshold) ||
+                    (xDifference[0] > shakeThreshold && zDifference[0] > shakeThreshold) ||
+                    (yDifference[0] > shakeThreshold && zDifference[0] > shakeThreshold))) {
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     vibrator.vibrate(500); //deprecated in API 26
                 }
-                ArrayList<Room> mRooms = new ArrayList<>();
+
                 final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Rooms");
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -218,17 +201,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Room rm = dataSnapshot.getValue(Room.class);
                             assert rm != null;
-                            roomsNumber++;
-                            mRooms.add(rm);
+                            roomsNumber[0]++;
+                            randRooms.add(rm);
                         }
                         Random rand = new Random();
-                        int lowRange = 1;
-                        int highRange = roomsNumber;
-                        final int randomRoomNo = rand.nextInt(highRange - lowRange);
-                        final Room room = mRooms.get(randomRoomNo);
-                        Intent intent = new Intent(MainActivity.this, RoomChatActivity.class);
-                        intent.putExtra("Room_Name", room.getRoomname());
-                        startActivity(intent);
+                        int lowRange = 0;
+                        final int randomRoomNo = rand.nextInt(roomsNumber[0] - lowRange);
+                        try {
+                            final Room room = randRooms.get(randomRoomNo);
+                            if (room.getRoomname() != null) {
+                                final Intent randomIntent = new Intent(MainActivity.this, RoomChatActivity.class);
+                                randomIntent.putExtra("Room_Name", room.getRoomname());
+                                startActivity(randomIntent);
+                            }
+                        } catch (Exception e) {e.printStackTrace();}
                     }
 
                     @Override
@@ -238,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
             }
         }
-
         lastX = currentX;
         lastY = currentY;
         lastZ = currentZ;
@@ -368,6 +353,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (fullScreenContainer.getVisibility() == View.VISIBLE) {
+            fullScreenContainer.setImageDrawable(null);
+            fullScreenContainer.setVisibility(View.GONE);
+            backFromPicBg.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     private  void status(String status) {
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
@@ -385,6 +380,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (isAccelerometerSensorAvailable) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
