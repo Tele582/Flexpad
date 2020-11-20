@@ -4,9 +4,11 @@
       <w>ayout</w>
       <w>chatlist</w>
       <w>clipboardmgr</w>
+      <w>currentuser</w>
       <w>duolingable</w>
       <w>flexpad</w>
       <w>fuser</w>
+      <w>gson</w>
       <w>imageuri</w>
       <w>isseen</w>
       <w>messa</w>
@@ -17,6 +19,7 @@
       <w>roomname</w>
       <w>roomtitle</w>
       <w>rootref</w>
+      <w>sented</w>
       <w>textview</w>
       <w>unfollowed</w>
       <w>userid</w>
