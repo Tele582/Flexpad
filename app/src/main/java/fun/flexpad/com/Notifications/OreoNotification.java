@@ -13,7 +13,7 @@ import android.os.Build;
 public class OreoNotification extends ContextWrapper {
 
     private static  final String CHANNEL_ID = "fun.flexpad.com";
-    private static  final String CHANNEL_NAME = "flexpad-official";
+    private static  final String CHANNEL_NAME = "flexpad";
 
     private NotificationManager notificationManager;
 
