@@ -13,7 +13,7 @@ import android.os.Build;
 public class OreoNotification extends ContextWrapper {
 
     private static  final String CHANNEL_ID = "fun.flexpad.com";
-    private static  final String CHANNEL_NAME = "flexpad";
+    private static  final String CHANNEL_NAME = "flexpad-official";
 
     private NotificationManager notificationManager;
 
@@ -53,7 +53,7 @@ public class OreoNotification extends ContextWrapper {
     public  Notification.Builder getOreoNotification(String title, String body,
                                                      PendingIntent pendingIntent, Uri soundUri, String icon){
 
-        return  new Notification.Builder(getApplicationContext(), CHANNEL_ID)
+        return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(body)

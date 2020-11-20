@@ -37,47 +37,47 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMessagingServ";
 
     ////////////I copied this from MyFirebaseIdService before deleting it (in case of need to reverse).
-    @Override
-    public void onNewToken(@NonNull String s) {
-        super.onNewToken(s);
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//    @Override
+//    public void onNewToken(@NonNull String s) {
+//        super.onNewToken(s);
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//
+//        //I think the issue here was that you were trying to call getResult before this task was complete.
+//        //I might be wrong so test it.
+//        Task<InstanceIdResult> tokenTask = FirebaseInstanceId.getInstance().getInstanceId();
+//        try {
+//            Tasks.await(tokenTask);
+//        } catch (ExecutionException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//
+//        try {
+//            @NonNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
+//            String refreshToken = tokenResult.getToken();
+//
+//            //String refreshToken = Objects.requireNonNull(FirebaseInstanceId.getInstance().getInstanceId().getResult()).getToken();//there's an issue here
+//
+//            if (firebaseUser != null){
+//                updateToken(refreshToken);
+//            }
+//        } catch (Exception e) {
+//            e.getStackTrace();
+//        }
+//        //Log.e("NEW_TOKEN",s);
+//    }
 
-        //I think the issue here was that you were trying to call getResult before this task was complete.
-        //I might be wrong so test it.
-        Task<InstanceIdResult> tokenTask = FirebaseInstanceId.getInstance().getInstanceId();
-        try {
-            Tasks.await(tokenTask);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
 
 
-
-        try {
-            @NonNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
-            String refreshToken = tokenResult.getToken();
-
-            //String refreshToken = Objects.requireNonNull(FirebaseInstanceId.getInstance().getInstanceId().getResult()).getToken();//there's an issue here
-
-            if (firebaseUser != null){
-                updateToken(refreshToken);
-            }
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-        //Log.e("NEW_TOKEN",s);
-    }
-
-
-
-    private void updateToken(String refreshToken) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
-        Token token = new Token(refreshToken);
-        assert firebaseUser != null;
-        reference.child(firebaseUser.getUid()).setValue(token);
-    }
+//    private void updateToken(String refreshToken) {
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+//        Token token = new Token(refreshToken);
+//        assert firebaseUser != null;
+//        reference.child(firebaseUser.getUid()).setValue(token);
+//    }
     ///////////
 
 
@@ -94,10 +94,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        assert sented != null;
+//        assert sented != null;
         if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
 
-            assert currentUser != null;
+//            assert currentUser != null;
             if (!currentUser.equals(user)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                     sendOreoNotification(remoteMessage);
@@ -107,8 +107,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
         }
     }
-
-
 
     private void sendOreoNotification(RemoteMessage remoteMessage) {
 
@@ -146,8 +144,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
-
-        //RemoteMessage.Notification notification = remoteMessage.getNotification();
 
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
