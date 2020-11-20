@@ -34,7 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
-    private static final String TAG = "MyFirebaseMessagingServ";
+    //private static final String TAG = "MyFirebaseMessagingServ";
 
     ////////////I copied this from MyFirebaseIdService before deleting it (in case of need to reverse).
 //    @Override
@@ -109,17 +109,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     }
 
     private void sendOreoNotification(RemoteMessage remoteMessage) {
-
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
-        //String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
         String body = remoteMessage.getData().get("body");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
-
-
-        assert user != null;
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, MessageActivity.class);
         Bundle bundle = new Bundle();
@@ -138,7 +133,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             i = j;
         }
 
-        //assert noti != null;
         oreoNotification.getManager().notify(i, builder.build());
 
     }
@@ -151,9 +145,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String body = remoteMessage.getData().get("body");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
-
-
-        assert user != null;
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, MessageActivity.class);
         Bundle bundle = new Bundle();
@@ -163,15 +154,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        assert icon != null;
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this) //this might be why notification doesn't work yet..
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(Integer.parseInt(icon))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(defaultSound)
                 .setContentIntent(pendingIntent);
-
         NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         int i = 0;
@@ -179,7 +168,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             i = j;
         }
 
-        assert noti != null;
         noti.notify(i, builder.build());
     }
 }
