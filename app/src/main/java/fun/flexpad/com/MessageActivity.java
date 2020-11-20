@@ -47,6 +47,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -108,6 +109,8 @@ public class MessageActivity extends AppCompatActivity {
             intent.putExtra("textFromMessageToMainActivity", textFromMessageToMainActivity);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
+
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
@@ -587,10 +590,9 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (notify) {
-                    assert user != null;
                     sendNotification(receiver, user.getUsername(), msg);
-                    notify = false;
                 }
+                notify = false;
             }
 
             @Override
@@ -603,6 +605,7 @@ public class MessageActivity extends AppCompatActivity {
     //to send notifications (not working yet)
     private void sendNotification(String receiver, final String username, final String message) {
 
+        final FirebaseUser notiFuser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -611,7 +614,7 @@ public class MessageActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
                     //String token = snapshot.getValue(String.class);
-                    Data data = new Data(fuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, username+": "+message, "New Message", userid);
+                    Data data = new Data(notiFuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, username+": "+message, "New Message", userid);
 
                     assert token != null;
                     Sender sender = new Sender(data, token.getToken());
@@ -621,17 +624,16 @@ public class MessageActivity extends AppCompatActivity {
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
                                 @Override
-                                public void onResponse(@NonNull Call<MyResponse> call, @NonNull Response<MyResponse> response) {
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if (response.code() == 200){
-                                        assert response.body() != null;
                                         if (response.body().success != 1){
-                                            Toast.makeText(MessageActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MessageActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
 
                                 @Override
-                                public void onFailure(@NonNull Call<MyResponse> call, @NonNull Throwable t) {
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
 
                                 }
                             });

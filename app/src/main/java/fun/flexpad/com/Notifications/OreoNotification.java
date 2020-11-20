@@ -12,8 +12,8 @@ import android.os.Build;
 
 public class OreoNotification extends ContextWrapper {
 
-    private static  final String CHANNEL_ID = "fun.flexpad.com";
-    private static  final String CHANNEL_NAME = "flexpad";
+    private static final String CHANNEL_ID = "fun.flexpad.com";
+    private static final String CHANNEL_NAME = "flexpad";
 
     private NotificationManager notificationManager;
 
@@ -25,34 +25,30 @@ public class OreoNotification extends ContextWrapper {
         }
     }
 
-
     @TargetApi(Build.VERSION_CODES.O)
     private void createChannel() {
 
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_DEFAULT);
         channel.enableLights(false);
         channel.enableVibration(true);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
         getManager().createNotificationChannel(channel);
-
     }
 
     public NotificationManager getManager() {
-        if (notificationManager == null){
-            notificationManager =(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
+        if (notificationManager == null) {
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
-        return notificationManager;
-
+        return  notificationManager;
     }
 
     @TargetApi(Build.VERSION_CODES.O)
     public  Notification.Builder getOreoNotification(String title, String body,
                                                      PendingIntent pendingIntent, Uri soundUri, String icon){
-
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
@@ -60,6 +56,5 @@ public class OreoNotification extends ContextWrapper {
                 .setSmallIcon(Integer.parseInt(icon))
                 .setSound(soundUri)
                 .setAutoCancel(true);
-
     }
 }
