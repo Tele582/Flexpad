@@ -56,15 +56,22 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         holder.showPopupAndVerification();
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, RoomChatActivity.class);
+            final Intent intent = new Intent(mContext, RoomChatActivity.class);
             intent.putExtra("Room_Name", room.getRoomname());
             mContext.startActivity(intent);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         });
     }
 
     @Override
     public int getItemCount() {
         return mRooms.size();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
