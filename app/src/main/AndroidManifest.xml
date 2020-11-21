@@ -38,6 +38,7 @@
             android:name=".WelcomeActivity" />
         <activity android:name=".RoomDesignActivity" />
         <activity android:name=".RoomChatActivity"
+            android:excludeFromRecents="false"
             android:launchMode="singleTask" />
         <activity android:name=".WalletActivity" />
         <activity android:name=".SendMoneyActivity" />
