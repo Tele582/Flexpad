@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@android:color/white"
     android:orientation="vertical"
     tools:context=".RoomChatActivity">
 
@@ -62,18 +62,72 @@
 
     <RelativeLayout
         android:id="@+id/mic_layout"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom">
 
-        <Button
+        <ImageButton
+            android:id="@+id/record_blink"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="12dp"
+            android:visibility="invisible"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/ic_recording_foreground" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancel_record"
+            android:layout_toEndOf="@id/record_blink"
+            android:layout_toStartOf="@id/mic_live"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:text="Cancel" />
+
+        <ImageButton
             android:id="@+id/mic_live"
             android:layout_centerHorizontal="true"
             android:background="@drawable/ic_mic_foreground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/mic_live_on"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_mic_foreground"
+            android:backgroundTint="#615858"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/record_time"
+            android:layout_toStartOf="@id/btn_send"
+            android:layout_toEndOf="@id/mic_live"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:text="Time" />
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/icon_send_foreground"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -24,9 +27,10 @@ import java.util.UUID;
 
 public class RoomChatActivity extends AppCompatActivity {
 
-    Button mic_live;
+    ImageButton mic_live, mic_live_on, btnSend, btnRecording;
     MediaRecorder mediaRecorder;
     String pathSave = "";
+    MaterialTextView recordTime, cancelRecord;
 
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
@@ -69,30 +73,14 @@ public class RoomChatActivity extends AppCompatActivity {
         });
 
         mic_live = findViewById(R.id.mic_live);
+        mic_live_on = findViewById(R.id.mic_live_on);
+        btnSend = findViewById(R.id.btn_send);
+        btnRecording = findViewById(R.id.record_blink);
+        recordTime = findViewById(R.id.record_time);
+        cancelRecord = findViewById(R.id.cancel_record);
 
-        mic_live.setOnClickListener(view -> {
-            if(checkPermissionFromDevice()){
-                pathSave = Environment.getExternalStorageDirectory()
-                        .getAbsolutePath()+"/"
-                        + UUID.randomUUID().toString()+"_audio_record.3gp";
-                setupMediaRecorder();
-                //mediaRecorder = new MediaRecorder();
-                try{
-                    mediaRecorder.prepare();
-                    mediaRecorder.start();
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-                //btnPlay.setEnabled(false);
-                //btnStop.setEnabled(false);
-                //btnStopRecord.setEnabled(true);
+        recordVoice();
 
-                Toast.makeText(RoomChatActivity.this, "Recording...", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                requestPermission();
-            }
-        });
     }
 
     public native String stringFromJNI();
@@ -136,6 +124,48 @@ public class RoomChatActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(RoomChatActivity.this, MainActivity.class));
+    }
+
+    public void recordVoice() {
+        mic_live.setOnClickListener(view -> {
+            if(checkPermissionFromDevice()){
+                pathSave = Environment.getExternalStorageDirectory()
+                        .getAbsolutePath()+"/"
+                        + UUID.randomUUID().toString()+"_audio_record.3gp";
+                setupMediaRecorder();
+                //mediaRecorder = new MediaRecorder();
+                try{
+                    mediaRecorder.prepare();
+                    mediaRecorder.start();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+                mic_live_on.setVisibility(View.VISIBLE);
+                btnSend.setVisibility(View.VISIBLE);
+                btnRecording.setVisibility(View.VISIBLE);
+                recordTime.setVisibility(View.VISIBLE);
+                cancelRecord.setVisibility(View.VISIBLE);
+
+                Toast.makeText(RoomChatActivity.this, "Recording...", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                requestPermission();
+            }
+        });
+
+        cancelRecord.setOnClickListener(v -> {
+            try{
+                mediaRecorder.stop();
+                Toast.makeText(RoomChatActivity.this, "Ended!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mic_live_on.setVisibility(View.INVISIBLE);
+            btnSend.setVisibility(View.INVISIBLE);
+            btnRecording.setVisibility(View.INVISIBLE);
+            recordTime.setVisibility(View.INVISIBLE);
+            cancelRecord.setVisibility(View.INVISIBLE);
+        });
     }
 }
 
