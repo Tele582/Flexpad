@@ -7,9 +7,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -17,9 +19,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
@@ -29,9 +35,11 @@ public class RoomChatActivity extends AppCompatActivity {
 
     ImageButton mic_live, mic_live_on, btnSend, btnRecording;
     private MediaRecorder mediaRecorder;
-    String fileName = "";
+    private String fileName = "";
     MaterialTextView recordTime, cancelRecord;
     private static final String LOG_TAG = "Record_log";
+    private StorageReference mStorage;
+    private ProgressDialog mProgress;
 
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
@@ -63,6 +71,8 @@ public class RoomChatActivity extends AppCompatActivity {
 //        final String randomRoomTitle = getIntent().getStringExtra("Random_Room_Name");
 //        roomTextview.setText(randomRoomTitle);
 
+        mStorage = FirebaseStorage.getInstance().getReference("Room Audio Clips");
+        mProgress = new ProgressDialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,13 +144,13 @@ public class RoomChatActivity extends AppCompatActivity {
                         .getAbsolutePath() + "/"
                         + UUID.randomUUID().toString() + "_audio_record.3gp";
                 setupMediaRecorder();
-                //mediaRecorder = new MediaRecorder();
+
                 try{
                     mediaRecorder.prepare();
-                    mediaRecorder.start();
                 } catch (IOException e){
                     e.printStackTrace();
                 }
+                mediaRecorder.start();
                 mic_live_on.setVisibility(View.VISIBLE);
                 btnSend.setVisibility(View.VISIBLE);
                 btnRecording.setVisibility(View.VISIBLE);
@@ -178,14 +188,23 @@ public class RoomChatActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Toast.makeText(RoomChatActivity.this, "Sending...", Toast.LENGTH_SHORT).show();
+
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
             btnRecording.setVisibility(View.INVISIBLE);
             recordTime.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
 
+            mProgress.setMessage("Sending...");
+            mProgress.show();
+            StorageReference filePath = mStorage;//.child("new_audio.3gp");
 
+            Uri uri = Uri.fromFile(new File(fileName));
+            filePath.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                mProgress.dismiss();
+
+
+            });
         });
     }
 }
