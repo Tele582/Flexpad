@@ -1,5 +1,6 @@
 package fun.flexpad.com;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -54,7 +55,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -295,11 +298,16 @@ public class MessageActivity extends AppCompatActivity {
                 });
 
                 String message_num = Integer.toString(doc_message_number);
-                String messagelabel = fuser.getUid() + message_num + userid;
+                String messagelabel = fuser.getUid() + userid + message_num;
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+                Calendar currentCal = Calendar.getInstance();
+                final String currentTime = dateFormat.format(currentCal.getTime());
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
-                StorageReference filePath = storageReference.child(userid + "." + checker);
+                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + checker);
 
                 filePath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -375,7 +383,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
             } else if (checker.equals("image")){ //sending image
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files"); //create separate image folder
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files");
 
                 final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 final String userid = intent.getStringExtra("userid");
@@ -396,11 +404,16 @@ public class MessageActivity extends AppCompatActivity {
                 });
 
                 String message_num = Integer.toString(image_message_number);
-                String messagelabel = fuser.getUid() + message_num + userid;
+                String messagelabel = fuser.getUid() + userid + message_num;
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+                Calendar currentCal = Calendar.getInstance();
+                final String currentTime = dateFormat.format(currentCal.getTime());
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
-                StorageReference filePath = storageReference.child(userid + "." + "jpg"); //or say "." + checker
+                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + "jpg"); //or say "." + checker
 
                 uploadTask = filePath.putFile(fileUri);
 

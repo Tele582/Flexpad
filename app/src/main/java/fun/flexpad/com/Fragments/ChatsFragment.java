@@ -51,8 +51,8 @@ public class ChatsFragment extends Fragment {
 
     private List<Chatlist> usersList;
 
-    String userid;
-    Intent intent;
+//    String userid;
+//    Intent intent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

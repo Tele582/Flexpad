@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,12 +22,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
@@ -43,6 +50,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
+    FirebaseUser firebaseUser;
 
     static {
         System.loadLibrary("cpp_code");
@@ -52,6 +60,8 @@ public class RoomChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Example of a call to a native method --C++
         TextView tv = findViewById(R.id.sample_text);
@@ -197,11 +207,24 @@ public class RoomChatActivity extends AppCompatActivity {
 
             mProgress.setMessage("Sending...");
             mProgress.show();
-            StorageReference filePath = mStorage;//.child("new_audio.3gp");
+
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+            final String roomTitle = getIntent().getStringExtra("Room_Name");
+            String messagelabel = firebaseUser.getUid() + roomTitle;
+
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+            Calendar currentCal = Calendar.getInstance();
+            final String currentTime = dateFormat.format(currentCal.getTime());
+
+            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
 
             Uri uri = Uri.fromFile(new File(fileName));
             filePath.putFile(uri).addOnSuccessListener(taskSnapshot -> {
                 mProgress.dismiss();
+
+
 
 
             });
