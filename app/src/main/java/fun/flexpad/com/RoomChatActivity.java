@@ -13,12 +13,12 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -28,9 +28,10 @@ import java.util.UUID;
 public class RoomChatActivity extends AppCompatActivity {
 
     ImageButton mic_live, mic_live_on, btnSend, btnRecording;
-    MediaRecorder mediaRecorder;
-    String pathSave = "";
+    private MediaRecorder mediaRecorder;
+    String fileName = "";
     MaterialTextView recordTime, cancelRecord;
+    private static final String LOG_TAG = "Record_log";
 
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
@@ -90,7 +91,7 @@ public class RoomChatActivity extends AppCompatActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(pathSave);
+        mediaRecorder.setOutputFile(fileName);
     }
 
     private void requestPermission() {
@@ -129,9 +130,9 @@ public class RoomChatActivity extends AppCompatActivity {
     public void recordVoice() {
         mic_live.setOnClickListener(view -> {
             if(checkPermissionFromDevice()){
-                pathSave = Environment.getExternalStorageDirectory()
-                        .getAbsolutePath()+"/"
-                        + UUID.randomUUID().toString()+"_audio_record.3gp";
+                fileName = Environment.getExternalStorageDirectory()
+                        .getAbsolutePath() + "/"
+                        + UUID.randomUUID().toString() + "_audio_record.3gp";
                 setupMediaRecorder();
                 //mediaRecorder = new MediaRecorder();
                 try{
@@ -146,7 +147,7 @@ public class RoomChatActivity extends AppCompatActivity {
                 recordTime.setVisibility(View.VISIBLE);
                 cancelRecord.setVisibility(View.VISIBLE);
 
-                Toast.makeText(RoomChatActivity.this, "Recording...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomChatActivity.this, "Recording started...", Toast.LENGTH_SHORT).show();
             }
             else{
                 requestPermission();
@@ -156,15 +157,35 @@ public class RoomChatActivity extends AppCompatActivity {
         cancelRecord.setOnClickListener(v -> {
             try{
                 mediaRecorder.stop();
-                Toast.makeText(RoomChatActivity.this, "Ended!", Toast.LENGTH_SHORT).show();
+                mediaRecorder.release();
+                mediaRecorder = null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Toast.makeText(RoomChatActivity.this, "Recording stopped!", Toast.LENGTH_SHORT).show();
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
             btnRecording.setVisibility(View.INVISIBLE);
             recordTime.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+        });
+
+        btnSend.setOnClickListener(vSend -> {
+            try{
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(RoomChatActivity.this, "Sending...", Toast.LENGTH_SHORT).show();
+            mic_live_on.setVisibility(View.INVISIBLE);
+            btnSend.setVisibility(View.INVISIBLE);
+            btnRecording.setVisibility(View.INVISIBLE);
+            recordTime.setVisibility(View.INVISIBLE);
+            cancelRecord.setVisibility(View.INVISIBLE);
+
+
         });
     }
 }
