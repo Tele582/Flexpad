@@ -24,8 +24,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,10 +36,15 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
+
+import fun.flexpad.com.Adapter.RoomAdapter;
+import fun.flexpad.com.Model.Room;
 
 public class RoomChatActivity extends AppCompatActivity {
 
@@ -92,6 +100,28 @@ public class RoomChatActivity extends AppCompatActivity {
             //might cause app to crash;
             startActivity(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
+//
+//        ArrayList<Room> mRooms = new ArrayList<>();
+//        final DatabaseReference room_reference = FirebaseDatabase.getInstance().getReference("Rooms");
+//        room_reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                mRooms.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                    Room room = snapshot.getValue(Room.class);
+//                    assert room != null;
+//                    mRooms.add(room);//    //
+//                }
+//                roomAdapter = new RoomAdapter(getContext(), mRooms);
+//                recyclerView.setAdapter(roomAdapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         mic_live = findViewById(R.id.mic_live);
         mic_live_on = findViewById(R.id.mic_live_on);
@@ -208,25 +238,53 @@ public class RoomChatActivity extends AppCompatActivity {
             mProgress.setMessage("Sending...");
             mProgress.show();
 
-            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
             final String roomTitle = getIntent().getStringExtra("Room_Name");
             String messagelabel = firebaseUser.getUid() + roomTitle;
+            final String roomId = getIntent().getStringExtra("Room_ID");
 
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
             Calendar currentCal = Calendar.getInstance();
             final String currentTime = dateFormat.format(currentCal.getTime());
 
-            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
+            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp"); // = uri.getLastPathSegment()..ish;
 
             Uri uri = Uri.fromFile(new File(fileName));
-            filePath.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            filePath.putFile(uri).addOnSuccessListener((UploadTask.TaskSnapshot taskSnapshot) -> {
+
+                final DatabaseReference voice_reference = reference.child("VoiceClips").push();
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("sender", firebaseUser.getUid());
+                hashMap.put("roomname", roomTitle);
+                hashMap.put("roomID", roomId);
+                hashMap.put("messagelabel", messagelabel);
+                hashMap.put("type", "audio(3gp)");
+                hashMap.put("message", Objects.requireNonNull(taskSnapshot).toString()); //or leave as myUrl
+                hashMap.put("name", uri.getLastPathSegment());
+                hashMap.put("messagekey", voice_reference.getKey());
+                voice_reference.setValue(hashMap);
+
+                final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
+                        .child(firebaseUser.getUid())
+                        .child(roomTitle);
+
+                voiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()){
+                            voiceRef.child("roomId").setValue(roomId);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 mProgress.dismiss();
-
-
-
-
             });
         });
     }

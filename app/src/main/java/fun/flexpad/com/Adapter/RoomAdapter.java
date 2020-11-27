@@ -58,6 +58,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             final Intent intent = new Intent(mContext, RoomChatActivity.class);
             intent.putExtra("Room_Name", room.getRoomname());
+            intent.putExtra("Room_ID", room.getRoomKey());
             mContext.startActivity(intent);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         });
