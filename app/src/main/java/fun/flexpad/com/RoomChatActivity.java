@@ -100,28 +100,6 @@ public class RoomChatActivity extends AppCompatActivity {
             //might cause app to crash;
             startActivity(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
-//
-//        ArrayList<Room> mRooms = new ArrayList<>();
-//        final DatabaseReference room_reference = FirebaseDatabase.getInstance().getReference("Rooms");
-//        room_reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                mRooms.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                    Room room = snapshot.getValue(Room.class);
-//                    assert room != null;
-//                    mRooms.add(room);//    //
-//                }
-//                roomAdapter = new RoomAdapter(getContext(), mRooms);
-//                recyclerView.setAdapter(roomAdapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
         mic_live = findViewById(R.id.mic_live);
         mic_live_on = findViewById(R.id.mic_live_on);
@@ -152,7 +130,7 @@ public class RoomChatActivity extends AppCompatActivity {
         }, REQUEST_PERMISSION_CODE);
     }
 
-    //Press Ctrl+O
+    //Ctrl+O
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -267,8 +245,7 @@ public class RoomChatActivity extends AppCompatActivity {
                 voice_reference.setValue(hashMap);
 
                 final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
-                        .child(firebaseUser.getUid())
-                        .child(roomTitle);
+                        .child(firebaseUser.getUid()).child(roomTitle);
 
                 voiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
