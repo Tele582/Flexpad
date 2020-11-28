@@ -125,7 +125,7 @@ public class RoomChatActivity extends AppCompatActivity {
         cancelRecord = findViewById(R.id.cancel_record);
 
 
-        playVoices (firebaseUser.getUid(), roomId);
+        playVoices(firebaseUser.getUid(), roomId);
         recordVoice();
     }
 
@@ -295,8 +295,8 @@ public class RoomChatActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Voice voice = snapshot.getValue(Voice.class);
                     assert voice != null;
-                    if (voice.getRoomID().equals(roomID)){
-                        mVoice.add(voice);
+                    if ((voice.getRoomID() != null) && voice.getRoomID().equals(roomID)){
+                            mVoice.add(voice);
                     }
                     voiceAdapter = new VoiceAdapter (RoomChatActivity.this, mVoice);
                     recyclerVoice.setAdapter(voiceAdapter);
