@@ -51,18 +51,20 @@
         android:layout_alignParentEnd="true">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_voice"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/white_duolingable"
-            android:id="@+id/recycler_voice"/>
+            android:background="@drawable/white_duolingable" />
 
         <TextView
             android:id="@+id/sample_text"
-            android:layout_width="24dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:text="Hello World!"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 
