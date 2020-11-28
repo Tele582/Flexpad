@@ -144,7 +144,7 @@ public class MessageActivity extends AppCompatActivity {
             if (!msg.trim().isEmpty()){
                 sendMessage(fuser.getUid(), userid, msg);
             } else {
-                Toast.makeText(MessageActivity.this, "You cant send empty message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
             }
             text_send.setText("");
         });
@@ -224,8 +224,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 User user = dataSnapshot.getValue(User.class);
-                String status = ""+ dataSnapshot.child("status").getValue();
-                String typingStatus = ""+ dataSnapshot.child("typingTo").getValue();
+                String status = "" + dataSnapshot.child("status").getValue();
+                String typingStatus = "" + dataSnapshot.child("typingTo").getValue();
 
                 assert user != null;
                 username.setText(user.getUsername());

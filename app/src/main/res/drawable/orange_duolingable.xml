@@ -22,7 +22,7 @@
                 android:right="20dp"/>
 
             <!--            Button TOP Color -->
-            <solid android:color="#EC7A55" />
+            <solid android:color="#E4673C" />
             <corners android:radius="17dp" />
         </shape>
 

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -39,12 +41,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
 import fun.flexpad.com.Adapter.RoomAdapter;
+import fun.flexpad.com.Adapter.VoiceAdapter;
 import fun.flexpad.com.Model.Room;
+import fun.flexpad.com.Model.User;
+import fun.flexpad.com.Model.Voice;
 
 public class RoomChatActivity extends AppCompatActivity {
 
@@ -59,6 +65,9 @@ public class RoomChatActivity extends AppCompatActivity {
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
     FirebaseUser firebaseUser;
+    RecyclerView recyclerVoice;
+    VoiceAdapter voiceAdapter;
+    List<Voice> mVoice;
 
     static {
         System.loadLibrary("cpp_code");
@@ -70,6 +79,11 @@ public class RoomChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_chat);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        recyclerVoice = findViewById(R.id.recycler_voice);
+        recyclerVoice.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerVoice.setLayoutManager(linearLayoutManager);
 
         // Example of a call to a native method --C++
         TextView tv = findViewById(R.id.sample_text);
@@ -88,6 +102,7 @@ public class RoomChatActivity extends AppCompatActivity {
         roomTextview.setText(roomtitle);
 //        final String randomRoomTitle = getIntent().getStringExtra("Random_Room_Name");
 //        roomTextview.setText(randomRoomTitle);
+        final String roomId = getIntent().getStringExtra("Room_ID");
 
         mStorage = FirebaseStorage.getInstance().getReference("Room Audio Clips");
         mProgress = new ProgressDialog(this);
@@ -107,6 +122,21 @@ public class RoomChatActivity extends AppCompatActivity {
         btnRecording = findViewById(R.id.record_blink);
         recordTime = findViewById(R.id.record_time);
         cancelRecord = findViewById(R.id.cancel_record);
+
+        final DatabaseReference room_reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        room_reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+
+                playVoices(firebaseUser.getUid(), roomId, user.getImageURI());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         recordVoice();
 
@@ -237,6 +267,7 @@ public class RoomChatActivity extends AppCompatActivity {
                 hashMap.put("sender", firebaseUser.getUid());
                 hashMap.put("roomname", roomTitle);
                 hashMap.put("roomID", roomId);
+                hashMap.put("time", currentTime);
                 hashMap.put("messagelabel", messagelabel);
                 hashMap.put("type", "audio(3gp)");
                 hashMap.put("message", Objects.requireNonNull(taskSnapshot).toString()); //or leave as myUrl
@@ -265,6 +296,33 @@ public class RoomChatActivity extends AppCompatActivity {
             });
         });
     }
+
+    private void playVoices(final String myId, final String roomID, final String imageuri){
+        mVoice = new ArrayList<>();
+
+        final DatabaseReference v_reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
+        v_reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mVoice.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Voice voice = snapshot.getValue(Voice.class);
+                    assert voice != null;
+                    if (voice.getRoomID().equals(roomID)){
+                        mVoice.add(voice);
+                    }
+                    voiceAdapter = new VoiceAdapter(RoomChatActivity.this, mVoice, imageuri);
+                    recyclerVoice.setAdapter(voiceAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
 
 

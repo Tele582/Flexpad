@@ -50,13 +50,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/white_duolingable"
+            android:id="@+id/recycler_voice"/>
 
         <TextView
             android:id="@+id/sample_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hello World!"
-            android:layout_centerInParent="true" />
+            android:rotation="90"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
