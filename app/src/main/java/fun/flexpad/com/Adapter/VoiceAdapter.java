@@ -2,6 +2,7 @@ package fun.flexpad.com.Adapter;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,13 +35,11 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
     private Context mContext;
     private final List<Voice> mVoice;
-    private String imageuri;
     private FirebaseUser fuser;
 
-    public VoiceAdapter(Context mContext, List<Voice> mVoice, String imageuri) {
+    public VoiceAdapter(Context mContext, List<Voice> mVoice) {
         this.mContext = mContext;
         this.mVoice = mVoice;
-        this.imageuri = imageuri;
     }
 
     @NonNull
@@ -57,25 +56,19 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         Voice voice = mVoice.get(position);
         final String senderId = voice.getSender();
 
-//        final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users").child(senderId);
 
-//        user_reference.child("VoiceClips").child(voice.getMessagekey()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
         user_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 holder.userName.setText(user.getUsername());
+
+                if (user.getImageURI().equals("default")){
+                    holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+                } else {
+                    Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
+                }
             }
 
             @Override
@@ -83,16 +76,6 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
             }
         });
-
-//        holder.seekbar.
-
-
-        if (imageuri.equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-        } else {
-            Glide.with(mContext).load(imageuri).into(holder.profile_image);
-        }
-
     }
 
     @Override
@@ -102,7 +85,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageButton btn_play;
+        ImageButton btn_play, btn_pause;
         private final ImageView profile_image;
         private SeekBar seekbar;
         private MediaPlayer mediaPlayer;
@@ -114,8 +97,12 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+//            Uri uri = Uri.parse(mVoice.get(getAdapterPosition()).getMessage());
+
             btn_play = itemView.findViewById(R.id.btn_play);
+            btn_pause = itemView.findViewById(R.id.btn_pause);
             profile_image = itemView.findViewById(R.id.profile_image);
+            handler = new Handler();
             seekbar = itemView.findViewById(R.id.seekbar);
             userName = itemView.findViewById(R.id.username);
             mediaPlayer = MediaPlayer.create(mContext, R.raw.symphony); //mVoice.get(getAdapterPosition()).getMessage()
@@ -151,13 +138,20 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             btn_play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                        mediaPlayer.start();
+                        btn_play.setVisibility(View.INVISIBLE);
+                        btn_pause.setVisibility(View.VISIBLE);
+                        changeSeekbar();
+                }
+            });
+
+            btn_pause.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.pause();
-                        btn_play.setImageResource(R.drawable.ic_play_rr);
-                    } else {
-                        mediaPlayer.start();
-                        btn_play.setImageResource(R.drawable.ic_pause_rr_foreground);
-                        changeSeekbar();
+                        btn_pause.setVisibility(View.INVISIBLE);
+                        btn_play.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -178,20 +172,5 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
             handler.postDelayed(runnable, 1000);
         }
-
-//        @Override
-//        public void onClick(View view) {
-//            if (view.getId() == R.id.btn_play) {
-//                if (mediaPlayer.isPlaying()) {
-//                    mediaPlayer.pause();
-//                    btn_play.setImageResource(R.drawable.ic_play_rr);
-//                } else {
-//                    mediaPlayer.start();
-//                    btn_play.setImageResource(R.drawable.ic_pause_rr_foreground);
-//                    changeSeekbar();
-//                }
-//            }
-//        }
-
     }
 }

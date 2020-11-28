@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -123,23 +124,9 @@ public class RoomChatActivity extends AppCompatActivity {
         recordTime = findViewById(R.id.record_time);
         cancelRecord = findViewById(R.id.cancel_record);
 
-        final DatabaseReference room_reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-        room_reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
 
-                playVoices(firebaseUser.getUid(), roomId, user.getImageURI());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
+        playVoices (firebaseUser.getUid(), roomId);
         recordVoice();
-
     }
 
     public native String stringFromJNI();
@@ -297,7 +284,7 @@ public class RoomChatActivity extends AppCompatActivity {
         });
     }
 
-    private void playVoices(final String myId, final String roomID, final String imageuri){
+    private void playVoices(final String myId, final String roomID){
         mVoice = new ArrayList<>();
 
         final DatabaseReference v_reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
@@ -311,7 +298,7 @@ public class RoomChatActivity extends AppCompatActivity {
                     if (voice.getRoomID().equals(roomID)){
                         mVoice.add(voice);
                     }
-                    voiceAdapter = new VoiceAdapter(RoomChatActivity.this, mVoice, imageuri);
+                    voiceAdapter = new VoiceAdapter (RoomChatActivity.this, mVoice);
                     recyclerVoice.setAdapter(voiceAdapter);
                 }
             }
