@@ -307,12 +307,22 @@ public class MessageActivity extends AppCompatActivity {
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
-                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + checker);
+                StorageReference filePath = storageReference.child(fileUri.getLastPathSegment());
+//                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + checker);
 
-                filePath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                filePath.putFile(fileUri).continueWithTask((Continuation) task -> {
+                    if (!task.isSuccessful()){
+                        throw Objects.requireNonNull(task.getException());
+                    }
+
+                    return filePath.getDownloadUrl();
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()){
+                            final Uri downloadUrl = task.getResult();
+                            assert downloadUrl != null;
+                            final String docUrl = downloadUrl.toString();
 
                             final DatabaseReference message_reference = reference.child("Chats").push();
 
@@ -322,7 +332,7 @@ public class MessageActivity extends AppCompatActivity {
                             hashMap.put("receiver", userid);
                             hashMap.put("messagelabel", messagelabel);
                             hashMap.put("type", checker);
-                            hashMap.put("message", Objects.requireNonNull(task.getResult()).toString()); //or leave as myUrl
+                            hashMap.put("message", docUrl); //or leave as myUrl
                             hashMap.put("name", fileUri.getLastPathSegment());
                             hashMap.put("isseen", false);
                             hashMap.put("messagekey", message_reference.getKey());
@@ -372,14 +382,16 @@ public class MessageActivity extends AppCompatActivity {
                         loadingBar.dismiss();
                         Toast.makeText(MessageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                        double p = (100.0*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        loadingBar.setMessage((int) p + "%  Uploading..."); //..also allow download in Message Adapter..
-
-                    }
-                });
+                })
+//                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+//                        double p = (100.0*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                        loadingBar.setMessage((int) p + "%  Uploading..."); //..also allow download in Message Adapter..
+//
+//                    }
+//                })
+                ;
 
 
             } else if (checker.equals("image")){ //sending image
@@ -413,7 +425,8 @@ public class MessageActivity extends AppCompatActivity {
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
-                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + "jpg"); //or say "." + checker
+                StorageReference filePath = storageReference.child(fileUri.getLastPathSegment());
+//                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + "jpg"); //or say "." + checker
 
                 uploadTask = filePath.putFile(fileUri);
 

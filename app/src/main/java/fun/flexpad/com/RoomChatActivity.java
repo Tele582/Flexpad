@@ -23,7 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -244,42 +247,57 @@ public class RoomChatActivity extends AppCompatActivity {
             Calendar currentCal = Calendar.getInstance();
             final String currentTime = dateFormat.format(currentCal.getTime());
 
-            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp"); // = uri.getLastPathSegment()..ish;
-
             Uri uri = Uri.fromFile(new File(fileName));
-            filePath.putFile(uri).addOnSuccessListener((UploadTask.TaskSnapshot taskSnapshot) -> {
+            StorageReference filePath = mStorage.child(uri.getLastPathSegment());
+//            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
 
-                final DatabaseReference voice_reference = reference.child("VoiceClips").push();
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("sender", firebaseUser.getUid());
-                hashMap.put("roomname", roomTitle);
-                hashMap.put("roomID", roomId);
-                hashMap.put("time", currentTime);
-                hashMap.put("messagelabel", messagelabel);
-                hashMap.put("type", "audio(3gp)");
-                hashMap.put("message", Objects.requireNonNull(taskSnapshot).toString()); //or leave as myUrl
-                hashMap.put("name", uri.getLastPathSegment());
-                hashMap.put("messagekey", voice_reference.getKey());
-                voice_reference.setValue(hashMap);
+            filePath.putFile(uri).continueWithTask((Continuation) task -> {
+                if (!task.isSuccessful()){
+                    throw Objects.requireNonNull(task.getException());
+                }
 
-                final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
-                        .child(firebaseUser.getUid()).child(roomTitle);
+                return filePath.getDownloadUrl();
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        final Uri downloadUrl = task.getResult();
+                        assert downloadUrl != null;
+                        final String voiceUrl = downloadUrl.toString();
 
-                voiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.exists()){
-                            voiceRef.child("roomId").setValue(roomId);
-                        }
+                        final DatabaseReference voice_reference = reference.child("VoiceClips").push();
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("sender", firebaseUser.getUid());
+                        hashMap.put("roomname", roomTitle);
+                        hashMap.put("roomID", roomId);
+                        hashMap.put("time", currentTime);
+                        hashMap.put("messagelabel", messagelabel);
+                        hashMap.put("type", "audio(3gp)");
+                        hashMap.put("message", voiceUrl); //or leave as myUrl
+                        hashMap.put("name", uri.getLastPathSegment());
+                        hashMap.put("messagekey", voice_reference.getKey());
+                        voice_reference.setValue(hashMap);
+
+                        final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
+                                .child(firebaseUser.getUid()).child(roomTitle);
+
+                        voiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (!dataSnapshot.exists()) {
+                                    voiceRef.child("roomId").setValue(roomId);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        mProgress.dismiss();
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                mProgress.dismiss();
+                }
             });
         });
     }

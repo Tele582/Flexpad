@@ -24,7 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.List;
 
 import fun.flexpad.com.Model.User;
@@ -76,6 +78,20 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
             }
         });
+
+        holder.mediaPlayer = MediaPlayer.create(mContext, Uri.parse(voice.getMessage()));
+
+        holder.mediaPlayer.setOnPreparedListener(mp -> {
+            holder.seekbar.setMax(holder.mediaPlayer.getDuration());
+            holder.changeSeekbar();
+        });
+
+        holder.mediaPlayer.setOnCompletionListener(mc -> {
+            holder.mediaPlayer.start();
+            holder.btn_play.setVisibility(View.INVISIBLE);
+            holder.btn_pause.setVisibility(View.VISIBLE);
+            holder.changeSeekbar();
+        });
     }
 
     @Override
@@ -93,11 +109,13 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         private Handler handler;
         TextView userName;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-//            Uri uri = Uri.parse(mVoice.get(getAdapterPosition()).getMessage());
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+            }
 
             btn_play = itemView.findViewById(R.id.btn_play);
             btn_pause = itemView.findViewById(R.id.btn_pause);
@@ -105,16 +123,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             handler = new Handler();
             seekbar = itemView.findViewById(R.id.seekbar);
             userName = itemView.findViewById(R.id.username);
-            mediaPlayer = MediaPlayer.create(mContext, R.raw.symphony); //mVoice.get(getAdapterPosition()).getMessage()
-
-//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mp) {
-//                    seekbar.setMax(mediaPlayer.getDuration());
-//                    mediaPlayer.start();
-//                    changeSeekbar();
-//                }
-//            });
+            mediaPlayer = new MediaPlayer(); //Uri.parse(mVoice.get(getAdapterPosition()).getMessage())
+//            mediaPlayer = MediaPlayer.create(mContext, R.raw.symphony);
 
             seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -135,39 +145,25 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                 }
             });
 
-            btn_play.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                        mediaPlayer.start();
-                        btn_play.setVisibility(View.INVISIBLE);
-                        btn_pause.setVisibility(View.VISIBLE);
-                        changeSeekbar();
-                }
+            btn_play.setOnClickListener(v -> {
+                    mediaPlayer.start();
+                    btn_play.setVisibility(View.INVISIBLE);
+                    btn_pause.setVisibility(View.VISIBLE);
+                    changeSeekbar();
             });
 
-            btn_pause.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.pause();
-                        btn_pause.setVisibility(View.INVISIBLE);
-                        btn_play.setVisibility(View.VISIBLE);
-                    }
-                }
+            btn_pause.setOnClickListener(v -> {
+                mediaPlayer.pause();
+                btn_pause.setVisibility(View.INVISIBLE);
+                btn_play.setVisibility(View.VISIBLE);
             });
-
         }
 
         private void changeSeekbar() {
             seekbar.setProgress(mediaPlayer.getCurrentPosition());
 
             if (mediaPlayer.isPlaying()) {
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        changeSeekbar();
-                    }
-                };
+                runnable = this::changeSeekbar;
             }
 
             handler.postDelayed(runnable, 1000);
