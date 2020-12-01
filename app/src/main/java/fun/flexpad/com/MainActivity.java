@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             if (room.getRoomname() != null) {
                                 final Intent randomIntent = new Intent(MainActivity.this, RoomChatActivity.class);
                                 randomIntent.putExtra("Room_Name", room.getRoomname());
+                                randomIntent.putExtra("Room_ID", room.getRoomKey());
                                 randomIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                 startActivity(randomIntent);
                             }

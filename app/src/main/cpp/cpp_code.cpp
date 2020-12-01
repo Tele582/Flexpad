@@ -11,6 +11,6 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_fun_flexpad_com_RoomChatActivity_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
-    std::string hello = "Hello from C++";
+    std::string hello = "Click for random number";
     return env->NewStringUTF(hello.c_str());
 }

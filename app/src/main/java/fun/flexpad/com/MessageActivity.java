@@ -1,5 +1,6 @@
 package fun.flexpad.com;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -54,7 +55,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -141,7 +144,7 @@ public class MessageActivity extends AppCompatActivity {
             if (!msg.trim().isEmpty()){
                 sendMessage(fuser.getUid(), userid, msg);
             } else {
-                Toast.makeText(MessageActivity.this, "You cant send empty message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
             }
             text_send.setText("");
         });
@@ -221,8 +224,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 User user = dataSnapshot.getValue(User.class);
-                String status = ""+ dataSnapshot.child("status").getValue();
-                String typingStatus = ""+ dataSnapshot.child("typingTo").getValue();
+                String status = "" + dataSnapshot.child("status").getValue();
+                String typingStatus = "" + dataSnapshot.child("typingTo").getValue();
 
                 assert user != null;
                 username.setText(user.getUsername());
@@ -295,16 +298,31 @@ public class MessageActivity extends AppCompatActivity {
                 });
 
                 String message_num = Integer.toString(doc_message_number);
-                String messagelabel = fuser.getUid() + message_num + userid;
+                String messagelabel = fuser.getUid() + userid + message_num;
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+                Calendar currentCal = Calendar.getInstance();
+                final String currentTime = dateFormat.format(currentCal.getTime());
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
-                StorageReference filePath = storageReference.child(userid + "." + checker);
+                StorageReference filePath = storageReference.child(fileUri.getLastPathSegment());
+//                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + checker);
 
-                filePath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                filePath.putFile(fileUri).continueWithTask((Continuation) task -> {
+                    if (!task.isSuccessful()){
+                        throw Objects.requireNonNull(task.getException());
+                    }
+
+                    return filePath.getDownloadUrl();
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()){
+                            final Uri downloadUrl = task.getResult();
+                            assert downloadUrl != null;
+                            final String docUrl = downloadUrl.toString();
 
                             final DatabaseReference message_reference = reference.child("Chats").push();
 
@@ -314,7 +332,7 @@ public class MessageActivity extends AppCompatActivity {
                             hashMap.put("receiver", userid);
                             hashMap.put("messagelabel", messagelabel);
                             hashMap.put("type", checker);
-                            hashMap.put("message", Objects.requireNonNull(task.getResult()).toString()); //or leave as myUrl
+                            hashMap.put("message", docUrl); //or leave as myUrl
                             hashMap.put("name", fileUri.getLastPathSegment());
                             hashMap.put("isseen", false);
                             hashMap.put("messagekey", message_reference.getKey());
@@ -364,18 +382,20 @@ public class MessageActivity extends AppCompatActivity {
                         loadingBar.dismiss();
                         Toast.makeText(MessageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                        double p = (100.0*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        loadingBar.setMessage((int) p + "%  Uploading..."); //..also allow download in Message Adapter..
-
-                    }
-                });
+                })
+//                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+//                        double p = (100.0*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                        loadingBar.setMessage((int) p + "%  Uploading..."); //..also allow download in Message Adapter..
+//
+//                    }
+//                })
+                ;
 
 
             } else if (checker.equals("image")){ //sending image
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files"); //create separate image folder
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files");
 
                 final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 final String userid = intent.getStringExtra("userid");
@@ -396,11 +416,17 @@ public class MessageActivity extends AppCompatActivity {
                 });
 
                 String message_num = Integer.toString(image_message_number);
-                String messagelabel = fuser.getUid() + message_num + userid;
+                String messagelabel = fuser.getUid() + userid + message_num;
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+                Calendar currentCal = Calendar.getInstance();
+                final String currentTime = dateFormat.format(currentCal.getTime());
 
                 //supposed to generate random keys to prevent replacement instead of fixed userid
                 assert userid != null;
-                StorageReference filePath = storageReference.child(userid + "." + "jpg"); //or say "." + checker
+                StorageReference filePath = storageReference.child(fileUri.getLastPathSegment());
+//                StorageReference filePath = storageReference.child(currentTime + messagelabel + "." + "jpg"); //or say "." + checker
 
                 uploadTask = filePath.putFile(fileUri);
 

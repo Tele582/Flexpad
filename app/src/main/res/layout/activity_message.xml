@@ -67,6 +67,7 @@
         android:id="@+id/bottom"
         android:padding="5dp"
         android:background="@drawable/white_duolingable"
+        android:layout_marginBottom="4dp"
         android:layout_alignParentBottom="true">
 
         <EditText
@@ -94,7 +95,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/btn_send"
-            android:background="@drawable/ic_action_name"
+            android:background="@drawable/icon_send_foreground"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             />
 
