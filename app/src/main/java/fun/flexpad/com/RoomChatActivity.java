@@ -16,18 +16,16 @@ import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,7 +36,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,10 +48,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-import fun.flexpad.com.Adapter.RoomAdapter;
 import fun.flexpad.com.Adapter.VoiceAdapter;
-import fun.flexpad.com.Model.Room;
-import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 
 public class RoomChatActivity extends AppCompatActivity {
@@ -62,10 +56,12 @@ public class RoomChatActivity extends AppCompatActivity {
     ImageButton mic_live, mic_live_on, btnSend, btnRecording;
     private MediaRecorder mediaRecorder;
     private String fileName = "";
-    MaterialTextView recordTime, cancelRecord;
+    MaterialTextView cancelRecord;
     private static final String LOG_TAG = "Record_log";
     private StorageReference mStorage;
     private ProgressDialog mProgress;
+    private Chronometer recordTime;
+    private boolean running;
 
     final int REQUEST_PERMISSION_CODE = 1000;
     TextView roomTextview;
@@ -125,11 +121,10 @@ public class RoomChatActivity extends AppCompatActivity {
         mic_live_on = findViewById(R.id.mic_live_on);
         btnSend = findViewById(R.id.btn_send);
         btnRecording = findViewById(R.id.record_blink);
-        recordTime = findViewById(R.id.record_time);
+        recordTime = findViewById(R.id.chronometer);
         cancelRecord = findViewById(R.id.cancel_record);
 
-
-        playVoices(firebaseUser.getUid(), roomId);
+        showVoices(roomId);
         recordVoice();
     }
 
@@ -194,10 +189,14 @@ public class RoomChatActivity extends AppCompatActivity {
                 mic_live_on.setVisibility(View.VISIBLE);
                 btnSend.setVisibility(View.VISIBLE);
                 btnRecording.setVisibility(View.VISIBLE);
-                recordTime.setVisibility(View.VISIBLE);
                 cancelRecord.setVisibility(View.VISIBLE);
 
-
+                if (!running) {
+                    recordTime.setBase(SystemClock.elapsedRealtime());
+                    recordTime.start();
+                    running = true;
+                }
+                recordTime.setVisibility(View.VISIBLE);
 
                 Toast.makeText(RoomChatActivity.this, "Recording started...", Toast.LENGTH_SHORT).show();
             }
@@ -218,8 +217,13 @@ public class RoomChatActivity extends AppCompatActivity {
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
             btnRecording.setVisibility(View.INVISIBLE);
-            recordTime.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+
+            if (running) {
+                recordTime.stop();
+                running = false;
+            }
+            recordTime.setVisibility(View.INVISIBLE);
         });
 
         btnSend.setOnClickListener(vSend -> {
@@ -234,8 +238,13 @@ public class RoomChatActivity extends AppCompatActivity {
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
             btnRecording.setVisibility(View.INVISIBLE);
-            recordTime.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+
+            if (running) {
+                recordTime.stop();
+                running = false;
+            }
+            recordTime.setVisibility(View.INVISIBLE);
 
             mProgress.setMessage("Sending...");
             mProgress.show();
@@ -251,7 +260,7 @@ public class RoomChatActivity extends AppCompatActivity {
             Calendar currentCal = Calendar.getInstance();
             final String currentTime = dateFormat.format(currentCal.getTime());
 
-            Uri uri = Uri.fromFile(new File(fileName));
+            final Uri uri = Uri.fromFile(new File(fileName));
             StorageReference filePath = mStorage.child(uri.getLastPathSegment());
 //            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
 
@@ -261,52 +270,49 @@ public class RoomChatActivity extends AppCompatActivity {
                 }
 
                 return filePath.getDownloadUrl();
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        final Uri downloadUrl = task.getResult();
-                        assert downloadUrl != null;
-                        final String voiceUrl = downloadUrl.toString();
+            }).addOnCompleteListener((OnCompleteListener<Uri>) task -> {
+                if (task.isSuccessful()) {
+                    final Uri downloadUrl = task.getResult();
+                    assert downloadUrl != null;
+                    final String voiceUrl = downloadUrl.toString();
 
-                        final DatabaseReference voice_reference = reference.child("VoiceClips").push();
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("sender", firebaseUser.getUid());
-                        hashMap.put("roomname", roomTitle);
-                        hashMap.put("roomID", roomId);
-                        hashMap.put("time", currentTime);
-                        hashMap.put("messagelabel", messagelabel);
-                        hashMap.put("type", "audio(3gp)");
-                        hashMap.put("message", voiceUrl); //or leave as myUrl
-                        hashMap.put("name", uri.getLastPathSegment());
-                        hashMap.put("messagekey", voice_reference.getKey());
-                        voice_reference.setValue(hashMap);
+                    final DatabaseReference voice_reference = reference.child("VoiceClips").push();
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("sender", firebaseUser.getUid());
+                    hashMap.put("roomname", roomTitle);
+                    hashMap.put("roomID", roomId);
+                    hashMap.put("time", currentTime);
+                    hashMap.put("messagelabel", messagelabel);
+                    hashMap.put("type", "audio(3gp)");
+                    hashMap.put("message", voiceUrl); //or leave as myUrl
+                    hashMap.put("name", uri.getLastPathSegment());
+                    hashMap.put("messagekey", voice_reference.getKey());
+                    voice_reference.setValue(hashMap);
 
-                        final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
-                                .child(firebaseUser.getUid()).child(roomTitle);
+                    final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
+                            .child(firebaseUser.getUid()).child(roomTitle);
 
-                        voiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (!dataSnapshot.exists()) {
-                                    voiceRef.child("roomId").setValue(roomId);
-                                }
+                    voiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (!dataSnapshot.exists()) {
+                                voiceRef.child("roomId").setValue(roomId);
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
+                        }
+                    });
 
-                        mProgress.dismiss();
-                    }
+                    mProgress.dismiss();
                 }
             });
         });
     }
 
-    private void playVoices(final String myId, final String roomID){
+    private void showVoices(final String roomID) {
         mVoice = new ArrayList<>();
 
         final DatabaseReference v_reference = FirebaseDatabase.getInstance().getReference("VoiceClips");

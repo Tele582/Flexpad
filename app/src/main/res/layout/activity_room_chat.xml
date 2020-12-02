@@ -114,18 +114,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <Chronometer
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/record_time"
+            android:id="@+id/chronometer"
             android:layout_toStartOf="@id/btn_send"
             android:layout_toEndOf="@id/mic_live"
             android:layout_centerInParent="true"
-            android:visibility="invisible"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:text="Time" />
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/btn_send"
