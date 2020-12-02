@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
@@ -176,6 +177,7 @@ public class RoomChatActivity extends AppCompatActivity {
     }
 
     public void recordVoice() {
+
         mic_live.setOnClickListener(view -> {
             if(checkPermissionFromDevice()){
                 fileName = Environment.getExternalStorageDirectory()
@@ -194,6 +196,8 @@ public class RoomChatActivity extends AppCompatActivity {
                 btnRecording.setVisibility(View.VISIBLE);
                 recordTime.setVisibility(View.VISIBLE);
                 cancelRecord.setVisibility(View.VISIBLE);
+
+
 
                 Toast.makeText(RoomChatActivity.this, "Recording started...", Toast.LENGTH_SHORT).show();
             }
