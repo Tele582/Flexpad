@@ -53,7 +53,7 @@
         android:layout_centerVertical="true"
         android:fontFamily="casual"
         android:layout_marginStart="4dp"
-        android:layout_toEndOf="@id/roomIname"
+        android:layout_toEndOf="@id/unseen_msg_view"
         tools:text="Creator"
         android:textColor="@color/colorBlack"
         android:textAllCaps="false"
@@ -67,5 +67,28 @@
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:src="@drawable/icon_check_verified_foreground"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/unseen_msg_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="10dp"
+        android:layout_toEndOf="@id/roomIname"
+        app:cardBackgroundColor="#ffffff"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/unseen_msg_no"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colorPrimaryDark"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textStyle="italic"
+            android:textColor="#ffff"/>
+
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>
