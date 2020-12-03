@@ -126,6 +126,7 @@ public class RoomChatActivity extends AppCompatActivity {
         btnRecording = findViewById(R.id.record_blink);
         cancelRecord = findViewById(R.id.cancel_record);
         recordTime = findViewById(R.id.chronometer); //recordTime.setFormat("Time: %s");
+//        mediaPlayer = new MediaPlayer();
 
         showVoices(roomId);
         recordVoice();
@@ -172,6 +173,7 @@ public class RoomChatActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(RoomChatActivity.this, MainActivity.class));
+//        if (mediaPlayer.isPlaying()) mediaPlayer.pause();
     }
 
     public void recordVoice() {
@@ -351,6 +353,13 @@ public class RoomChatActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+
     }
 }
 
