@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,6 +56,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
     ImageButton mic_live, mic_live_on, btnSend, btnRecording;
     private MediaRecorder mediaRecorder;
+//    private MediaPlayer mediaPlayer;
     private String fileName = "";
     MaterialTextView cancelRecord;
     private static final String LOG_TAG = "Record_log";
@@ -175,6 +177,9 @@ public class RoomChatActivity extends AppCompatActivity {
     public void recordVoice() {
 
         mic_live.setOnClickListener(view -> {
+
+
+
             try {
                 if(checkPermissionFromDevice()){
                     fileName = Environment.getExternalStorageDirectory()

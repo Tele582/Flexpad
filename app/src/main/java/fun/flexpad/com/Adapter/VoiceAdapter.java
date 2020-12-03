@@ -69,6 +69,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
+                assert user != null;
                 holder.userName.setText(user.getUsername());
 
                 if (user.getImageURI().equals("default")){
@@ -86,18 +87,34 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             }
         });
 
-        holder.mediaPlayer = MediaPlayer.create(mContext, Uri.parse(voice.getMessage()));
+//        holder.mediaPlayer = MediaPlayer.create(mContext, Uri.parse(voice.getMessage())); ...
 
-        holder.mediaPlayer.setOnPreparedListener(mp -> {
-            holder.seekbar.setMax(holder.mediaPlayer.getDuration());
-            holder.changeSeekbar();
-        });
+        holder.btn_play.setOnClickListener(v -> {
 
-        holder.mediaPlayer.setOnCompletionListener(mc -> {
+            holder.mediaPlayer = MediaPlayer.create(mContext, Uri.parse(voice.getMessage()));
+
+            holder.mediaPlayer.setOnPreparedListener(mp -> {
+                holder.seekbar.setMax(holder.mediaPlayer.getDuration());
+                holder.changeSeekbar();
+            });
+
+            holder.mediaPlayer.setOnCompletionListener(mc -> {
+                holder.mediaPlayer.start();
+                holder.btn_play.setVisibility(View.INVISIBLE);
+                holder.btn_pause.setVisibility(View.VISIBLE);
+                holder.changeSeekbar();
+            });
+
             holder.mediaPlayer.start();
             holder.btn_play.setVisibility(View.INVISIBLE);
             holder.btn_pause.setVisibility(View.VISIBLE);
             holder.changeSeekbar();
+        });
+
+        holder.btn_pause.setOnClickListener(v -> {
+            holder.mediaPlayer.pause();
+            holder.btn_pause.setVisibility(View.INVISIBLE);
+            holder.btn_play.setVisibility(View.VISIBLE);
         });
 
         holder.voiceLayout.setOnClickListener(v -> {
@@ -118,7 +135,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         ImageButton btn_play, btn_pause;
         private final ImageView profile_image;
         private SeekBar seekbar;
-        private MediaPlayer mediaPlayer;
+        public MediaPlayer mediaPlayer;
         private Runnable runnable;
         private Handler handler;
         TextView userName, duration;
@@ -160,19 +177,6 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                 public void onStopTrackingTouch(SeekBar seekBar) {
 
                 }
-            });
-
-            btn_play.setOnClickListener(v -> {
-                    mediaPlayer.start();
-                    btn_play.setVisibility(View.INVISIBLE);
-                    btn_pause.setVisibility(View.VISIBLE);
-                    changeSeekbar();
-            });
-
-            btn_pause.setOnClickListener(v -> {
-                mediaPlayer.pause();
-                btn_pause.setVisibility(View.INVISIBLE);
-                btn_play.setVisibility(View.VISIBLE);
             });
         }
 
