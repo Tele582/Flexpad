@@ -69,6 +69,7 @@ public class RoomChatActivity extends AppCompatActivity {
     RecyclerView recyclerVoice;
     VoiceAdapter voiceAdapter;
     List<Voice> mVoice;
+    long record_start_time, record_end_time;
 
     static {
         System.loadLibrary("cpp_code");
@@ -121,8 +122,8 @@ public class RoomChatActivity extends AppCompatActivity {
         mic_live_on = findViewById(R.id.mic_live_on);
         btnSend = findViewById(R.id.btn_send);
         btnRecording = findViewById(R.id.record_blink);
-        recordTime = findViewById(R.id.chronometer);
         cancelRecord = findViewById(R.id.cancel_record);
+        recordTime = findViewById(R.id.chronometer); //recordTime.setFormat("Time: %s");
 
         showVoices(roomId);
         recordVoice();
@@ -174,35 +175,39 @@ public class RoomChatActivity extends AppCompatActivity {
     public void recordVoice() {
 
         mic_live.setOnClickListener(view -> {
-            if(checkPermissionFromDevice()){
-                fileName = Environment.getExternalStorageDirectory()
-                        .getAbsolutePath() + "/"
-                        + UUID.randomUUID().toString() + "_audio_record.3gp";
-                setupMediaRecorder();
+            try {
+                if(checkPermissionFromDevice()){
+                    fileName = Environment.getExternalStorageDirectory()
+                            .getAbsolutePath() + "/"
+                            + UUID.randomUUID().toString() + "_audio_record.3gp";
+                    setupMediaRecorder();
 
-                try{
-                    mediaRecorder.prepare();
-                } catch (IOException e){
-                    e.printStackTrace();
+                    try{
+                        mediaRecorder.prepare();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    mediaRecorder.start();
+                    mic_live_on.setVisibility(View.VISIBLE);
+                    btnSend.setVisibility(View.VISIBLE);
+                    btnRecording.setVisibility(View.VISIBLE);
+                    cancelRecord.setVisibility(View.VISIBLE);
+
+                    if (!running) {
+                        recordTime.setBase(SystemClock.elapsedRealtime());
+                        recordTime.start();
+                        running = true;
+                    }
+                    recordTime.setVisibility(View.VISIBLE);
+
+                    Toast.makeText(RoomChatActivity.this, "Recording started...", Toast.LENGTH_SHORT).show();
                 }
-                mediaRecorder.start();
-                mic_live_on.setVisibility(View.VISIBLE);
-                btnSend.setVisibility(View.VISIBLE);
-                btnRecording.setVisibility(View.VISIBLE);
-                cancelRecord.setVisibility(View.VISIBLE);
-
-                if (!running) {
-                    recordTime.setBase(SystemClock.elapsedRealtime());
-                    recordTime.start();
-                    running = true;
+                else{
+                    requestPermission();
                 }
-                recordTime.setVisibility(View.VISIBLE);
+            } catch (Exception e) {e.printStackTrace();}
 
-                Toast.makeText(RoomChatActivity.this, "Recording started...", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                requestPermission();
-            }
+            record_start_time = Calendar.getInstance().getTimeInMillis();
         });
 
         cancelRecord.setOnClickListener(v -> {
@@ -260,6 +265,9 @@ public class RoomChatActivity extends AppCompatActivity {
             Calendar currentCal = Calendar.getInstance();
             final String currentTime = dateFormat.format(currentCal.getTime());
 
+            record_end_time = Calendar.getInstance().getTimeInMillis();
+            SimpleDateFormat date4mat = new SimpleDateFormat("mm:ss");
+
             final Uri uri = Uri.fromFile(new File(fileName));
             StorageReference filePath = mStorage.child(uri.getLastPathSegment());
 //            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
@@ -283,10 +291,11 @@ public class RoomChatActivity extends AppCompatActivity {
                     hashMap.put("roomID", roomId);
                     hashMap.put("time", currentTime);
                     hashMap.put("messagelabel", messagelabel);
-                    hashMap.put("type", "audio(3gp)");
+                    hashMap.put("type", "audio (3gp)");
                     hashMap.put("message", voiceUrl); //or leave as myUrl
                     hashMap.put("name", uri.getLastPathSegment());
                     hashMap.put("messagekey", voice_reference.getKey());
+                    hashMap.put("duration", date4mat.format(record_end_time - record_start_time));
                     voice_reference.setValue(hashMap);
 
                     final DatabaseReference voiceRef = FirebaseDatabase.getInstance().getReference("RoomVoiceList")
@@ -305,7 +314,6 @@ public class RoomChatActivity extends AppCompatActivity {
 
                         }
                     });
-
                     mProgress.dismiss();
                 }
             });
@@ -321,11 +329,13 @@ public class RoomChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mVoice.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Voice voice = snapshot.getValue(Voice.class);
-                    assert voice != null;
-                    if ((voice.getRoomID() != null) && voice.getRoomID().equals(roomID)){
+                    try {
+                        Voice voice = snapshot.getValue(Voice.class);
+                        assert voice != null;
+                        if ((voice.getRoomID() != null) && voice.getRoomID().equals(roomID)){
                             mVoice.add(voice);
-                    }
+                        }
+                    } catch (Exception e) {e.printStackTrace();}
                     voiceAdapter = new VoiceAdapter (RoomChatActivity.this, mVoice);
                     recyclerVoice.setAdapter(voiceAdapter);
                 }
@@ -337,8 +347,5 @@ public class RoomChatActivity extends AppCompatActivity {
             }
         });
     }
-
 }
-
-
 

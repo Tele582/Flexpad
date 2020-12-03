@@ -1,17 +1,23 @@
 package fun.flexpad.com.Adapter;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +35,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.List;
 
+import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
@@ -56,9 +63,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         Voice voice = mVoice.get(position);
-        final String senderId = voice.getSender();
-
-        final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users").child(senderId);
+        final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users").child(voice.getSender());
 
         user_reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -71,6 +76,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                 } else {
                     Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
                 }
+
+                holder.duration.setText(voice.getDuration());
             }
 
             @Override
@@ -92,6 +99,13 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             holder.btn_pause.setVisibility(View.VISIBLE);
             holder.changeSeekbar();
         });
+
+        holder.voiceLayout.setOnClickListener(v -> {
+            try {
+                if (voice.getType().equals("audio (3gp)")) {holder.showNonTextPopup(v);}
+            }
+            catch (Exception exception) {exception.getStackTrace();}
+        });
     }
 
     @Override
@@ -99,7 +113,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         return mVoice.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
 
         ImageButton btn_play, btn_pause;
         private final ImageView profile_image;
@@ -107,7 +121,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         private MediaPlayer mediaPlayer;
         private Runnable runnable;
         private Handler handler;
-        TextView userName;
+        TextView userName, duration;
+        LinearLayout voiceLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -123,6 +138,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             handler = new Handler();
             seekbar = itemView.findViewById(R.id.seekbar);
             userName = itemView.findViewById(R.id.username);
+            duration = itemView.findViewById(R.id.duration);
+            voiceLayout = itemView.findViewById(R.id.voice_layout);
             mediaPlayer = new MediaPlayer(); //Uri.parse(mVoice.get(getAdapterPosition()).getMessage())
 //            mediaPlayer = MediaPlayer.create(mContext, R.raw.symphony);
 
@@ -157,6 +174,29 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                 btn_pause.setVisibility(View.INVISIBLE);
                 btn_play.setVisibility(View.VISIBLE);
             });
+        }
+
+        private void showNonTextPopup(View view) {
+            PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), view);
+            popup.setOnMenuItemClickListener(this);
+            popup.inflate(R.menu.non_text_msg_popup_menu);
+            popup.show();
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            final DatabaseReference message_delete_reference = FirebaseDatabase.getInstance().getReference().child("VoiceClips");
+            final Voice voice = mVoice.get(getAdapterPosition());
+            switch (item.getItemId()) {
+                case R.id.item1:
+                    message_delete_reference.child(voice.getMessagekey()).removeValue().addOnSuccessListener(aVoid ->
+                            Toast.makeText(mContext.getApplicationContext(), "Voice Message Deleted!", Toast.LENGTH_SHORT).show());
+                    voiceLayout.setVisibility(View.GONE);
+                    return true;
+
+                default:
+                    return false;
+            }
         }
 
         private void changeSeekbar() {
