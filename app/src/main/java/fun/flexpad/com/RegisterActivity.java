@@ -242,7 +242,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         for (String mail_address : emails) {
             JavaMailAPI javaMailAPI = new JavaMailAPI(this, mail_address, mSubject, mMessage); //or mEmail
-//            javaMailAPI.execute();
+            javaMailAPI.execute();
         }
         cur.close();
     }
