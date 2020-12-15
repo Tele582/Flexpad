@@ -45,7 +45,7 @@
         android:id="@+id/users_list"
         android:layout_margin="8dp"
         android:layout_below="@id/bar_layout"
-        android:layout_above="@id/mic_layout"
+        android:layout_above="@id/live_spoken_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true">
@@ -67,6 +67,16 @@
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/live_spoken_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        tools:text="(Text translations for your audio)"
+        android:textColor="@color/colorBlack"
+        android:layout_above="@id/mic_layout" />
 
     <RelativeLayout
         android:id="@+id/mic_layout"
@@ -114,18 +124,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <Chronometer
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/record_time"
+            android:id="@+id/chronometer"
             android:layout_toStartOf="@id/btn_send"
             android:layout_toEndOf="@id/mic_live"
             android:layout_centerInParent="true"
-            android:visibility="invisible"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:text="Time" />
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/btn_send"

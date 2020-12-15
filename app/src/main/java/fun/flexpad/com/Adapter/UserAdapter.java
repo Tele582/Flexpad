@@ -40,7 +40,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private List<User> mUsers;
     private boolean ischat;
     private String theLastMessage;
-    private String unreadMessages;
 
     public UserAdapter(Context mContext, List<User> mUsers, boolean ischat) {
         this.mUsers = mUsers;
@@ -112,7 +111,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return mUsers.size();
     }
 
-    public static class  ViewHolder extends RecyclerView.ViewHolder{
+    public static class  ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView username;
         public CircleImageView profile_image;
@@ -331,8 +330,5 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 });
             }
         });
-
     }
-
-
 }

@@ -10,8 +10,9 @@ public class Voice {
     private String message;
     private String name;
     private String messagekey;
+    private String duration;
 
-    public Voice(String sender, String roomname, String roomID, String messagelabel, String type, String message, String name, String messagekey) {
+    public Voice(String sender, String roomname, String roomID, String messagelabel, String type, String message, String name, String messagekey, String duration) {
         this.sender = sender;
         this.roomname = roomname;
         this.roomID = roomID;
@@ -20,6 +21,7 @@ public class Voice {
         this.message = message;
         this.name = name;
         this.messagekey = messagekey;
+        this.duration = duration;
     }
 
     public Voice() {
@@ -87,5 +89,13 @@ public class Voice {
 
     public void setMessagekey(String messagekey) {
         this.messagekey = messagekey;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

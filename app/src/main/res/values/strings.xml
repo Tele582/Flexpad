@@ -44,12 +44,14 @@
     <string name="translate_message">Translate Message</string>
     <string name="delete_message">Delete Message</string>
     <string name="forgot_your_password">Forgot your password?</string>
-    <string name="room_name_hint">Room Name (32 characters max):</string>
+    <string name="room_name_hint">Room Name (32 characters max, only alphabets and numbers allowed):</string>
     <string name="follow">Follow</string>
     <string name="following">Following</string>
     <string name="mine">Mine</string>
     <string name="delete_room">Delete Room</string>
     <string name="followers_number">Followers:</string>
     <string name="following_number">Following:</string>
+    <string name="already_have_an_account">Already have an account? Login Here:</string>
+    <string name="onboarding_text">Ready for some audio-streaming?\nAfter register/login, click \'➕\' to create group, any group name to pop in and listen, and \'🎙️\' to record.</string>
 
 </resources>

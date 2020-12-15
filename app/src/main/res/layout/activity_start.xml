@@ -20,25 +20,48 @@
         android:textStyle="bold"
         android:fontFamily="casual" />
 
-    <Button
-        android:id="@+id/login"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:background="@drawable/white_duolingable"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:text="@string/login" />
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:text="@string/onboarding_text" />
 
     <Button
         android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/white_duolingable"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
-        android:layout_marginTop="20dp"
         android:text="@string/register" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:text="@string/already_have_an_account" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_duolingable"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:text="@string/login" />
 
 </LinearLayout>

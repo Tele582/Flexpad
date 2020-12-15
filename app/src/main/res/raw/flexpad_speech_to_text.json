@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "flexpad-speech-to-text",
+  "private_key_id": "90ca3b4d9e52142e8b6a6c2c1364572069eab1f1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc+SaWBHmNqKuO\ndRiCnBKi7yRORP7kjwYsfKKZ63eEzf4qo6hCESlhrQlLAg8/gz4OWC8XBpydDK05\nO6anXbnuH9yAYN1940gXqYP9bMqLHnznl3JN/0lIxg6SjWNGLVOMZTkNeBMFtbgQ\nLvHlX5lb3HTlhYcEWKsyLRVsljK5X5Vnq6U9ACWiQkgZnyFbh92bCCkxQy+ZDTql\nCrsdWqgfe2U4NL6UzOzA0798q5Hkju5/PixiXI8kTIDSIaWOjfYETSDhrdd04L3Z\nApO5U5Cu1b0JL9E4IR3SYEQRT21tNi0c9dFUO9XjV4Ox2sX3Qo9fK2726WwNqYdY\neGLuYJbBAgMBAAECggEACiU5RvdlktAMvIGZcrGbK8A4kL15WvTagYwRp1CWcjUt\nIPzgXlrFGazJHbm1mhWFsIAnFP4mp6je1kTidc1DO95/ziVUk3MZ4PuiDgJWyeyP\nxpkdeGiQSD2SygqM2MeLr5aIPDRfSF5xFcyu8jP+UbdbL810R0Xi1LSgvpqrjxsC\nIhAXUfyZF5vBoXdx9VhLoWnscOJx5sMkUSFnUfHSbqNRPfsrKM6a23TqeuiLLl0k\nLCw5BSmnFZkr5UunvRN9veKpSFXn8hl97v/ZIpmCuVlFvSjpYgw1F3SR5t/bmCA/\nk9Zcww47qwezLVl9KsBHxkbdorISPjcAo8I16TPjFQKBgQDcTQGIxuWookZDHtE2\ncxvXvB5Ibtcdw0AVXQJIVfuUgNO1kJaEGGAvAOmJnh4NOkxA/py9NVrqn3feVCrv\nY1L9SH9LVK59gRZWelyjTDWOpNZqimIHrFbwwVOLz6Q1/t0kUhzYEe+4w1KeLGvG\nBBaxQaywiCLjZgjQtdADiPLZXQKBgQC2aQ3XQVS7BunrP/iTgyC0IYNO9utdalcP\naqaOluQ+dSJaKZCm0pAl3YsOAYuA1TZcfyQeolI049LWShMdiLLoFyWQl13ExqmR\noagm8cUJ8ybrPb+YzikGZD9zb6lYR7Evlp4hnxHiJubkR31iDm6azIuMAjdrpHR/\nKvRNe0oItQKBgQCplF1p/DEs7j1HzaEeWN1F4/krqKbOsk3SJBZtuEJAvio5yWMT\nq+/ePsWGucBITmgEX/ona7rggIC1E/U48Swg7H2Qb08iLQwU5XwJ99ACTcD/oiZz\n4aXLDgZRyTSOm/F+0/aAHM57W19tgqQzeVI+gF9+RE0W3qRKhKnrDrBhwQKBgBM/\n2toQZuSlwiG1SoImoFjiAH1gyU2+XxmdY55Ahi2hJtLk+ALizZtxWa9MsnASD/6K\n3EDvWEWElUdP4dyIBHlBmBE+KAMQA+z+ZkRV1zlJk53XklSJzQKDqb6A1hoe1q/y\n8RUTOEvpVwxYDv8+DqX/V+qagUa2wCR7X/SdQh7RAoGAH93WntnJaqkwNb9UdRex\nAE2qzwQLmnGd+1CLzd+crVVn1jXAPhdxeAM7KxMDAytcZKWVMbHml5PRdFj0sqp2\nhlj8q90G/mDsP7NQzGgtI2jMm9Apt/Vzn2oFRpHqkpp99HURzhL1BenTZQA5k9J/\n2WUdLp3L3jYGJXkuCEm1rNE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "flexpad-speech-to-textt@flexpad-speech-to-text.iam.gserviceaccount.com",
+  "client_id": "111533798581238344910",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/flexpad-speech-to-textt%40flexpad-speech-to-text.iam.gserviceaccount.com"
+}

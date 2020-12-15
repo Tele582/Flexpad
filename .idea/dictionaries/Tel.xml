@@ -10,7 +10,10 @@
       <w>fuser</w>
       <w>gson</w>
       <w>imageuri</w>
+      <w>iname</w>
+      <w>ischat</w>
       <w>isseen</w>
+      <w>javamail</w>
       <w>messa</w>
       <w>messagekey</w>
       <w>messagelabel</w>
@@ -18,6 +21,7 @@
       <w>nmap</w>
       <w>noti</w>
       <w>notifuser</w>
+      <w>onboarding</w>
       <w>roomname</w>
       <w>roomtitle</w>
       <w>rootref</w>
