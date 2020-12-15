@@ -11,14 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -66,7 +71,7 @@ public class RoomChatActivity extends AppCompatActivity {
     private boolean running;
 
     final int REQUEST_PERMISSION_CODE = 1000;
-    TextView roomTextview;
+    TextView roomTextview, liveTextFromSpeech;
     FirebaseUser firebaseUser;
     RecyclerView recyclerVoice;
     VoiceAdapter voiceAdapter;
@@ -120,6 +125,7 @@ public class RoomChatActivity extends AppCompatActivity {
             startActivity(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
 
+        liveTextFromSpeech = findViewById(R.id.live_spoken_text);
         mic_live = findViewById(R.id.mic_live);
         mic_live_on = findViewById(R.id.mic_live_on);
         btnSend = findViewById(R.id.btn_send);

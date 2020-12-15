@@ -94,17 +94,22 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        try {
+
 //        assert sented != null;
-        if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
+            if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
 
 //            assert currentUser != null;
-            if (!currentUser.equals(user)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    sendOreoNotification(remoteMessage);
-                } else {
-                    sendNotification(remoteMessage);
+                if (!currentUser.equals(user)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                        sendOreoNotification(remoteMessage);
+                    } else {
+                        sendNotification(remoteMessage);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

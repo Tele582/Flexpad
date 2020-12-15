@@ -45,7 +45,7 @@
         android:id="@+id/users_list"
         android:layout_margin="8dp"
         android:layout_below="@id/bar_layout"
-        android:layout_above="@id/mic_layout"
+        android:layout_above="@id/live_spoken_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true">
@@ -67,6 +67,16 @@
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/live_spoken_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        tools:text="(Text translations for your voice)"
+        android:textColor="@color/colorBlack"
+        android:layout_above="@id/mic_layout" />
 
     <RelativeLayout
         android:id="@+id/mic_layout"
