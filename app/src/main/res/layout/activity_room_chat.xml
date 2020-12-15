@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        tools:text="(Text translations for your voice)"
+        tools:text="(Text translations for your audio)"
         android:textColor="@color/colorBlack"
         android:layout_above="@id/mic_layout" />
 

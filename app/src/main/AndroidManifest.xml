@@ -26,6 +26,7 @@
         android:resource="@color/colorPrimaryDark" />
 
     <application
+        android:name=".FlexpadApplication"
         android:allowBackup="true"
         android:icon="@mipmap/flexpad_fourth_actual_icon"
         android:requestLegacyExternalStorage="true"

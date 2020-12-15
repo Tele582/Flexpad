@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 //apply plugin: 'com.google.protobuf'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 ext {
     supportLibraryVersion = '25.4.0'
@@ -154,4 +156,14 @@ dependencies {
     implementation('com.google.auth:google-auth-library-oauth2-http:0.21.1') {
         exclude module: 'httpclient'
     }
+
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+repositories {
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
 }
