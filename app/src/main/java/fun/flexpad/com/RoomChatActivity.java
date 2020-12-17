@@ -11,19 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.os.SystemClock;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -54,7 +48,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-import fun.flexpad.com.Adapter.VoiceAdapter;
+import fun.flexpad.com.Adapters.VoiceAdapter;
 import fun.flexpad.com.Model.Voice;
 
 public class RoomChatActivity extends AppCompatActivity {
@@ -276,14 +270,14 @@ public class RoomChatActivity extends AppCompatActivity {
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
             Calendar currentCal = Calendar.getInstance();
-            final String currentTime = dateFormat.format(currentCal.getTime());
+            final String sendingTime = dateFormat.format(currentCal.getTime());
 
             record_end_time = Calendar.getInstance().getTimeInMillis();
             SimpleDateFormat date4mat = new SimpleDateFormat("mm:ss");
 
             final Uri uri = Uri.fromFile(new File(fileName));
             StorageReference filePath = mStorage.child(uri.getLastPathSegment());
-//            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
+//            StorageReference filePath = mStorage.child(sendingTime + messagelabel + "_clip.3gp");
 
             filePath.putFile(uri).continueWithTask((Continuation) task -> {
                 if (!task.isSuccessful()){
@@ -302,7 +296,7 @@ public class RoomChatActivity extends AppCompatActivity {
                     hashMap.put("sender", firebaseUser.getUid());
                     hashMap.put("roomname", roomTitle);
                     hashMap.put("roomID", roomId);
-                    hashMap.put("time", currentTime);
+                    hashMap.put("time", sendingTime);
                     hashMap.put("messagelabel", messagelabel);
                     hashMap.put("type", "audio (3gp)");
                     hashMap.put("message", voiceUrl); //or leave as myUrl

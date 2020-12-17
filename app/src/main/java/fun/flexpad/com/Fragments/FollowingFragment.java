@@ -20,12 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import fun.flexpad.com.Adapter.RoomAdapter;
-import fun.flexpad.com.Adapter.UserAdapter;
+import fun.flexpad.com.Adapters.RoomAdapter;
 import fun.flexpad.com.Model.Room;
-import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
 public class FollowingFragment extends Fragment {

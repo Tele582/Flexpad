@@ -1,4 +1,4 @@
-package fun.flexpad.com.Adapter;
+package fun.flexpad.com.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fun.flexpad.com.MainActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;

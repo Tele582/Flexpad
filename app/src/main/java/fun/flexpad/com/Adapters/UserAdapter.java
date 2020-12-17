@@ -1,4 +1,4 @@
-package fun.flexpad.com.Adapter;
+package fun.flexpad.com.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,7 +19,6 @@ import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

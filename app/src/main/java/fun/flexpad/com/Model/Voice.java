@@ -5,6 +5,7 @@ public class Voice {
     private String sender;
     private String roomname;
     private String roomID;
+    private String time;
     private String messagelabel;
     private String type;
     private String message;
@@ -12,10 +13,11 @@ public class Voice {
     private String messagekey;
     private String duration;
 
-    public Voice(String sender, String roomname, String roomID, String messagelabel, String type, String message, String name, String messagekey, String duration) {
+    public Voice(String sender, String roomname, String roomID, String time, String messagelabel, String type, String message, String name, String messagekey, String duration) {
         this.sender = sender;
         this.roomname = roomname;
         this.roomID = roomID;
+        this.time = time;
         this.messagelabel = messagelabel;
         this.type = type;
         this.message = message;
@@ -49,6 +51,14 @@ public class Voice {
 
     public void setRoomID(String roomID) {
         this.roomID = roomID;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getMessagelabel() {

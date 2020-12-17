@@ -1,7 +1,5 @@
-package fun.flexpad.com.Adapter;
+package fun.flexpad.com.Adapters;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +27,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
 import java.util.List;
 
-import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
