@@ -268,7 +268,7 @@ public class RoomChatActivity extends AppCompatActivity {
             final String roomId = getIntent().getStringExtra("Room_ID");
 
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss, dd MMM, yyyy");
             Calendar currentCal = Calendar.getInstance();
             final String sendingTime = dateFormat.format(currentCal.getTime());
 
