@@ -197,7 +197,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                             if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId) && chat.isIsseen()) {
                                 unread_msg_nos.setVisibility(View.GONE);
                             }
-                            if (chat.getReceiver().equals(userId) && chat.getSender().equals(firebaseUser.getUid())){
+                            if (chat.getReceiver().equals(userId) && chat.getSender().equals(firebaseUser.getUid())) {
                                 unread_msg_nos.setVisibility(View.GONE);
                             }
                         } catch (Exception e) {
