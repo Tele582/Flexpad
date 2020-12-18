@@ -71,6 +71,7 @@ public class RoomChatActivity extends AppCompatActivity {
     VoiceAdapter voiceAdapter;
     List<Voice> mVoice;
     long record_start_time, record_end_time;
+    ValueEventListener seenListener;
 
     static {
         System.loadLibrary("cpp_code");
@@ -130,6 +131,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
         showVoices(roomId);
         recordVoice();
+        seenMessage(roomId);
     }
 
     public native String stringFromJNI();
@@ -324,6 +326,28 @@ public class RoomChatActivity extends AppCompatActivity {
                     mProgress.dismiss();
                 }
             });
+        });
+    }
+
+    private void seenMessage(final String roomID) {
+        DatabaseReference openedRef = FirebaseDatabase.getInstance().getReference("VoiceClips");
+        seenListener = openedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Voice voice = snapshot.getValue(Voice.class);
+                    assert voice != null;
+                    if ((voice.getRoomID() != null) && voice.getRoomID().equals(roomID)) {
+                        openedRef.child(voice.getMessagekey()).child("seenBy").child(firebaseUser.getUid()).setValue(true);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 
