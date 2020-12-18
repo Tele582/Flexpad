@@ -56,13 +56,17 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         holder.showPopupAndVerification();
         holder.unseenMessageNo(holder.unseen_msg_no);
 
-        holder.itemView.setOnClickListener(v -> {
-            final Intent intent = new Intent(mContext, RoomChatActivity.class);
-            intent.putExtra("Room_Name", room.getRoomname());
-            intent.putExtra("Room_ID", room.getRoomKey());
-            mContext.startActivity(intent);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        });
+        try {
+            holder.itemView.setOnClickListener(v -> {
+                final Intent intent = new Intent(mContext, RoomChatActivity.class);
+                intent.putExtra("Room_Name", room.getRoomname());
+                intent.putExtra("Room_ID", room.getRoomKey());
+                mContext.startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            });
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
     }
 
     @Override
@@ -191,18 +195,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                         }
 
                         try {
-                            if (!seenUsersList.contains(firebaseUser.getUid()) && roomS.getRoomKey().equals(voice.getRoomID())) {
+                            if ((!seenUsersList.contains(firebaseUser.getUid())) && (roomS.getRoomKey().equals(voice.getRoomID()))) {
                                 unseen_msg_nos.setVisibility(View.VISIBLE);
                                 unread++;
                                 unseen_msg_nos.setText(Integer.toString(unread));
-                            } else {
-                                if (seenUsersList.contains(firebaseUser.getUid()) && roomS.getRoomKey().equals(voice.getRoomID())) {
-                                    unseen_msg_nos.setVisibility(View.GONE);
-                                }
                             }
                         } catch (Exception e) {
                             e.getStackTrace();
                         }
+                        seenUsersList.clear();
                     }
                 }
 

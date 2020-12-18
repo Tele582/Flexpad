@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
     android:layout_height="wrap_content">
 
     <TextView
@@ -13,12 +13,14 @@
         android:text="roomIname"
         android:id="@+id/roomIname"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:layout_centerVertical="true"
         android:textColor="@color/colorBlack"
         android:textStyle="bold"
         android:textSize="20sp"
+        android:maxLines="2"
+        android:maxLength="16"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -54,6 +56,7 @@
         android:fontFamily="casual"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@id/unseen_msg_view"
+        android:maxLines="2"
         tools:text="Creator"
         android:textColor="@color/colorBlack"
         android:textAllCaps="false"
