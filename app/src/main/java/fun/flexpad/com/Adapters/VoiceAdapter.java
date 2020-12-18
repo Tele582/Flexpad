@@ -67,15 +67,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 assert user != null;
-                if (voice!=null) {
+                if (voice != null) {
                     holder.userName.setText(user.getUsername());
-
-                    if (user.getImageURI().equals("default")) {
-                        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-                    } else {
-                        Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
-                    }
-
                     holder.duration.setText(voice.getDuration()); //"Duration: " +
 
                     @SuppressLint("SimpleDateFormat")
@@ -91,6 +84,14 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", Yesterday");
                     } else {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", " + ttt.substring(ttt.length() - 12));
+                    }
+
+                    if (user.getImageURI().equals("default")) {
+                        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+                    } else {
+                        try {
+                            Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
+                        } catch (Exception e) {e.printStackTrace(); }
                     }
                 }
             }
