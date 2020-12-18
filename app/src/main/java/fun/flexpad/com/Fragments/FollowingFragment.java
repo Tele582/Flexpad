@@ -29,7 +29,6 @@ public class FollowingFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RoomAdapter roomAdapter;
-    private ArrayList<Room> mRooms;
 
     private FirebaseUser fuser;
 
@@ -49,7 +48,7 @@ public class FollowingFragment extends Fragment {
     }
 
     private void readFollowedRooms() {
-        mRooms = new ArrayList<>();
+
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("FollowList").child(firebaseUser.getUid()).child("following")

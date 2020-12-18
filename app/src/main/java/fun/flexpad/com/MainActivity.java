@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (unread == 0){
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
                 } else {
-                    viewPagerAdapter.addFragment(new ChatsFragment(), "Chats ( "+unread+" )");
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "Chats ("+unread+")");
                 }
                 viewPagerAdapter.addFragment(new ContactsFragment(), "Contacts");
                 viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
