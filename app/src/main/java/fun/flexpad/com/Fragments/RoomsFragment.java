@@ -108,7 +108,6 @@ public class RoomsFragment extends Fragment {
                                                             seenUsersList.clear();
                                                         }
 
-
                                                         viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
                                                         if (unread == 0) {
                                                             viewPagerAdapter.addFragment(new FollowingFragment(), "Following ("+unread+")");
@@ -119,7 +118,6 @@ public class RoomsFragment extends Fragment {
 
                                                         viewPager.setAdapter(viewPagerAdapter);
                                                         tabLayout.setupWithViewPager(viewPager);
-
                                                     }
 
                                                     @Override
@@ -127,9 +125,6 @@ public class RoomsFragment extends Fragment {
 
                                                     }
                                                 });
-
-
-
                                             }
 
                                             @Override
