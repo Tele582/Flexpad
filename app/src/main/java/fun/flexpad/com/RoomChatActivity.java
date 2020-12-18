@@ -9,16 +9,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -144,6 +149,16 @@ public class RoomChatActivity extends AppCompatActivity {
         mediaRecorder.setOutputFile(fileName);
     }
 
+    private void manageBlinkEffect() {
+//        ObjectAnimator animator = ObjectAnimator.ofInt(btnRecording, "src",
+//                R.id.record_blink, R.color.colorWhite, R.id.record_blink);
+//        animator.setDuration(750);
+//        animator.setEvaluator(new ArgbEvaluator());
+//        animator.setRepeatMode(ValueAnimator.REVERSE);
+//        animator.setRepeatCount(Animation.INFINITE);
+//        animator.start();
+    }
+
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -191,16 +206,14 @@ public class RoomChatActivity extends AppCompatActivity {
                             + UUID.randomUUID().toString() + "_audio_record.3gp";
                     setupMediaRecorder();
 
-                    try{
-                        mediaRecorder.prepare();
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
+                    try { mediaRecorder.prepare();
+                    } catch (IOException e){ e.printStackTrace(); }
                     mediaRecorder.start();
                     mic_live_on.setVisibility(View.VISIBLE);
                     btnSend.setVisibility(View.VISIBLE);
-                    btnRecording.setVisibility(View.VISIBLE);
                     cancelRecord.setVisibility(View.VISIBLE);
+                    btnRecording.setVisibility(View.VISIBLE);
+                    manageBlinkEffect();
 
                     if (!running) {
                         recordTime.setBase(SystemClock.elapsedRealtime());
@@ -230,8 +243,8 @@ public class RoomChatActivity extends AppCompatActivity {
             Toast.makeText(RoomChatActivity.this, "Recording stopped!", Toast.LENGTH_SHORT).show();
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
-            btnRecording.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+            btnRecording.setVisibility(View.INVISIBLE);
 
             if (running) {
                 recordTime.stop();
@@ -251,8 +264,8 @@ public class RoomChatActivity extends AppCompatActivity {
 
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
-            btnRecording.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+            btnRecording.setVisibility(View.INVISIBLE);
 
             if (running) {
                 recordTime.stop();
