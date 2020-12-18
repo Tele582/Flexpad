@@ -77,10 +77,6 @@ public class RoomDesignActivity extends AppCompatActivity {
                     final String room = room_name.getText().toString();
                     if (!room.trim().isEmpty()){
                         saveroom(room, user.getId(), user.getUsername(), user.getVerified());
-                        final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
-                        intent.putExtra("Room_Name", room);
-                        Toast.makeText(RoomDesignActivity.this, "Creating room..", Toast.LENGTH_SHORT).show();
-                        startActivity(intent);
                     } else {
                         Toast.makeText(RoomDesignActivity.this, "Can't create room with no name.", Toast.LENGTH_SHORT).show();
                     }
@@ -135,6 +131,12 @@ public class RoomDesignActivity extends AppCompatActivity {
         nmap.put("roomKey", roomKey);
         nmap.put("creatorVerified", creatorVerified);
         room_reference.setValue(nmap);
+
+        final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
+        intent.putExtra("Room_Name", roomname);
+        intent.putExtra("Room_ID", roomKey);
+        Toast.makeText(RoomDesignActivity.this, "Creating room..", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
     /*private void openImage() {
