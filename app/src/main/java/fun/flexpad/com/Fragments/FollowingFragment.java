@@ -20,19 +20,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import fun.flexpad.com.Adapter.RoomAdapter;
-import fun.flexpad.com.Adapter.UserAdapter;
+import fun.flexpad.com.Adapters.RoomAdapter;
 import fun.flexpad.com.Model.Room;
-import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 
 public class FollowingFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RoomAdapter roomAdapter;
-    private ArrayList<Room> mRooms;
 
     private FirebaseUser fuser;
 
@@ -52,7 +48,7 @@ public class FollowingFragment extends Fragment {
     }
 
     private void readFollowedRooms() {
-        mRooms = new ArrayList<>();
+
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("FollowList").child(firebaseUser.getUid()).child("following")

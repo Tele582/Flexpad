@@ -2,12 +2,14 @@
   <dictionary name="Tel">
     <words>
       <w>ayout</w>
+      <w>camerax</w>
       <w>chatlist</w>
       <w>clipboardmgr</w>
       <w>currentuser</w>
       <w>duolingable</w>
       <w>flexpad</w>
       <w>fuser</w>
+      <w>grpc</w>
       <w>gson</w>
       <w>imageuri</w>
       <w>iname</w>
@@ -22,6 +24,8 @@
       <w>noti</w>
       <w>notifuser</w>
       <w>onboarding</w>
+      <w>protobuf</w>
+      <w>pytorch</w>
       <w>roomname</w>
       <w>roomtitle</w>
       <w>rootref</w>

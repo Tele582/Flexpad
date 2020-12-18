@@ -34,10 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import fun.flexpad.com.Adapter.UserAdapter;
-import fun.flexpad.com.Model.Chatlist;
+import fun.flexpad.com.Adapters.UserAdapter;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 

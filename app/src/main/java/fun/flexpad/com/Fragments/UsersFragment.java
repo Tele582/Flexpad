@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import fun.flexpad.com.Adapter.UserAdapter;
+import fun.flexpad.com.Adapters.UserAdapter;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 import com.google.firebase.auth.FirebaseAuth;

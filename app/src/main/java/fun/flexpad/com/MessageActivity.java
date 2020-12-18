@@ -20,13 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
+//import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import fun.flexpad.com.Adapter.MessageAdapter;
+import fun.flexpad.com.Adapters.MessageAdapter;
 import fun.flexpad.com.Fragments.APIService;
 import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
@@ -50,10 +49,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -772,6 +769,5 @@ public class MessageActivity extends AppCompatActivity {
 
 // you can't see image picture yet because i had issues making the view gone,
 // and also issues displaying picture, even though messages are actually sent, as shown in firebase.
-
 
 

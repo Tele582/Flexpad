@@ -9,22 +9,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.os.SystemClock;
-import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -54,7 +53,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-import fun.flexpad.com.Adapter.VoiceAdapter;
+import fun.flexpad.com.Adapters.VoiceAdapter;
 import fun.flexpad.com.Model.Voice;
 
 public class RoomChatActivity extends AppCompatActivity {
@@ -77,6 +76,7 @@ public class RoomChatActivity extends AppCompatActivity {
     VoiceAdapter voiceAdapter;
     List<Voice> mVoice;
     long record_start_time, record_end_time;
+    ValueEventListener seenListener;
 
     static {
         System.loadLibrary("cpp_code");
@@ -136,6 +136,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
         showVoices(roomId);
         recordVoice();
+        seenMessage(roomId);
     }
 
     public native String stringFromJNI();
@@ -146,6 +147,16 @@ public class RoomChatActivity extends AppCompatActivity {
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         mediaRecorder.setOutputFile(fileName);
+    }
+
+    private void manageBlinkEffect() {
+//        ObjectAnimator animator = ObjectAnimator.ofInt(btnRecording, "src",
+//                R.id.record_blink, R.color.colorWhite, R.id.record_blink);
+//        animator.setDuration(750);
+//        animator.setEvaluator(new ArgbEvaluator());
+//        animator.setRepeatMode(ValueAnimator.REVERSE);
+//        animator.setRepeatCount(Animation.INFINITE);
+//        animator.start();
     }
 
     private void requestPermission() {
@@ -195,16 +206,14 @@ public class RoomChatActivity extends AppCompatActivity {
                             + UUID.randomUUID().toString() + "_audio_record.3gp";
                     setupMediaRecorder();
 
-                    try{
-                        mediaRecorder.prepare();
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
+                    try { mediaRecorder.prepare();
+                    } catch (IOException e){ e.printStackTrace(); }
                     mediaRecorder.start();
                     mic_live_on.setVisibility(View.VISIBLE);
                     btnSend.setVisibility(View.VISIBLE);
-                    btnRecording.setVisibility(View.VISIBLE);
                     cancelRecord.setVisibility(View.VISIBLE);
+                    btnRecording.setVisibility(View.VISIBLE);
+                    manageBlinkEffect();
 
                     if (!running) {
                         recordTime.setBase(SystemClock.elapsedRealtime());
@@ -234,8 +243,8 @@ public class RoomChatActivity extends AppCompatActivity {
             Toast.makeText(RoomChatActivity.this, "Recording stopped!", Toast.LENGTH_SHORT).show();
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
-            btnRecording.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+            btnRecording.setVisibility(View.INVISIBLE);
 
             if (running) {
                 recordTime.stop();
@@ -255,8 +264,8 @@ public class RoomChatActivity extends AppCompatActivity {
 
             mic_live_on.setVisibility(View.INVISIBLE);
             btnSend.setVisibility(View.INVISIBLE);
-            btnRecording.setVisibility(View.INVISIBLE);
             cancelRecord.setVisibility(View.INVISIBLE);
+            btnRecording.setVisibility(View.INVISIBLE);
 
             if (running) {
                 recordTime.stop();
@@ -274,16 +283,16 @@ public class RoomChatActivity extends AppCompatActivity {
             final String roomId = getIntent().getStringExtra("Room_ID");
 
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,dd.MM.yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss, dd MMM, yyyy");
             Calendar currentCal = Calendar.getInstance();
-            final String currentTime = dateFormat.format(currentCal.getTime());
+            final String sendingTime = dateFormat.format(currentCal.getTime());
 
             record_end_time = Calendar.getInstance().getTimeInMillis();
             SimpleDateFormat date4mat = new SimpleDateFormat("mm:ss");
 
             final Uri uri = Uri.fromFile(new File(fileName));
             StorageReference filePath = mStorage.child(uri.getLastPathSegment());
-//            StorageReference filePath = mStorage.child(currentTime + messagelabel + "_clip.3gp");
+//            StorageReference filePath = mStorage.child(sendingTime + messagelabel + "_clip.3gp");
 
             filePath.putFile(uri).continueWithTask((Continuation) task -> {
                 if (!task.isSuccessful()){
@@ -302,7 +311,7 @@ public class RoomChatActivity extends AppCompatActivity {
                     hashMap.put("sender", firebaseUser.getUid());
                     hashMap.put("roomname", roomTitle);
                     hashMap.put("roomID", roomId);
-                    hashMap.put("time", currentTime);
+                    hashMap.put("time", sendingTime);
                     hashMap.put("messagelabel", messagelabel);
                     hashMap.put("type", "audio (3gp)");
                     hashMap.put("message", voiceUrl); //or leave as myUrl
@@ -330,6 +339,28 @@ public class RoomChatActivity extends AppCompatActivity {
                     mProgress.dismiss();
                 }
             });
+        });
+    }
+
+    private void seenMessage(final String roomID) {
+        DatabaseReference openedRef = FirebaseDatabase.getInstance().getReference("VoiceClips");
+        seenListener = openedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Voice voice = snapshot.getValue(Voice.class);
+                    assert voice != null;
+                    if ((voice.getRoomID() != null) && voice.getRoomID().equals(roomID)) {
+                        openedRef.child(voice.getMessagekey()).child("seenBy").child(firebaseUser.getUid()).setValue(true);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 

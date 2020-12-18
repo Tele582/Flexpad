@@ -1,7 +1,6 @@
-package fun.flexpad.com.Adapter;
+package fun.flexpad.com.Adapters;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +28,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
-import fun.flexpad.com.Model.Chat;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
@@ -70,15 +67,33 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 assert user != null;
-                holder.userName.setText(user.getUsername());
+                if (voice != null) {
+                    holder.userName.setText(user.getUsername());
+                    holder.duration.setText(voice.getDuration()); //"Duration: " +
 
-                if (user.getImageURI().equals("default")){
-                    holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                    Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+                    Calendar currentCal = Calendar.getInstance();
+                    final String currentDay = dateFormat.format(currentCal.getTime());
+                    String ttt = voice.getTime();
+                    if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
+                        holder.sendingTime.setText(String.format("%.5s", ttt) + ", Today");
+                    } else if ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                            .equals(String.format("%.2s", ttt.substring(ttt.length() - 12))) &&
+                            (ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) {
+                        holder.sendingTime.setText(String.format("%.5s", ttt) + ", Yesterday");
+                    } else {
+                        holder.sendingTime.setText(String.format("%.5s", ttt) + ", " + ttt.substring(ttt.length() - 12));
+                    }
+
+                    if (user.getImageURI().equals("default")) {
+                        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+                    } else {
+                        try {
+                            Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
+                        } catch (Exception e) {e.printStackTrace(); }
+                    }
                 }
-
-                holder.duration.setText(voice.getDuration());
             }
 
             @Override
@@ -99,9 +114,9 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             });
 
             holder.mediaPlayer.setOnCompletionListener(mc -> {
-                holder.mediaPlayer.start();
-                holder.btn_play.setVisibility(View.INVISIBLE);
-                holder.btn_pause.setVisibility(View.VISIBLE);
+//                holder.mediaPlayer.start();
+                holder.btn_pause.setVisibility(View.INVISIBLE);
+                holder.btn_play.setVisibility(View.VISIBLE);
                 holder.changeSeekbar();
             });
 
@@ -138,7 +153,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         public MediaPlayer mediaPlayer;
         private Runnable runnable;
         private Handler handler;
-        TextView userName, duration;
+        TextView userName, duration, sendingTime;
         LinearLayout voiceLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -156,6 +171,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             seekbar = itemView.findViewById(R.id.seekbar);
             userName = itemView.findViewById(R.id.username);
             duration = itemView.findViewById(R.id.duration);
+            sendingTime = itemView.findViewById(R.id.sending_time);
             voiceLayout = itemView.findViewById(R.id.voice_layout);
             mediaPlayer = new MediaPlayer(); //Uri.parse(mVoice.get(getAdapterPosition()).getMessage())
 //            mediaPlayer = MediaPlayer.create(mContext, R.raw.symphony);

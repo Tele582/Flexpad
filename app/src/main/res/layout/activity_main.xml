@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="28dp"
-        android:src="@drawable/ic_share"
+        android:src="@drawable/share_icon"
         app:backgroundTint="@color/colorPrimaryDark" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

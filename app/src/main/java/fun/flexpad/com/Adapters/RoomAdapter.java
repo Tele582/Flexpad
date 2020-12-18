@@ -1,4 +1,4 @@
-package fun.flexpad.com.Adapter;
+package fun.flexpad.com.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fun.flexpad.com.MainActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
+import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
 import fun.flexpad.com.RoomChatActivity;
 
@@ -54,14 +54,19 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         holder.roomname.setText(room.getRoomname());
         holder.mineShowView(holder.mine, holder.creator);
         holder.showPopupAndVerification();
+        holder.unseenMessageNo(holder.unseen_msg_no);
 
-        holder.itemView.setOnClickListener(v -> {
-            final Intent intent = new Intent(mContext, RoomChatActivity.class);
-            intent.putExtra("Room_Name", room.getRoomname());
-            intent.putExtra("Room_ID", room.getRoomKey());
-            mContext.startActivity(intent);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        });
+        try {
+            holder.itemView.setOnClickListener(v -> {
+                final Intent intent = new Intent(mContext, RoomChatActivity.class);
+                intent.putExtra("Room_Name", room.getRoomname());
+                intent.putExtra("Room_ID", room.getRoomKey());
+                mContext.startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            });
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
     }
 
     @Override
@@ -80,6 +85,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         public TextView mine;
         public TextView creator;
         public CircleImageView verification;
+        private final TextView unseen_msg_no;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +93,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             mine = itemView.findViewById(R.id.mine_view);
             creator = itemView.findViewById(R.id.creator_view);
             verification = itemView.findViewById(R.id.verification_image);
+            unseen_msg_no = itemView.findViewById(R.id.unseen_msg_no);
         }
 
         private void showPopup(View view) {
@@ -168,6 +175,43 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 }
             });
         }
-    }
 
+        private void unseenMessageNo (final TextView unseen_msg_nos) {
+            final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
+            final Room roomS = mRooms.get(getAdapterPosition());
+
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int unread = 0;
+                    ArrayList<String> seenUsersList = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        Voice voice = snapshot.getValue(Voice.class);
+                        assert voice != null;
+                        //assert firebaseUser != null;
+                        for (DataSnapshot dataSnapshot1 : snapshot.child("seenBy").getChildren()) {
+                            seenUsersList.add(dataSnapshot1.getKey());
+                        }
+
+                        try {
+                            if ((!seenUsersList.contains(firebaseUser.getUid())) && (roomS.getRoomKey().equals(voice.getRoomID()))) {
+                                unseen_msg_nos.setVisibility(View.VISIBLE);
+                                unread++;
+                                unseen_msg_nos.setText(Integer.toString(unread));
+                            }
+                        } catch (Exception e) {
+                            e.getStackTrace();
+                        }
+                        seenUsersList.clear();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
 }
