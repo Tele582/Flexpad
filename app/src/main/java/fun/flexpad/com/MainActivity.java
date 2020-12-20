@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (item.getItemId() == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             //might cause app to crash;
+            status("offline");
             startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             return true;
         }

@@ -637,29 +637,28 @@ public class MessageActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
                     //String token = snapshot.getValue(String.class);
-                    Data data = new Data(notiFuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, username+": "+message, "New Message", userid);
+                    Data data = new Data(notiFuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, username + ": " + message, "New Message", userid);
 
                     assert token != null;
                     Sender sender = new Sender(data, token.getToken());
                     //Sender sender = new Sender(data, token);
 
                     // I don't even fully yet grasp how the f*** this apiService works exactly
-                    apiService.sendNotification(sender)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if (response.code() == 200){
-                                        if (response.body().success != 1){
-                                            Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
+                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                            if (response.code() == 200) {
+                                if (response.body().success != 1){
+                                    Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                 }
+                            }
+                        }
 
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                                }
-                            });
+                        }
+                    });
                 }
             }
 

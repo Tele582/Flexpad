@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import fun.flexpad.com.MessageActivity;
+import fun.flexpad.com.R;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -34,53 +35,6 @@ import java.util.concurrent.ExecutionException;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
-    //private static final String TAG = "MyFirebaseMessagingServ";
-
-    ////////////I copied this from MyFirebaseIdService before deleting it (in case of need to reverse).
-//    @Override
-//    public void onNewToken(@NonNull String s) {
-//        super.onNewToken(s);
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        //I think the issue here was that you were trying to call getResult before this task was complete.
-//        //I might be wrong so test it.
-//        Task<InstanceIdResult> tokenTask = FirebaseInstanceId.getInstance().getInstanceId();
-//        try {
-//            Tasks.await(tokenTask);
-//        } catch (ExecutionException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//
-//        try {
-//            @NonNull GetTokenResult tokenResult = (GetTokenResult) Objects.requireNonNull(tokenTask.getResult());
-//            String refreshToken = tokenResult.getToken();
-//
-//            //String refreshToken = Objects.requireNonNull(FirebaseInstanceId.getInstance().getInstanceId().getResult()).getToken();//there's an issue here
-//
-//            if (firebaseUser != null){
-//                updateToken(refreshToken);
-//            }
-//        } catch (Exception e) {
-//            e.getStackTrace();
-//        }
-//        //Log.e("NEW_TOKEN",s);
-//    }
-
-
-
-//    private void updateToken(String refreshToken) {
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
-//        Token token = new Token(refreshToken);
-//        assert firebaseUser != null;
-//        reference.child(firebaseUser.getUid()).setValue(token);
-//    }
-    ///////////
-
-
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -90,7 +44,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         SharedPreferences preferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         String currentUser = preferences.getString("currentuser", "none");
-
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -160,9 +113,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(Integer.parseInt(icon))
+//                .setSmallIcon(Integer.parseInt(icon))
                 .setContentTitle(title)
                 .setContentText(body)
+                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
                 .setAutoCancel(true)
                 .setSound(defaultSound)
                 .setContentIntent(pendingIntent);
