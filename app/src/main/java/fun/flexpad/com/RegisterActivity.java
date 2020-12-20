@@ -167,44 +167,41 @@ public class RegisterActivity extends AppCompatActivity {
     public void register (final String username, String email, String password, String phone_number){
 
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            FirebaseUser firebaseUser = auth.getCurrentUser();
-                            assert firebaseUser != null;
-                            String userid = firebaseUser.getUid();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                        assert firebaseUser != null;
+                        String userid = firebaseUser.getUid();
 
-                            reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+                        reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
 
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("email", email);
-                            hashMap.put("id", userid);
-                            hashMap.put("username", username);
-                            hashMap.put("contact", phone_number);
-                            hashMap.put("typingTo", "noOne");
-                            hashMap.put("imageURI", "default");
-                            hashMap.put("status", "offline");
-                            hashMap.put("search", username.toLowerCase());
-                            hashMap.put("verified", String.valueOf(false));
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("email", email);
+                        hashMap.put("id", userid);
+                        hashMap.put("username", username);
+                        hashMap.put("contact", phone_number);
+                        hashMap.put("typingTo", "noOne");
+                        hashMap.put("imageURI", "default");
+                        hashMap.put("status", "offline");
+                        hashMap.put("search", username.toLowerCase());
+                        hashMap.put("verified", String.valueOf(false));
 
-                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
+                        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
 
-                                        Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
+                                    Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
 
-                                        finish();
-                                    }
+                                    finish();
                                 }
-                            });
-                        }
-                        else {
-                            Toast.makeText(RegisterActivity.this, "You can't register with this email or password", Toast.LENGTH_SHORT).show();
-                        }
+                            }
+                        });
+                    }
+                    else {
+                        Toast.makeText(RegisterActivity.this, "You can't register with this email or password", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
