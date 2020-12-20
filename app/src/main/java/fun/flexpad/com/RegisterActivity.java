@@ -100,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             //this is to get the app link in the Play Store without launching your app.
             final String appPackageName = getApplicationContext().getPackageName();
-            String strAppLink = "";
+            String strAppLink;
 
             try {
                 strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
@@ -217,7 +217,7 @@ public class RegisterActivity extends AppCompatActivity {
         String txt_username = Objects.requireNonNull(username.getText()).toString();
         String txt_email = Objects.requireNonNull(email.getText()).toString();
         final String appPackageName = getApplicationContext().getPackageName();
-        String strAppLink = "";
+        String strAppLink;
         try
         {
             strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
