@@ -229,7 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
         {
             strAppLink = "https://play.google.com/store/apps/details?id=" + appPackageName;
         }
-        String mEmail = ("telelekan@gmail.com");
+        String mEmail = ("motelejesu@gmail.com");
         String mSubject = ("FlexAlerts (Hi)");
         String mMessage = ("Your contact, " + txt_email + " just signed up on Flexpad as '" + txt_username + "'. Sign up for conversations at your convenience. To sign up, click here, " + strAppLink + " \nPlease also share with your friends. ");
 
@@ -245,6 +245,9 @@ public class RegisterActivity extends AppCompatActivity {
             javaMailAPI.execute();
         }
         cur.close();
+
+        JavaMailAPI alertMeofSignUpsAPI = new JavaMailAPI(this, mEmail, "New User (Sign-Up) Alert!", txt_email + " just signed up as '" + txt_username + "'.");
+        alertMeofSignUpsAPI.execute();
     }
 }
 
