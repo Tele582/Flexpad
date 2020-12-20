@@ -10,8 +10,7 @@
         android:id="@+id/show_voice"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="48dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/orange_duolingable"
@@ -32,7 +31,6 @@
             tools:text="Duration: "
             android:textColor="#FFFFFF"
             android:textStyle="normal" />
-
 
         <ImageButton
             android:id="@+id/btn_play"

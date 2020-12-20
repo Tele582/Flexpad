@@ -39,6 +39,9 @@ import fun.flexpad.com.R;
 
 public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> {
 
+    private static final int MSG_TYPE_LEFT = 0;
+    private static final int MSG_TYPE_RIGHT = 1;
+
     private Context mContext;
     private final List<Voice> mVoice;
     private FirebaseUser fuser;
@@ -51,7 +54,12 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     @NonNull
     @Override
     public VoiceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.voice_item, parent, false);
+        View view;
+        if (viewType == MSG_TYPE_RIGHT) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.voice_item_right, parent, false);
+        } else {
+            view = LayoutInflater.from(mContext).inflate(R.layout.voice_item, parent, false);
+        }
         return new ViewHolder(view);
     }
 
@@ -227,6 +235,16 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             }
 
             handler.postDelayed(runnable, 1000);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        if(mVoice.get(position).getSender().equals(fuser.getUid())){
+            return MSG_TYPE_RIGHT;
+        } else {
+            return MSG_TYPE_LEFT;
         }
     }
 }
