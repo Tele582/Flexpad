@@ -110,7 +110,7 @@ public class RoomsFragment extends Fragment {
 
                                                         viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
                                                         if (unread == 0) {
-                                                            viewPagerAdapter.addFragment(new FollowingFragment(), "Following ("+unread+")");
+                                                            viewPagerAdapter.addFragment(new FollowingFragment(), "Following");
                                                         } else {
                                                             viewPagerAdapter.addFragment(new FollowingFragment(), "Following ("+unread+")");
                                                         }
