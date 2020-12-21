@@ -57,12 +57,27 @@ public class ContactsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+        EditText search_contacts = view.findViewById(R.id.search_contacts);
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_GRANTED) {
             // You can use the API that requires the permission.
             addContacts();
+            search_contacts.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    searchUsers(s.toString().toLowerCase());
+                }
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         } else {
             // You can directly ask for the permission.
             ActivityCompat.requestPermissions((Activity) requireContext(),
@@ -70,21 +85,6 @@ public class ContactsFragment extends Fragment {
                     Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }
 
-        EditText search_contacts = view.findViewById(R.id.search_contacts);
-        search_contacts.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchUsers(s.toString().toLowerCase());
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         return view;
     }
 
