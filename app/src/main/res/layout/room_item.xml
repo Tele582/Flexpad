@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/ripple_effect_white_ish"
     android:paddingTop="0dp"
     android:paddingBottom="0dp"
     android:layout_height="wrap_content">
@@ -19,6 +20,7 @@
         android:textColor="@color/colorBlack"
         android:textStyle="bold"
         android:textSize="20sp"
+        android:layout_marginStart="4dp"
         android:maxLines="2"
         android:maxLength="16"
         tools:ignore="HardcodedText" />

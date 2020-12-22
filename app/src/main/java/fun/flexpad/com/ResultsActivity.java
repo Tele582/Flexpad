@@ -35,7 +35,7 @@ public class ResultsActivity extends AppCompatActivity {
         } else if (score >= Math.round(QuizBook.questions.length * 0.7)){
             mGrade.setText("Nice Attempt");
         } else {
-            mGrade.setText("Study more...");
+            mGrade.setText("Study harder...");
         }
 
         mRetryButton.setOnClickListener(new View.OnClickListener() {
