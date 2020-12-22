@@ -1,6 +1,7 @@
 package fun.flexpad.com;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,17 +12,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GamesActivity extends AppCompatActivity {
 
     ListView listView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games);
-
+        Toolbar toolbar = findViewById(R.id.toolbar_games);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> {
+            //might cause app to crash;
+            startActivity(new Intent(GamesActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        });
         listView = findViewById(R.id.gamelist);
         ArrayList<String> arrayList = new ArrayList<>();
 
@@ -42,7 +50,5 @@ public class GamesActivity extends AppCompatActivity {
                 //}
             }
         });
-
     }
-
 }

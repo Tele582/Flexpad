@@ -105,7 +105,7 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
             //might cause app to crash;
-            Intent intent = new Intent(MessageActivity.this, MainActivity.class);
+            final Intent intent = new Intent(MessageActivity.this, MainActivity.class);
             intent.putExtra("textFromMessageToMainActivity", textFromMessageToMainActivity);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });

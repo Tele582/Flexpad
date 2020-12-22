@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
@@ -38,7 +39,6 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
-import fun.flexpad.com.PaymentActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -187,7 +187,7 @@ public class ProfileFragment extends Fragment {
         followRef.child("followers").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                underFollowersList.clear();
                 if (snapshot.child("unfollowed").exists()) {
                     final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
                     followersList.setText("Followers: " + followersNumber);
@@ -219,6 +219,16 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        followersList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                FollowerListFragment followerListFragment = new FollowerListFragment();
+//                getActivity().getSupportFragmentManager().beginTransaction().
+//                        replace(((ViewGroup) getView().getParent()).getId(), followerListFragment).commit();
 
             }
         });
