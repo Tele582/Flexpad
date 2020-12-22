@@ -15,7 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
@@ -35,18 +38,17 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
+import fun.flexpad.com.databinding.FragmentFollowerListBinding;
+import fun.flexpad.com.databinding.FragmentProfileBinding;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
-
-    private CircleImageView image_profile;
-    private TextView username;
-    private TextView followersList, followingList;
 
     private DatabaseReference reference;
     private FirebaseUser fuser;
@@ -55,22 +57,16 @@ public class ProfileFragment extends Fragment {
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
     private StorageTask uploadTask;
+    FragmentProfileBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        image_profile = view.findViewById(R.id.profile_image);
-        username = view.findViewById(R.id.username);
-        followersList = view.findViewById(R.id.followers_list);
-        followingList = view.findViewById(R.id.following_list);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
 
 //        Button group_payment = view.findViewById(R.id.group_pay);
-//
-//        group_payment.setOnClickListener(new View.OnClickListener() {
+//        binding.groupPay.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                startActivity(new Intent(getContext(), PaymentActivity.class));
@@ -87,12 +83,12 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 assert user != null;
-                username.setText(user.getUsername());
+                binding.username.setText(user.getUsername());
                 if (user.getImageURI().equals("default")){
-                    image_profile.setImageResource(R.mipmap.ic_launcher);
+                    binding.profileImage.setImageResource(R.mipmap.ic_launcher);
                 } else {
                     if (isAdded()) {
-                        Glide.with(requireContext()).load(user.getImageURI()).into(image_profile);
+                        Glide.with(requireContext()).load(user.getImageURI()).into(binding.profileImage);
                     }
                 }
             }
@@ -104,8 +100,8 @@ public class ProfileFragment extends Fragment {
         });
 
         showFollowerShip(fuser.getUid());
-        image_profile.setOnClickListener(v -> openImage());
-        return view;
+        binding.profileImage.setOnClickListener(v -> openImage());
+        return binding.getRoot();
     }
 
     private void openImage() {
@@ -190,10 +186,10 @@ public class ProfileFragment extends Fragment {
                 underFollowersList.clear();
                 if (snapshot.child("unfollowed").exists()) {
                     final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
-                    followersList.setText("Followers: " + followersNumber);
+                    binding.followersList.setText("Followers: " + followersNumber);
                 } else {
                     final String followersNumber = Long.toString(snapshot.getChildrenCount());
-                    followersList.setText("Followers: " + followersNumber);
+                    binding.followersList.setText("Followers: " + followersNumber);
                 }
             }
 
@@ -210,10 +206,10 @@ public class ProfileFragment extends Fragment {
 
                 if (snapshot.child("unfollowed").exists()) {
                     final String followingNumber = Long.toString(snapshot.getChildrenCount() - 1 );
-                    followingList.setText("Following: " + followingNumber);
+                    binding.followingList.setText("Following: " + followingNumber);
                 } else {
                     final String followingNumber = Long.toString(snapshot.getChildrenCount());
-                    followingList.setText("Following: " + followingNumber);
+                    binding.followingList.setText("Following: " + followingNumber);
                 }
             }
 
@@ -222,14 +218,25 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+    }
 
-        followersList.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.followersList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                FollowerListFragment followerListFragment = new FollowerListFragment();
-//                getActivity().getSupportFragmentManager().beginTransaction().
-//                        replace(((ViewGroup) getView().getParent()).getId(), followerListFragment).commit();
-
+//NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.action_profileFragment_to_followerListFragment);
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.profile_details, new FollowerListFragment()).addToBackStack(null).commit();
+            }
+        });
+        binding.followingList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.profile_details, new FollowingListFragment()).addToBackStack(null).commit();
             }
         });
     }

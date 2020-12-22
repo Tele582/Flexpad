@@ -27,34 +27,35 @@ import fun.flexpad.com.Adapters.UserAdapter;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
 import fun.flexpad.com.databinding.FragmentFollowerListBinding;
+import fun.flexpad.com.databinding.FragmentFollowingBinding;
+import fun.flexpad.com.databinding.FragmentFollowingListBinding;
 
-public class FollowerListFragment extends Fragment {
+public class FollowingListFragment extends Fragment {
 
     private FirebaseUser fuser;
     //    private RecyclerView recyclerView;
     private UserAdapter userAdapter;
-    FragmentFollowerListBinding followerListBinding;
+    FragmentFollowingListBinding followingListBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        followerListBinding = FragmentFollowerListBinding.inflate(inflater, container, false);
+        followingListBinding = FragmentFollowingListBinding.inflate(inflater, container, false);
 
-//        recyclerView = view.findViewById(R.id.followers_listing);
-        followerListBinding.followersListing.setHasFixedSize(true);
-        followerListBinding.followersListing.setLayoutManager(new LinearLayoutManager(getContext()));
+        followingListBinding.followingListing.setHasFixedSize(true);
+        followingListBinding.followingListing.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        showFollowersList(fuser.getUid());
+        showFollowingList(fuser.getUid());
 
-        return followerListBinding.getRoot();
+        return followingListBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        followerListBinding.titleBar.setOnClickListener(new View.OnClickListener() {
+        followingListBinding.titleBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requireActivity().getSupportFragmentManager().popBackStack();
@@ -62,42 +63,42 @@ public class FollowerListFragment extends Fragment {
         });
     }
 
-    public void showFollowersList (String currentUserId) {
+    public void showFollowingList (String currentUserId) {
         final DatabaseReference followRef = FirebaseDatabase.getInstance().getReference()
                 .child("FollowList").child(currentUserId);
 
-        ArrayList<String> underFollowersList = new ArrayList<>();
-        followRef.child("followers").addValueEventListener(new ValueEventListener() {
+        ArrayList<String> underFollowingList = new ArrayList<>();
+        followRef.child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                underFollowersList.clear();
+                underFollowingList.clear();
                 if (snapshot.child("unfollowed").exists()) {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
-                    followerListBinding.title.setText("Followers: " + followersNumber);
+                    final String followingNumber = Long.toString(snapshot.getChildrenCount() - 1);
+                    followingListBinding.title.setText("Following: " + followingNumber);
                 } else {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount());
-                    followerListBinding.title.setText("Followers: " + followersNumber);
+                    final String followingNumber = Long.toString(snapshot.getChildrenCount());
+                    followingListBinding.title.setText("Following: " + followingNumber);
                 }
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String follower = dataSnapshot.getKey();
-                    underFollowersList.add(follower);
+                    String following = dataSnapshot.getKey();
+                    underFollowingList.add(following);
                 }
-                ArrayList<User> followersNamesList = new ArrayList<>();
+                ArrayList<User> followingNamesList = new ArrayList<>();
                 FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        followersNamesList.clear();
+                        followingNamesList.clear();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             User user = dataSnapshot.getValue(User.class);
                             assert user != null;
-                            if (underFollowersList.contains(user.getId())) {
-                                followersNamesList.add(user);
+                            if (underFollowingList.contains(user.getId())) {
+                                followingNamesList.add(user);
                             }
                         }
 
-                        userAdapter = new UserAdapter(getContext(), followersNamesList, false);
-                        followerListBinding.followersListing.setAdapter(userAdapter);
+                        userAdapter = new UserAdapter(getContext(), followingNamesList, false);
+                        followingListBinding.followingListing.setAdapter(userAdapter);
                     }
 
                     @Override
