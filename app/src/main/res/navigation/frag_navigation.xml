@@ -24,4 +24,18 @@
             android:id="@+id/action_roomsFragment_to_chatsFragment"
             app:destination="@id/chatsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/followerListFragment"
+        android:name="fun.flexpad.com.Fragments.FollowerListFragment"
+        android:label="fragment_follower_list"
+        tools:layout="@layout/fragment_follower_list" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="fun.flexpad.com.Fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_followerListFragment"
+            app:destination="@id/followerListFragment" />
+    </fragment>
 </navigation>

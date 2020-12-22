@@ -122,7 +122,9 @@ public class RoomChatActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
             //might cause app to crash;
-            startActivity(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//            startActivity(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            navigateUpTo(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
         });
 
         liveTextFromSpeech = findViewById(R.id.live_spoken_text);
@@ -189,7 +191,7 @@ public class RoomChatActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(RoomChatActivity.this, MainActivity.class));
+        navigateUpTo(new Intent(RoomChatActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 //        if (mediaPlayer.isPlaying()) mediaPlayer.pause();
     }
 

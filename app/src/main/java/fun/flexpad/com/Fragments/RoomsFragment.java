@@ -30,33 +30,22 @@ import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.RoomDesignActivity;
+import fun.flexpad.com.databinding.FragmentRoomsBinding;
 
 public class RoomsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private FirebaseUser fuser;
-
-    Button create_room;
     DatabaseReference reference;
+    FragmentRoomsBinding fragmentRoomsBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_rooms, container, false);
+        fragmentRoomsBinding = FragmentRoomsBinding.inflate(inflater, container, false);
 
-        create_room = view.findViewById(R.id.create_room);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        create_room.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
-
-//        String message_to_main = "messageToMain";
-//        final String textFromPrevActivity = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("textFromMessageToMainActivity");
-//        if (textFromPrevActivity.equals(message_to_main)) {
-//            Navigation.findNavController(requireView()).navigate(R.id.action_roomsFragment_to_chatsFragment);
-//        }
-        final TabLayout tabLayout = view.findViewById(R.id.room_tab_layout);
-        final ViewPager viewPager = view.findViewById(R.id.room_view_pager);
+        fragmentRoomsBinding.createRoom.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
 
         reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
         reference.addValueEventListener(new ValueEventListener() {
@@ -116,8 +105,8 @@ public class RoomsFragment extends Fragment {
                                                         }
                                                         viewPagerAdapter.addFragment(new GeneralFragment(), "General");
 
-                                                        viewPager.setAdapter(viewPagerAdapter);
-                                                        tabLayout.setupWithViewPager(viewPager);
+                                                        fragmentRoomsBinding.roomViewPager.setAdapter(viewPagerAdapter);
+                                                        fragmentRoomsBinding.roomTabLayout.setupWithViewPager(fragmentRoomsBinding.roomViewPager);
                                                     }
 
                                                     @Override
@@ -149,7 +138,7 @@ public class RoomsFragment extends Fragment {
 
             }
         });
-        return view;
+        return fragmentRoomsBinding.getRoot();
     }
 
     public static class  ViewPagerAdapter extends FragmentPagerAdapter {

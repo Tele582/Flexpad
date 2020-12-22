@@ -107,7 +107,7 @@ public class MessageActivity extends AppCompatActivity {
             //might cause app to crash;
             final Intent intent = new Intent(MessageActivity.this, MainActivity.class);
             intent.putExtra("textFromMessageToMainActivity", textFromMessageToMainActivity);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            navigateUpTo(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
 
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
