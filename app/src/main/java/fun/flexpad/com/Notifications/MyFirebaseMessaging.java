@@ -1,6 +1,5 @@
 package fun.flexpad.com.Notifications;
 
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,32 +10,19 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import fun.flexpad.com.MessageActivity;
-import fun.flexpad.com.R;
-
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
+import fun.flexpad.com.MessageActivity;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         String sented = remoteMessage.getData().get("sented");
@@ -47,26 +33,18 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        try {
-
-//        assert sented != null;
-            if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
-
-//            assert currentUser != null;
-                if (!currentUser.equals(user)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                        sendOreoNotification(remoteMessage);
-                    } else {
-                        sendNotification(remoteMessage);
-                    }
+        if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
+            if (!currentUser.equals(user)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    sendOreoNotification(remoteMessage);
+                } else {
+                    sendNotification(remoteMessage);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
-    private void sendOreoNotification(RemoteMessage remoteMessage) {
+    private void sendOreoNotification(RemoteMessage remoteMessage){
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
@@ -113,14 +91,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-//                .setSmallIcon(Integer.parseInt(icon))
+                .setSmallIcon(Integer.parseInt(icon))
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
                 .setAutoCancel(true)
                 .setSound(defaultSound)
                 .setContentIntent(pendingIntent);
-        NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         int i = 0;
         if (j > 0){

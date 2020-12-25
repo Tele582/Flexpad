@@ -110,7 +110,7 @@ public class MessageActivity extends AppCompatActivity {
             navigateUpTo(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
 
-        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+//        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
@@ -131,7 +131,7 @@ public class MessageActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
 
         intent = getIntent();
-        final String userid = intent.getStringExtra("userid");
+        userid = intent.getStringExtra("userid");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         btn_send.setOnClickListener(v -> {
@@ -144,27 +144,6 @@ public class MessageActivity extends AppCompatActivity {
                 Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
             }
             text_send.setText("");
-        });
-
-        text_send.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() == 0) {
-                    checkTypingStatus("noOne");
-                } else {
-                    checkTypingStatus(fuser.getUid()); //uid of receiver
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
         });
 
         btn_send_files.setOnClickListener(new View.OnClickListener() {
@@ -227,16 +206,15 @@ public class MessageActivity extends AppCompatActivity {
                 assert user != null;
                 username.setText(user.getUsername());
 
-                // might honestly have f***ed this up (logically), not clean enough for my liking.
-                if (typingStatus.equals("noOne")) {
-                    if (status.equals("online")) {
-                        userstatus.setText("is online.."); //user.getStatus()
+                // might honestly have f***ed this up (logically)
+                if (status.equals("online")) {
+                    if (typingStatus.equals("noOne")) {
+                        userstatus.setText("is online..");
                     } else {
-                        //convert timestamp to proper time date: last seen @... (maybe,..hmm)
-                        userstatus.setText("");
+                        userstatus.setText("is typing..");
                     }
                 } else {
-                    userstatus.setText("is typing..");
+                    userstatus.setText("");
                 }
 
                 if (user.getImageURI().equals("default")){
@@ -245,6 +223,33 @@ public class MessageActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext()).load(user.getImageURI()).into(profile_image);
                 }
                 readMessages(fuser.getUid(), userid, user.getImageURI());
+
+                text_send.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                        if (s.toString().trim().length() == 0) {
+//                            checkTypingStatus("noOne");
+//                        }
+//                        if (status.equals("offline")) {
+//                            checkTypingStatus("noOne");
+//                        }
+                        if (status.equals("online") && s.toString().trim().length() != 0) {
+                            checkTypingStatus(fuser.getUid());
+                        } else {
+                            checkTypingStatus("noOne");
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
             }
 
             @Override
@@ -532,9 +537,9 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(String sender, final String receiver, String message) {
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        final String userid = intent.getStringExtra("userid");
-
-        assert userid != null;
+//        final String userid = intent.getStringExtra("userid");
+//
+//        assert userid != null;
         //reference.child("Chats").child(fuser.getUid()).child(userid).push(); // comment this line maybe
 
         reference.addChildEventListener(new ChildEventListener() {
@@ -627,8 +632,6 @@ public class MessageActivity extends AppCompatActivity {
 
     //to send notifications (not working yet)
     private void sendNotification(String receiver, final String username, final String message) {
-
-        final FirebaseUser notiFuser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -636,29 +639,26 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    //String token = snapshot.getValue(String.class);
-                    Data data = new Data(notiFuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, username + ": " + message, "New Message", userid);
+                    Data data = new Data(fuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, message, username, userid);
 
-                    assert token != null;
                     Sender sender = new Sender(data, token.getToken());
-                    //Sender sender = new Sender(data, token);
 
-                    // I don't even fully yet grasp how the f*** this apiService works exactly
-                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-                        @Override
-                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                            if (response.code() == 200) {
-                                if (response.body().success != 1){
-                                    Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200){
+                                        if (response.body().success != 1){
+                                            Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                        }
-                    });
+                                }
+                            });
                 }
             }
 
@@ -715,7 +715,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     // ..fix current user identity, I think
-    private void currentUser (String userid){
+    private void currentUser(String userid) {
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
         editor.putString("currentuser", userid);
         editor.apply();
@@ -727,7 +727,7 @@ public class MessageActivity extends AppCompatActivity {
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);
-        //hashMap.put("onlineStatus", status);
+
         reference.updateChildren(hashMap);
     }
 
@@ -760,7 +760,7 @@ public class MessageActivity extends AppCompatActivity {
         if (seenListener != null && reference != null) {
             reference.removeEventListener(seenListener);
             status("offline");
-            checkTypingStatus("noOne");
+//            checkTypingStatus("noOne");
             currentUser("none");
         }
     }

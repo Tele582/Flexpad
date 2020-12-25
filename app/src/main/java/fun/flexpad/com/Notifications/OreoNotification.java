@@ -14,8 +14,8 @@ import fun.flexpad.com.R;
 
 public class OreoNotification extends ContextWrapper {
 
-    private static final String CHANNEL_ID = "flexpad_channel";
-    private static final String CHANNEL_NAME = "flexpad";
+    private static final String CHANNEL_ID = "com.koddev.chatapp";
+    private static final String CHANNEL_NAME = "chatapp";
 
     private NotificationManager notificationManager;
 
@@ -32,18 +32,17 @@ public class OreoNotification extends ContextWrapper {
 
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                 CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH);
-        channel.enableLights(true);
-        channel.setLightColor(R.color.colorPrimaryDark);
+                NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(false);
         channel.enableVibration(true);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
         getManager().createNotificationChannel(channel);
     }
 
-    public NotificationManager getManager() {
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    public NotificationManager getManager(){
+        if (notificationManager == null){
+            notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
         return  notificationManager;
@@ -56,8 +55,7 @@ public class OreoNotification extends ContextWrapper {
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(body)
-//                .setSmallIcon(Integer.parseInt(icon))
-                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+                .setSmallIcon(Integer.parseInt(icon))
                 .setSound(soundUri)
                 .setAutoCancel(true);
     }
