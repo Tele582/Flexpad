@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import fun.flexpad.com.MessageActivity;
+import fun.flexpad.com.R;
+import fun.flexpad.com.RoomChatActivity;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -27,13 +29,14 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         String sented = remoteMessage.getData().get("sented");
         String user = remoteMessage.getData().get("user");
+        String room = remoteMessage.getData().get("room");
 
         SharedPreferences preferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         String currentUser = preferences.getString("currentuser", "none");
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (firebaseUser != null && sented.equals(firebaseUser.getUid())){
+        if (firebaseUser != null && sented != null && sented.equals(firebaseUser.getUid())) {
             if (!currentUser.equals(user)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     sendOreoNotification(remoteMessage);
@@ -42,9 +45,20 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 }
             }
         }
+        else {
+            if (room != null ) {
+//            if (!currentUser.equals(user)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    sendRoomOreoNotification(remoteMessage);
+                } else {
+                    sendRoomNotification(remoteMessage);
+                }
+//            }
+            }
+        }
     }
 
-    private void sendOreoNotification(RemoteMessage remoteMessage){
+    private void sendOreoNotification(RemoteMessage remoteMessage) {
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
@@ -91,7 +105,74 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(Integer.parseInt(icon))
+                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(defaultSound)
+                .setContentIntent(pendingIntent);
+        NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int i = 0;
+        if (j > 0){
+            i = j;
+        }
+
+        noti.notify(i, builder.build());
+    }
+
+    private void sendRoomOreoNotification(RemoteMessage remoteMessage) {
+        String user = remoteMessage.getData().get("user");
+        String room = remoteMessage.getData().get("room");
+        String icon = remoteMessage.getData().get("icon");
+        String title = remoteMessage.getData().get("title");
+        String body = remoteMessage.getData().get("body");
+
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        Intent intent = new Intent(this, RoomChatActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("userid", user);
+        bundle.putString("Room_ID", room);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        OreoNotification oreoNotification = new OreoNotification(this);
+        Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                defaultSound, icon);
+
+        int i = 0;
+        if (j > 0){
+            i = j;
+        }
+
+        oreoNotification.getManager().notify(i, builder.build());
+
+    }
+
+    private void sendRoomNotification(RemoteMessage remoteMessage) {
+
+        String user = remoteMessage.getData().get("user");
+        String room = remoteMessage.getData().get("room");
+        String icon = remoteMessage.getData().get("icon");
+        String title = remoteMessage.getData().get("title");
+        String body = remoteMessage.getData().get("body");
+
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        Intent intent = new Intent(this, RoomChatActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("userid", user);
+        bundle.putString("Room_ID", room);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

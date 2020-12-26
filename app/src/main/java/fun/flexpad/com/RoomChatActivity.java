@@ -1,5 +1,21 @@
 package fun.flexpad.com;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.view.View;
+import android.widget.Chronometer;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -7,27 +23,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.SystemClock;
-import android.view.View;
-import android.view.animation.Animation;
-import android.widget.Chronometer;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -54,7 +50,21 @@ import java.util.Random;
 import java.util.UUID;
 
 import fun.flexpad.com.Adapters.VoiceAdapter;
+import fun.flexpad.com.Fragments.APIService;
+import fun.flexpad.com.Fragments.RoomAPIService;
+import fun.flexpad.com.Model.Room;
+import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
+import fun.flexpad.com.Notifications.Client;
+import fun.flexpad.com.Notifications.Data;
+import fun.flexpad.com.Notifications.MyResponse;
+import fun.flexpad.com.Notifications.RoomData;
+import fun.flexpad.com.Notifications.RoomSender;
+import fun.flexpad.com.Notifications.Sender;
+import fun.flexpad.com.Notifications.Token;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RoomChatActivity extends AppCompatActivity {
 
@@ -77,6 +87,9 @@ public class RoomChatActivity extends AppCompatActivity {
     List<Voice> mVoice;
     long record_start_time, record_end_time;
     ValueEventListener seenListener;
+//    RoomAPIService roomAPIService;
+    APIService roomAPIService;
+    boolean notify = false;
 
     static {
         System.loadLibrary("cpp_code");
@@ -87,6 +100,8 @@ public class RoomChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
 
+//        roomAPIService = Client.getClient("https://fcm.googleapis.com/").create(RoomAPIService.class);
+        roomAPIService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerVoice = findViewById(R.id.recycler_voice);
         recyclerVoice.setHasFixedSize(true);
@@ -97,7 +112,6 @@ public class RoomChatActivity extends AppCompatActivity {
         // Example of a call to a native method --C++
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
-
         tv.setOnClickListener(v -> {
             Random r = new Random();
             int lowRange = 0;
@@ -256,6 +270,7 @@ public class RoomChatActivity extends AppCompatActivity {
         });
 
         btnSend.setOnClickListener(vSend -> {
+            notify = true;
             try{
                 mediaRecorder.stop();
                 mediaRecorder.release();
@@ -339,8 +354,90 @@ public class RoomChatActivity extends AppCompatActivity {
                         }
                     });
                     mProgress.dismiss();
+
+                    final DatabaseReference referenceNotify = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                    referenceNotify.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            if (notify) {
+
+//                                final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                DatabaseReference followReference = FirebaseDatabase.getInstance().getReference();
+                                followReference.child("FollowList").child(firebaseUser.getUid()).child("followers")
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                ArrayList<String> followersList = new ArrayList<>();
+                                                followersList.clear();
+                                                for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
+                                                    String follower = dataSnapshot2.getKey();
+                                                    followersList.add(follower);
+                                                    sendNotification(follower, roomId, user.getUsername() + " [ROOM: " + roomTitle + "]", "Duration: " + date4mat.format(record_end_time - record_start_time), follower);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+
+                            }
+                            notify = false;
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             });
+        });
+    }
+
+    private void sendNotification(String receiver, String roomid, final String username, final String message_time, String userid) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Token token = snapshot.getValue(Token.class);
+//                    RoomData roomData = new RoomData(firebaseUser.getUid(), roomid, R.mipmap.flexpad_fourth_actual_icon, message_time, username, userid);
+//
+//                    RoomSender roomSender = new RoomSender(roomData, token.getToken());
+//
+//                    roomAPIService.sendNotification(roomSender)
+
+                    Data data = new Data(firebaseUser.getUid(), R.mipmap.flexpad_fourth_actual_icon, message_time, username, userid);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    roomAPIService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200){
+                                        if (response.body().success != 1) {
+//                                            Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 
