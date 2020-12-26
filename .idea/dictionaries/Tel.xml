@@ -36,6 +36,7 @@
       <w>textview</w>
       <w>unfollowed</w>
       <w>userid</w>
+      <w>userstatus</w>
     </words>
   </dictionary>
 </component>

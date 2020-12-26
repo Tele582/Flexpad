@@ -630,7 +630,6 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    //to send notifications (not working yet)
     private void sendNotification(String receiver, final String username, final String message) {
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);

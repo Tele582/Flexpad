@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 
@@ -14,8 +15,8 @@ import fun.flexpad.com.R;
 
 public class OreoNotification extends ContextWrapper {
 
-    private static final String CHANNEL_ID = "com.koddev.chatapp";
-    private static final String CHANNEL_NAME = "chatapp";
+    private static final String CHANNEL_ID = "fun.flexpad.com";
+    private static final String CHANNEL_NAME = "flexpad_channel";
 
     private NotificationManager notificationManager;
 
@@ -32,8 +33,9 @@ public class OreoNotification extends ContextWrapper {
 
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                 CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT);
-        channel.enableLights(false);
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.enableLights(true);
+        channel.setLightColor(Color.GREEN);
         channel.enableVibration(true);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
@@ -55,7 +57,7 @@ public class OreoNotification extends ContextWrapper {
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(Integer.parseInt(icon))
+                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
                 .setSound(soundUri)
                 .setAutoCancel(true);
     }
