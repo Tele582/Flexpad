@@ -25,13 +25,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+
+import fun.flexpad.com.Fragments.APIService;
+import fun.flexpad.com.Notifications.Client;
+import fun.flexpad.com.Notifications.Data;
+import fun.flexpad.com.Notifications.MyResponse;
+import fun.flexpad.com.Notifications.Sender;
+import fun.flexpad.com.Notifications.Token;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     DatabaseReference reference;
+    APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Register");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
@@ -189,13 +205,14 @@ public class RegisterActivity extends AppCompatActivity {
                         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()){
+                                if (task.isSuccessful()) {
 
                                     Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
 
                                     finish();
+                                    sendNotification("JQ6y93PNv3OBLXXbUk0zQqhYlIZ2", "Flexpad Sign-Up Alert", username + " joined!", "JQ6y93PNv3OBLXXbUk0zQqhYlIZ2");
                                 }
                             }
                         });
@@ -246,6 +263,46 @@ public class RegisterActivity extends AppCompatActivity {
         JavaMailAPI alertMeofSignUpsAPI = new JavaMailAPI(this, mEmail, "New User (Sign-Up) Alert!", txt_email + " just signed up as '" + txt_username + "'.");
         alertMeofSignUpsAPI.execute();
     }
+
+    private void sendNotification(String receiver, final String username, final String message, String userid) {
+        final FirebaseUser fuser = auth.getCurrentUser();
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(fuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, message, username, userid);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200){
+                                        if (response.body().success != 1){
+//                                            Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
 
 
