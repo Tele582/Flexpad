@@ -1,11 +1,11 @@
 package fun.flexpad.com.Notifications;
 
 public class RoomSender {
-    public Data data;
-    public String to;
+    public RoomData roomData;
+    public String roomTo;
 
-    public RoomSender(RoomData roomData, String to) {
-        this.data = data;
-        this.to = to;
+    public RoomSender(RoomData roomData, String roomTo) {
+        this.roomData = roomData;
+        this.roomTo = roomTo;
     }
 }
