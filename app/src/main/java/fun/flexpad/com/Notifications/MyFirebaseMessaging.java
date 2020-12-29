@@ -36,26 +36,30 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (firebaseUser != null && sented != null && sented.equals(firebaseUser.getUid())) {
-            if (!currentUser.equals(user)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    sendOreoNotification(remoteMessage);
-                } else {
-                    sendNotification(remoteMessage);
+        if (room != null ) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                sendRoomOreoNotification(remoteMessage);
+            } else {
+                sendRoomNotification(remoteMessage);
+            }
+        }
+
+        if (room == null ) {
+            if (firebaseUser != null && sented != null && sented.equals(firebaseUser.getUid())) {
+                if (!currentUser.equals(user)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        sendOreoNotification(remoteMessage);
+                    } else {
+                        sendNotification(remoteMessage);
+                    }
                 }
             }
         }
-        else {
-            if (room != null ) {
+//        else if (room != null && sented.equals(firebaseUser.getUid())) {
 //            if (!currentUser.equals(user)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    sendRoomOreoNotification(remoteMessage);
-                } else {
-                    sendRoomNotification(remoteMessage);
-                }
 //            }
-            }
-        }
+//        }
     }
 
     private void sendOreoNotification(RemoteMessage remoteMessage) {
@@ -105,7 +109,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+//                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+                .setSmallIcon(Integer.parseInt(icon))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
@@ -172,7 +177,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+//                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+                .setSmallIcon(Integer.parseInt(icon))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

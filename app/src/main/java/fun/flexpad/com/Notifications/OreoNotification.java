@@ -57,7 +57,8 @@ public class OreoNotification extends ContextWrapper {
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+//                .setSmallIcon(R.mipmap.flexpad_fourth_actual_icon)
+                .setSmallIcon(Integer.parseInt(icon))
                 .setSound(soundUri)
                 .setAutoCancel(true);
     }

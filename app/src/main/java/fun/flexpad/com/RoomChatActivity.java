@@ -70,7 +70,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
     ImageButton mic_live, mic_live_on, btnSend, btnRecording;
     private MediaRecorder mediaRecorder;
-//    private MediaPlayer mediaPlayer;
+    //    private MediaPlayer mediaPlayer;
     private String fileName = "";
     MaterialTextView cancelRecord;
     private static final String LOG_TAG = "Record_log";
@@ -86,22 +86,25 @@ public class RoomChatActivity extends AppCompatActivity {
     VoiceAdapter voiceAdapter;
     List<Voice> mVoice;
     long record_start_time, record_end_time;
-    ValueEventListener seenListener;
-//    RoomAPIService roomAPIService;
-    APIService roomAPIService;
+    ValueEventListener seenListener, showVoiceListener, sendNotifListener;
+    OnCompleteListener sendListener;
+    RoomAPIService roomAPIService;
+    //    APIService roomAPIService;
     boolean notify = false;
+    DatabaseReference openedRef, v_reference;
+    DatabaseReference tokens, referenceNotify;
 
-    static {
-        System.loadLibrary("cpp_code");
-    }
+//    static {
+//        System.loadLibrary("cpp_code");
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
 
-//        roomAPIService = Client.getClient("https://fcm.googleapis.com/").create(RoomAPIService.class);
-        roomAPIService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        roomAPIService = Client.getClient("https://fcm.googleapis.com/").create(RoomAPIService.class);
+//        roomAPIService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerVoice = findViewById(R.id.recycler_voice);
         recyclerVoice.setHasFixedSize(true);
@@ -111,7 +114,7 @@ public class RoomChatActivity extends AppCompatActivity {
 
         // Example of a call to a native method --C++
         TextView tv = findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        tv.setText("Click for random number");
         tv.setOnClickListener(v -> {
             Random r = new Random();
             int lowRange = 0;
@@ -355,8 +358,8 @@ public class RoomChatActivity extends AppCompatActivity {
                     });
                     mProgress.dismiss();
 
-                    final DatabaseReference referenceNotify = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-                    referenceNotify.addValueEventListener(new ValueEventListener() {
+                    referenceNotify = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                    sendNotifListener = referenceNotify.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             User user = dataSnapshot.getValue(User.class);
@@ -373,7 +376,7 @@ public class RoomChatActivity extends AppCompatActivity {
                                                 for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
                                                     String follower = dataSnapshot2.getKey();
                                                     followersList.add(follower);
-                                                    sendNotification(follower, roomId, user.getUsername() + " [ROOM: " + roomTitle + "]", "Duration: " + date4mat.format(record_end_time - record_start_time), follower);
+                                                    sendNotification(follower, roomId, user.getUsername() + " [ROOM - " + roomTitle + "]", "Duration: " + date4mat.format(record_end_time - record_start_time), follower);
                                                 }
                                             }
 
@@ -382,7 +385,6 @@ public class RoomChatActivity extends AppCompatActivity {
 
                                             }
                                         });
-
                             }
                             notify = false;
                         }
@@ -398,7 +400,7 @@ public class RoomChatActivity extends AppCompatActivity {
     }
 
     private void sendNotification(String receiver, String roomid, final String username, final String message_time, String userid) {
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -411,9 +413,9 @@ public class RoomChatActivity extends AppCompatActivity {
 //
 //                    roomAPIService.sendNotification(roomSender)
 
-                    Data data = new Data(firebaseUser.getUid(), R.mipmap.flexpad_fourth_actual_icon, message_time, username, userid);
+                    RoomData data = new RoomData(firebaseUser.getUid(), roomid, R.mipmap.flexpad_fourth_actual_icon, message_time, username, userid);
 
-                    Sender sender = new Sender(data, token.getToken());
+                    RoomSender sender = new RoomSender(data, token.getToken());
 
                     roomAPIService.sendNotification(sender)
                             .enqueue(new Callback<MyResponse>() {
@@ -421,14 +423,16 @@ public class RoomChatActivity extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if (response.code() == 200){
                                         if (response.body().success != 1) {
-//                                            Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                         }
+                                    } else {
+                                        Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<MyResponse> call, Throwable t) {
-
+                                    Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
@@ -442,7 +446,7 @@ public class RoomChatActivity extends AppCompatActivity {
     }
 
     private void seenMessage(final String roomID) {
-        DatabaseReference openedRef = FirebaseDatabase.getInstance().getReference("VoiceClips");
+        openedRef = FirebaseDatabase.getInstance().getReference("VoiceClips");
         seenListener = openedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -466,8 +470,8 @@ public class RoomChatActivity extends AppCompatActivity {
     private void showVoices(final String roomID) {
         mVoice = new ArrayList<>();
 
-        final DatabaseReference v_reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
-        v_reference.addValueEventListener(new ValueEventListener() {
+        v_reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
+        showVoiceListener = v_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mVoice.clear();
@@ -496,6 +500,14 @@ public class RoomChatActivity extends AppCompatActivity {
         super.onPause();
 //        if (mediaPlayer.isPlaying()) mediaPlayer.pause();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        openedRef.removeEventListener(seenListener);
+        v_reference.removeEventListener(showVoiceListener);
+//        referenceNotify.removeEventListener(sendNotifListener);
     }
 }
 
