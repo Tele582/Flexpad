@@ -650,6 +650,8 @@ public class MessageActivity extends AppCompatActivity {
                                         if (response.body().success != 1){
                                             Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                         }
+                                    } else {
+                                        Toast.makeText(MessageActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -762,6 +764,12 @@ public class MessageActivity extends AppCompatActivity {
 //            checkTypingStatus("noOne");
             currentUser("none");
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        reference.removeEventListener(seenListener);
     }
 }
 
