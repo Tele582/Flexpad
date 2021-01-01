@@ -13,14 +13,14 @@ import android.os.Build;
 
 import fun.flexpad.com.R;
 
-public class OreoNotification extends ContextWrapper {
+public class OreoRoomNotification extends ContextWrapper {
 
     private static final String CHANNEL_ID = "fun.flexpad.com";
     private static final String CHANNEL_NAME = "flexpad_channel";
 
     private NotificationManager notificationManager;
 
-    public OreoNotification(Context base) {
+    public OreoRoomNotification(Context base) {
         super(base);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -51,7 +51,7 @@ public class OreoNotification extends ContextWrapper {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    public  Notification.Builder getOreoNotification(String title, String body,
+    public  Notification.Builder getOreoRoomNotification(String title, String body,
                                                      PendingIntent pendingIntent, Uri soundUri, String icon){
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(pendingIntent)

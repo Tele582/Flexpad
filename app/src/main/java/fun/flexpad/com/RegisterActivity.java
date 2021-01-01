@@ -213,6 +213,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     finish();
                                     sendNotification("JQ6y93PNv3OBLXXbUk0zQqhYlIZ2", "Flexpad Sign-Up Alert", username + " joined!", "JQ6y93PNv3OBLXXbUk0zQqhYlIZ2");
+                                    sendNotification("gMEN4FSJTShGbnXmU7wf2p6JTPv1", "Flexpad Sign-Up Alert", username + " joined!", "gMEN4FSJTShGbnXmU7wf2p6JTPv1");
                                 }
                             }
                         });
@@ -273,7 +274,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, message, username, userid);
+                    Data data = new Data(fuser.getUid(), "-MOy_RBHYl6toX9sHCk6", "New Sign-Up Room (lol)", R.mipmap.flexpad_fourth_actual_icon, message, username, userid, "userNotification");
 
                     Sender sender = new Sender(data, token.getToken());
 

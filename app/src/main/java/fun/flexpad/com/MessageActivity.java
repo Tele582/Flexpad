@@ -618,7 +618,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (notify) {
-                    sendNotification(receiver, user.getUsername(), msg);
+//                    sendNotification(receiver, user.getUsername(), msg);
                 }
                 notify = false;
             }
@@ -638,7 +638,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(), R.mipmap.flexpad_fourth_actual_icon, message, username, userid);
+                    Data data = new Data(fuser.getUid(), "none", "none", R.mipmap.flexpad_fourth_actual_icon_foreground, message, username, userid, "userNotification");
 
                     Sender sender = new Sender(data, token.getToken());
 

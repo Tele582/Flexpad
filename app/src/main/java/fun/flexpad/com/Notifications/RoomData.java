@@ -1,71 +1,71 @@
 package fun.flexpad.com.Notifications;
 
 public class RoomData {
-    private String user;
-    private String room;
-    private int icon;
-    private String body;
-    private String title;
-    private String sented;
+    private String roomuser;
+//    private String room;
+    private int roomicon;
+    private String roombody;
+    private String roomtitle;
+    private String roomsented;
 
-    public RoomData(String user, String room, int icon, String body, String title, String sented) {
-        this.user = user;
-        this.room = room;
-        this.icon = icon;
-        this.body = body;
-        this.title = title;
-        this.sented = sented;
+    public RoomData(String roomuser, int roomicon, String roombody, String roomtitle, String roomsented) {//, String room
+        this.roomuser = roomuser;
+//        this.room = room;
+        this.roomicon = roomicon;
+        this.roombody = roombody;
+        this.roomtitle = roomtitle;
+        this.roomsented = roomsented;
     }
 
     public RoomData() {
     }
 
-    public String getUser() {
-        return user;
+    public String getRoomuser() {
+        return roomuser;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setRoomuser(String roomuser) {
+        this.roomuser = roomuser;
     }
 
-    public String getRoom() {
-        return room;
+//    public String getRoom() {
+//        return room;
+//    }
+//
+//    public void setRoom(String room) {
+//        this.room = room;
+//    }
+
+    public int getRoomicon() {
+        return roomicon;
     }
 
-    public void setRoom(String room) {
-        this.room = room;
+    public void setRoomicon(int roomicon) {
+        this.roomicon = roomicon;
     }
 
-    public int getIcon() {
-        return icon;
+    public String getRoombody() {
+        return roombody;
     }
 
-    public void setIcon(int icon) {
-        this.icon = icon;
+    public void setRoombody(String roombody) {
+        this.roombody = roombody;
     }
 
-    public String getBody() {
-        return body;
+    public String getRoomtitle() {
+        return roomtitle;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setRoomtitle(String roomtitle) {
+        this.roomtitle = roomtitle;
     }
 
-    public String getTitle() {
-        return title;
+    public String getRoomsented() {
+        return roomsented;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSented() {
-        return sented;
-    }
-
-    public void setSented(String sented) {
-        this.sented = sented;
+    public void setRoomsented(String roomsented) {
+        this.roomsented = roomsented;
     }
 }
 
