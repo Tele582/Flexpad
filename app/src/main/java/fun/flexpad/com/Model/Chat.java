@@ -6,6 +6,7 @@ public class Chat {
     private String receiver;
     private String messagelabel;
     private String message;
+    private String time;
     private boolean isseen;
 
     private String name;
@@ -17,11 +18,12 @@ public class Chat {
 
 
 
-    public Chat(String sender, String receiver, String messagelabel, String message, boolean isseen, String name, String type, String userid, String messageid, String messagekey){
+    public Chat(String sender, String receiver, String messagelabel, String message, String time, boolean isseen, String name, String type, String userid, String messageid, String messagekey){
         this.sender = sender;
         this.receiver = receiver;
         this.messagelabel = messagelabel;
         this.message = message;
+        this.time = time;
         this.isseen = isseen;
         this.name = name;
         this.type = type;
@@ -77,6 +79,14 @@ public class Chat {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getMessagelabel() {

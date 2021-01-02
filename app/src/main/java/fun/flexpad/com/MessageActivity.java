@@ -536,6 +536,11 @@ public class MessageActivity extends AppCompatActivity {
     // for sent messages
     private void sendMessage(String sender, final String receiver, String message) {
 
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss, dd MMM, yyyy");
+        Calendar currentCal = Calendar.getInstance();
+        final String sendingTime = dateFormat.format(currentCal.getTime());
+
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 //        final String userid = intent.getStringExtra("userid");
 //
@@ -568,6 +573,7 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("messagelabel", messagelabel);
         hashMap.put("type", "text");
         hashMap.put("message", message);
+        hashMap.put("time", sendingTime);
         hashMap.put("isseen", false);
         hashMap.put("messagekey", message_reference.getKey());
 

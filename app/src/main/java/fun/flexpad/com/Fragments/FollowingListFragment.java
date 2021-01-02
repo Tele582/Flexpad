@@ -33,7 +33,6 @@ import fun.flexpad.com.databinding.FragmentFollowingListBinding;
 public class FollowingListFragment extends Fragment {
 
     private FirebaseUser fuser;
-    //    private RecyclerView recyclerView;
     private UserAdapter userAdapter;
     FragmentFollowingListBinding followingListBinding;
 
@@ -72,13 +71,6 @@ public class FollowingListFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 underFollowingList.clear();
-                if (snapshot.child("unfollowed").exists()) {
-                    final String followingNumber = Long.toString(snapshot.getChildrenCount() - 1);
-                    followingListBinding.title.setText("Following: " + followingNumber);
-                } else {
-                    final String followingNumber = Long.toString(snapshot.getChildrenCount());
-                    followingListBinding.title.setText("Following: " + followingNumber);
-                }
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String following = dataSnapshot.getKey();
@@ -89,14 +81,17 @@ public class FollowingListFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         followingNamesList.clear();
+                        int followingNumber = 0;
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             User user = dataSnapshot.getValue(User.class);
                             assert user != null;
                             if (underFollowingList.contains(user.getId())) {
                                 followingNamesList.add(user);
+                                followingNumber++;
                             }
                         }
 
+                        followingListBinding.title.setText("Following: " + followingNumber);
                         userAdapter = new UserAdapter(getContext(), followingNamesList, false);
                         followingListBinding.followingListing.setAdapter(userAdapter);
                     }

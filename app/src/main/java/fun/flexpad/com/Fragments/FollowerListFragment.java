@@ -31,7 +31,6 @@ import fun.flexpad.com.databinding.FragmentFollowerListBinding;
 public class FollowerListFragment extends Fragment {
 
     private FirebaseUser fuser;
-    //    private RecyclerView recyclerView;
     private UserAdapter userAdapter;
     FragmentFollowerListBinding followerListBinding;
 
@@ -71,13 +70,6 @@ public class FollowerListFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 underFollowersList.clear();
-                if (snapshot.child("unfollowed").exists()) {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
-                    followerListBinding.title.setText("Followers: " + followersNumber);
-                } else {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount());
-                    followerListBinding.title.setText("Followers: " + followersNumber);
-                }
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String follower = dataSnapshot.getKey();
@@ -88,14 +80,17 @@ public class FollowerListFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         followersNamesList.clear();
+                        int followersNumber = 0;
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             User user = dataSnapshot.getValue(User.class);
                             assert user != null;
                             if (underFollowersList.contains(user.getId())) {
                                 followersNamesList.add(user);
+                                followersNumber++;
                             }
                         }
 
+                        followerListBinding.title.setText("Followers: " + followersNumber);
                         userAdapter = new UserAdapter(getContext(), followersNamesList, false);
                         followerListBinding.followersListing.setAdapter(userAdapter);
                     }

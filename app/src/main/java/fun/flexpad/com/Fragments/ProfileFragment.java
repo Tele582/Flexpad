@@ -9,16 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
@@ -38,12 +33,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
-import fun.flexpad.com.databinding.FragmentFollowerListBinding;
 import fun.flexpad.com.databinding.FragmentProfileBinding;
 
 import static android.app.Activity.RESULT_OK;
@@ -184,13 +176,30 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 underFollowersList.clear();
-                if (snapshot.child("unfollowed").exists()) {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
-                    binding.followersList.setText("Followers: " + followersNumber);
-                } else {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount());
-                    binding.followersList.setText("Followers: " + followersNumber);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String follower = dataSnapshot.getKey();
+                    underFollowersList.add(follower);
                 }
+                ArrayList<User> followersNamesList = new ArrayList<>();
+                FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int followersNumber = 0;
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            User user = dataSnapshot.getValue(User.class);
+                            assert user != null;
+                            if (underFollowersList.contains(user.getId())) {
+                                followersNumber++;
+                            }
+                        }
+                        binding.followersList.setText("Followers: " + followersNumber);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -203,14 +212,30 @@ public class ProfileFragment extends Fragment {
         followRef.child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.child("unfollowed").exists()) {
-                    final String followingNumber = Long.toString(snapshot.getChildrenCount() - 1 );
-                    binding.followingList.setText("Following: " + followingNumber);
-                } else {
-                    final String followingNumber = Long.toString(snapshot.getChildrenCount());
-                    binding.followingList.setText("Following: " + followingNumber);
+                underFollowingList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String following = dataSnapshot.getKey();
+                    underFollowingList.add(following);
                 }
+                FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int followingNumber = 0;
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            User user = dataSnapshot.getValue(User.class);
+                            assert user != null;
+                            if (underFollowingList.contains(user.getId())) {
+                                followingNumber++;
+                            }
+                        }
+                        binding.followingList.setText("Following: " + followingNumber);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
