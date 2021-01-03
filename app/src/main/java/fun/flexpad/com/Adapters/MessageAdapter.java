@@ -121,6 +121,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         } else {
             holder.txt_seen.setVisibility(View.GONE);
+            holder.sendingTime.setVisibility(View.GONE);
         }
 
         //either use holder.show_message or holder.messageLAyout

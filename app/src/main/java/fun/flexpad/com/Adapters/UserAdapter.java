@@ -38,7 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mUsers;
     private boolean ischat;
-    private String theLastMessage;
+    private String theLastMessage, lastMessageTime;
 
     public UserAdapter(Context mContext, List<User> mUsers, boolean ischat) {
         this.mUsers = mUsers;
@@ -69,7 +69,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
 
         if (ischat){
-            lastMessage(user.getId(), holder.last_msg);
+            lastMessage(user.getId(), holder.last_msg, holder.lastMsgTime);
         } else {
             holder.last_msg.setVisibility(View.GONE);
         }
@@ -102,7 +102,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         checkFollowingStatus(user.getId(), holder.btnFollow);
 
         updateFollowList(holder.btnFollow, user.getId());
-
     }
 
     @Override
@@ -117,7 +116,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public CircleImageView verification_image;
         private final ImageView img_on;
         private final ImageView img_off;
-        private final TextView last_msg;
+        private final TextView last_msg, lastMsgTime;
         private final TextView unread_msg_no;
         public Button btnFollow;
 
@@ -130,14 +129,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             img_on = itemView.findViewById(R.id.img_on);
             img_off = itemView.findViewById(R.id.img_off);
             last_msg = itemView.findViewById(R.id.last_msg);
+            lastMsgTime = itemView.findViewById(R.id.last_msg_time);
             unread_msg_no = itemView.findViewById(R.id.unread_msg_no);
             btnFollow = itemView.findViewById(R.id.btn_follow);
 
         }
     }
 
-    private void lastMessage(final String userid, final TextView last_msg){
+    private void lastMessage(final String userid, final TextView last_msg, final TextView lastMsgTime){
         theLastMessage = "default";
+        lastMessageTime = "";
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
 
@@ -153,6 +154,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                         if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid)
                                 || chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getUid())) {
                             theLastMessage = chat.getMessage();
+                            if (chat.getTime() != null) {
+                                @SuppressLint("SimpleDateFormat")
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+                                Calendar currentCal = Calendar.getInstance();
+                                final String currentDay = dateFormat.format(currentCal.getTime());
+                                String ttt = chat.getTime();
+                                if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
+                                    lastMessageTime = (String.format("%.5s", ttt));
+                                } else if ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                        .equals(String.format("%.2s", ttt.substring(ttt.length() - 12))) &&
+                                        (ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) {
+                                    lastMessageTime = ("Ystdy"); //(String.format("%.5s", ttt) + ", Ystdy");
+                                } else {
+                                    lastMessageTime = String.format("%.6s", ttt.substring(ttt.length() - 12));
+                                }
+//                                lastMessageTime = chat.getTime();//
+                            } else {
+                                lastMessageTime = "";
+                            }
                         }
 
                     } catch (Exception e) {
@@ -161,8 +181,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 }
                 if ("default".equals(theLastMessage)) {
                     last_msg.setText("");
+                    lastMsgTime.setText("");
                 } else {
                     last_msg.setText(theLastMessage);
+                    lastMsgTime.setText(lastMessageTime);
                 }
                 theLastMessage = "default";
             }
@@ -225,10 +247,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.child(uid).exists()) {
+                        followButton.setVisibility(View.VISIBLE);
                         followButton.setText(R.string.following);
                         Drawable dr = followButton.getContext().getResources().getDrawable(R.drawable.ic_baseline_check_circle_24);
                         followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, dr,null);
                     } else {
+                        followButton.setVisibility(View.VISIBLE);
                         followButton.setText(R.string.follow);
                         followButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
                     }
