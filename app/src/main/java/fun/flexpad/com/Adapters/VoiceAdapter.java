@@ -69,6 +69,10 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         Voice voice = mVoice.get(position);
         final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users").child(voice.getSender());
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+        Calendar currentCal = Calendar.getInstance();
+        final String currentDay = dateFormat.format(currentCal.getTime());
 
         user_reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -79,16 +83,12 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                     holder.userName.setText(user.getUsername());
                     holder.duration.setText(voice.getDuration()); //"Duration: " +
 
-                    @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
-                    Calendar currentCal = Calendar.getInstance();
-                    final String currentDay = dateFormat.format(currentCal.getTime());
-                    String ttt = voice.getTime();
+                    final String ttt = voice.getTime();
                     if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", Today");
-                    } else if ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
-                            .equals(String.format("%.2s", ttt.substring(ttt.length() - 12))) &&
-                            (ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) {
+                    } else if (((ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) &&
+                            ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                    .equals(Integer.toString(Integer.parseInt(String.format("%.2s", ttt.substring(ttt.length() - 12))))))) {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", Yesterday");
                     } else {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", " + ttt.substring(ttt.length() - 12));

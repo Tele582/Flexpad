@@ -162,19 +162,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                 String ttt = chat.getTime();
                                 if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
                                     lastMessageTime = (String.format("%.5s", ttt));
-                                } else if ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
-                                        .equals(String.format("%.2s", ttt.substring(ttt.length() - 12))) &&
-                                        (ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) {
+                                } else if (((ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) &&
+                                        ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                                .equals(Integer.toString(Integer.parseInt(String.format("%.2s", ttt.substring(ttt.length() - 12))))))) {
                                     lastMessageTime = ("Ystdy"); //(String.format("%.5s", ttt) + ", Ystdy");
                                 } else {
                                     lastMessageTime = String.format("%.6s", ttt.substring(ttt.length() - 12));
                                 }
-//                                lastMessageTime = chat.getTime();//
                             } else {
                                 lastMessageTime = "";
                             }
                         }
-
                     } catch (Exception e) {
                         e.getStackTrace();
                     }

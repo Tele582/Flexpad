@@ -109,9 +109,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 String ttt = chat.getTime();
                 if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
                     holder.sendingTime.setText(String.format("%.5s", ttt) + ". ");
-                } else if ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
-                        .equals(String.format("%.2s", ttt.substring(ttt.length() - 12))) &&
-                        (ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) {
+                } else if (((ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) &&
+                        ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                .equals(Integer.toString(Integer.parseInt(String.format("%.2s", ttt.substring(ttt.length() - 12))))))) {
                     holder.sendingTime.setText(String.format("%.5s", ttt) + ", Yesterday. ");
                 } else {
                     holder.sendingTime.setText(String.format("%.5s", ttt) + ", " + ttt.substring(ttt.length() - 12) + ". ");
