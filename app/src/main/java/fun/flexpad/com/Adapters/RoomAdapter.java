@@ -262,7 +262,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                         }
                     }
                     if ("default".equals(theLastMessage)) {
-                        lastMsgTime.setText("def");
+                        lastMsgTime.setText("");
                     } else {
                         lastMsgTime.setText(lastMessageTime);
                     }

@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.navigation.NavController;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -117,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 } else {
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats ("+unread+")");
                 }
-                viewPagerAdapter.addFragment(new ContactsFragment(), "Contacts");
                 viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+
                 viewPagerAdapter.addFragment(new UsersFragment(), "Users");
 
                 viewPager.setAdapter(viewPagerAdapter);

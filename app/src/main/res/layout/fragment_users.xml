@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.UsersFragment">
 
-    <EditText
+    <LinearLayout
+        android:id="@+id/inrooms_fragments_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:hint="@string/search"
-        android:id="@+id/search_users"/>
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/search_users"
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/users_tab_layout"
+            app:tabTextAppearance="@style/TabTextAppearanceLowerCase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:textAlignment="center"
+            app:tabSelectedTextColor="#fff"
+            app:tabIndicatorColor="#fff"
+            app:tabTextColor="#fff"/>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/users_view_pager"
+            android:background="@drawable/white_duolingable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

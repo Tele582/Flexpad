@@ -81,7 +81,7 @@ public class ChatsFragment extends Fragment {
         });
 
         reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() { //add orderbychild here
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
