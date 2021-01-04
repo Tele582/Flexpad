@@ -71,16 +71,16 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/icon_check_verified_foreground"/>
+        android:src="@drawable/icon_check_verified_foreground" />
 
     <TextView
         android:id="@+id/last_msg_time"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:maxLines="1"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@id/roomIname"
-        android:text="time"
+        tools:text="time"
         android:textColor="@color/colorPrimaryDark" />
 
     <androidx.cardview.widget.CardView
@@ -90,9 +90,10 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="10dp"
+        android:layout_below="@id/last_msg_time"
         android:layout_toEndOf="@id/roomIname"
-        app:cardBackgroundColor="#ffffff"
-        android:layout_centerVertical="true">
+        android:layout_centerHorizontal="true"
+        app:cardBackgroundColor="#ffffff">
 
         <TextView
             android:id="@+id/unseen_msg_no"

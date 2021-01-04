@@ -110,6 +110,7 @@
         app:cardCornerRadius="10dp"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/last_msg_time"
+        android:layout_toEndOf="@id/btn_follow"
         android:layout_centerHorizontal="true"
         app:cardBackgroundColor="#ffffff">
 

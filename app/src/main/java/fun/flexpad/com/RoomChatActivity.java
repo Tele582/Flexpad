@@ -433,7 +433,7 @@ public class RoomChatActivity extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if (response.code() == 200){
                                         if (response.body().success != 1) {
-                                            Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
 //                                        Toast.makeText(RoomChatActivity.this, "Notification Failed!", Toast.LENGTH_SHORT).show();
