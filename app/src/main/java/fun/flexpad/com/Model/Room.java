@@ -8,14 +8,16 @@ public class Room {
     public String creatorUsername;
     private String roomKey;
     public String creatorVerified;
+    public String dateCreated;
 
-    public Room (String id, String roomname, String creatorId, String creatorUsername, String roomKey, String creatorVerified) {
+    public Room (String id, String roomname, String creatorId, String creatorUsername, String roomKey, String creatorVerified, String dateCreated) {
         this.id = id;
         this.roomname = roomname;
         this.creatorId = creatorId;
         this.creatorUsername = creatorUsername;
         this.roomKey = roomKey;
         this.creatorVerified = creatorVerified;
+        this.dateCreated = dateCreated;
     }
 
     public Room() {
@@ -68,6 +70,14 @@ public class Room {
 
     public void setCreatorVerified(String creatorVerified) {
         this.creatorVerified = creatorVerified;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }
 

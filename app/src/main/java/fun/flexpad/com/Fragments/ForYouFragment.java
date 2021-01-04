@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import fun.flexpad.com.Adapters.RoomAdapter;
@@ -50,7 +51,7 @@ public class ForYouFragment extends Fragment {
         mRooms = new ArrayList<>();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

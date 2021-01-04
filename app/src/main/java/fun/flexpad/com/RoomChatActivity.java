@@ -403,6 +403,9 @@ public class RoomChatActivity extends AppCompatActivity {
 
                             }
                         });
+
+                        reference.child("Rooms").child(roomId).child("lastMessageTime").setValue(sendingTime);
+                        reference.child("Rooms").child(roomId).child("lastMsgTimeStamp").setValue(System.currentTimeMillis());
                     }
                 }
             });

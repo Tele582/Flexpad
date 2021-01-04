@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -31,6 +32,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -117,12 +120,17 @@ public class RoomDesignActivity extends AppCompatActivity {
         //room_image.setOnClickListener(v -> openImage());
     }
 
-    //Create and save room
+//    Create and save room
     public void saveroom(String roomname, String creatorId, String creatorName, String creatorVerified) {
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         DatabaseReference room_reference = reference.child("Rooms").push();
         String roomKey = room_reference.getKey();
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss, dd MMM, yyyy");
+        Calendar currentCal = Calendar.getInstance();
+        final String dateCreated = dateFormat.format(currentCal.getTime());
 
         HashMap<String, Object> nmap = new HashMap<>();
         nmap.put("roomname", roomname);
@@ -130,6 +138,8 @@ public class RoomDesignActivity extends AppCompatActivity {
         nmap.put("creatorUsername", creatorName);
         nmap.put("roomKey", roomKey);
         nmap.put("creatorVerified", creatorVerified);
+        nmap.put("dateCreated", dateCreated);
+        nmap.put("lastMessageTime", dateCreated);
         room_reference.setValue(nmap);
 
         final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
