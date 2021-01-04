@@ -65,34 +65,6 @@ public class ProfileFragment extends Fragment {
 //            }
 //        });
 
-        storageReference = FirebaseStorage.getInstance().getReference("Profile Uploads");
-
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                assert user != null;
-                binding.username.setText(user.getUsername());
-                if (user.getImageURI().equals("default")){
-                    binding.profileImage.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                    if (isAdded()) {
-                        Glide.with(requireContext()).load(user.getImageURI()).into(binding.profileImage);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        showFollowerShip(fuser.getUid());
-        binding.profileImage.setOnClickListener(v -> openImage());
         return binding.getRoot();
     }
 
@@ -248,6 +220,35 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        storageReference = FirebaseStorage.getInstance().getReference("Profile Uploads");
+
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                assert user != null;
+                binding.username.setText(user.getUsername());
+                if (user.getImageURI().equals("default")){
+                    binding.profileImage.setImageResource(R.mipmap.ic_launcher);
+                } else {
+                    if (isAdded()) {
+                        Glide.with(requireContext()).load(user.getImageURI()).into(binding.profileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        showFollowerShip(fuser.getUid());
+        binding.profileImage.setOnClickListener(v -> openImage());
 
         binding.followersList.setOnClickListener(new View.OnClickListener() {
             @Override
