@@ -39,7 +39,9 @@ public class ForYouFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_for_you, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         //mRooms = new ArrayList<>();

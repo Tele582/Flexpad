@@ -130,7 +130,7 @@ public class RoomDesignActivity extends AppCompatActivity {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss, dd MMM, yyyy");
         Calendar currentCal = Calendar.getInstance();
-        final String dateCreated = dateFormat.format(currentCal.getTime());
+        final String timeCreated = dateFormat.format(currentCal.getTime());
 
         HashMap<String, Object> nmap = new HashMap<>();
         nmap.put("roomname", roomname);
@@ -138,8 +138,9 @@ public class RoomDesignActivity extends AppCompatActivity {
         nmap.put("creatorUsername", creatorName);
         nmap.put("roomKey", roomKey);
         nmap.put("creatorVerified", creatorVerified);
-        nmap.put("dateCreated", dateCreated);
-        nmap.put("lastMessageTime", dateCreated);
+        nmap.put("dateCreated", timeCreated);
+        nmap.put("lastMessageTime", timeCreated);
+        nmap.put("lastMsgTimeStamp", System.currentTimeMillis());
         room_reference.setValue(nmap);
 
         final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);

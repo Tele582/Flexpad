@@ -37,7 +37,9 @@ public class GeneralFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_general, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         //mRooms = new ArrayList<>();
@@ -50,7 +52,7 @@ public class GeneralFragment extends Fragment {
 
         //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

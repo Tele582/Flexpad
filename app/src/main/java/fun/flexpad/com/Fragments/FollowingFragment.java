@@ -40,7 +40,9 @@ public class FollowingFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         readFollowedRooms();
@@ -61,7 +63,7 @@ public class FollowingFragment extends Fragment {
                         String followed = dataSnapshot.getKey();
                         followingList.add(followed);
                     }
-                    reference.child("Rooms").addValueEventListener(new ValueEventListener() {
+                    reference.child("Rooms").orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             ArrayList<Room> roomFollowList = new ArrayList<>();
