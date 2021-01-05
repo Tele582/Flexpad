@@ -592,6 +592,8 @@ public class MessageActivity extends AppCompatActivity {
                 if (!dataSnapshot.exists()){
                     chatRef.child("id").setValue(userid);
                 }
+                chatRef.child("lastMessageTime").setValue(sendingTime);
+                chatRef.child("lastMsgTimeStamp").setValue(System.currentTimeMillis());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -606,9 +608,9 @@ public class MessageActivity extends AppCompatActivity {
         chatSenderRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()){
-                    chatSenderRef.child("id").setValue(fuser.getUid());
-                }
+                chatSenderRef.child("id").setValue(fuser.getUid());
+                chatSenderRef.child("lastMessageTime").setValue(sendingTime);
+                chatSenderRef.child("lastMsgTimeStamp").setValue(System.currentTimeMillis());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
