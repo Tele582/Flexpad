@@ -10,6 +10,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -22,9 +23,9 @@
             app:popupTheme="@style/MenuStyle">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/room_image"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/room_image"/>
+                android:layout_height="30dp" />
 
             <TextView
                 android:id="@+id/room_title"
@@ -39,11 +40,20 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/online_user_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/users_list"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:layout_below="@id/bar_layout"
         android:layout_above="@id/live_spoken_text"
         android:layout_width="match_parent"

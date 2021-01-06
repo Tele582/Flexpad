@@ -81,18 +81,18 @@ public class RoomChatActivity extends AppCompatActivity {
     private boolean running;
 
     final int REQUEST_PERMISSION_CODE = 1000;
-    TextView roomTextview, liveTextFromSpeech;
+    TextView roomTextview, liveTextFromSpeech, onlineUserNo;
     FirebaseUser firebaseUser;
     RecyclerView recyclerVoice;
     VoiceAdapter voiceAdapter;
     List<Voice> mVoice;
     long record_start_time, record_end_time;
     ValueEventListener seenListener, showVoiceListener, sendNotifListener;
-    ValueEventListener sendListener;
+    ValueEventListener sendListener, numberReferenceListener;
 //    RoomAPIService roomAPIService;
     APIService roomAPIService;
     boolean notify = false;
-    DatabaseReference openedRef, v_reference;
+    DatabaseReference openedRef, v_reference, numberReference;
     DatabaseReference tokens, referenceNotify;
     StorageReference filePath;
     DatabaseReference voiceRef;
@@ -149,6 +149,7 @@ public class RoomChatActivity extends AppCompatActivity {
         });
 
         liveTextFromSpeech = findViewById(R.id.live_spoken_text);
+        onlineUserNo = findViewById(R.id.online_user_number);
         mic_live = findViewById(R.id.mic_live);
         mic_live_on = findViewById(R.id.mic_live_on);
         btnSend = findViewById(R.id.btn_send);
@@ -157,12 +158,34 @@ public class RoomChatActivity extends AppCompatActivity {
         recordTime = findViewById(R.id.chronometer); //recordTime.setFormat("Time: %s");
 //        mediaPlayer = new MediaPlayer();
 
+        showOnlineNumber();
         showVoices(roomId);
         recordVoice();
         seenMessage(roomId);
     }
 
     public native String stringFromJNI();
+
+    private void showOnlineNumber() {
+        numberReference = FirebaseDatabase.getInstance().getReference("Users");
+        numberReferenceListener = numberReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int people_online = 0;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if ("online".equals(snapshot.child(dataSnapshot.getKey()).child("status").getValue(String.class))) {
+                        people_online++;
+                    }
+                }
+                onlineUserNo.setText(people_online + " online");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     private void setupMediaRecorder() {
         mediaRecorder = new MediaRecorder();
@@ -514,11 +537,30 @@ public class RoomChatActivity extends AppCompatActivity {
         });
     }
 
+    private void status(String status) {
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        status("online");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-//        if (mediaPlayer.isPlaying()) mediaPlayer.pause();
-
+        status("offline");
     }
 
     @Override
@@ -528,6 +570,7 @@ public class RoomChatActivity extends AppCompatActivity {
         v_reference.removeEventListener(showVoiceListener);
 //        referenceNotify.removeEventListener(sendNotifListener);
 //        voiceRef.removeValue();
+//        numberReference.removeEventListener(numberReferenceListener);
     }
 }
 

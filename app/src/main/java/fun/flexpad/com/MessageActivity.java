@@ -730,22 +730,20 @@ public class MessageActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    //online or offline Status
-    private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-
-        reference.updateChildren(hashMap);
-    }
-
     // for typing (a bit messy though)
     private void checkTypingStatus (String typing) {
         reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("typingTo", typing);
+        reference.updateChildren(hashMap);
+    }
+
+    //online or offline Status
+    private void status(String status) {
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
         reference.updateChildren(hashMap);
     }
 
