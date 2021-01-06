@@ -216,6 +216,12 @@ public class RoomChatActivity extends AppCompatActivity {
 //        if (mediaPlayer.isPlaying()) mediaPlayer.pause();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
     public void recordVoice() {
 
         mic_live.setOnClickListener(view -> {

@@ -2,6 +2,7 @@ package fun.flexpad.com.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
@@ -101,6 +103,17 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                             Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
                         } catch (Exception e) {e.printStackTrace(); }
                     }
+
+                    holder.userName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!user.getId().equals(fuser.getUid())) {
+                                Intent intent = new Intent(mContext, MessageActivity.class);
+                                intent.putExtra("userid", user.getId());
+                                mContext.startActivity(intent);
+                            }
+                        }
+                    });
                 }
             }
 
