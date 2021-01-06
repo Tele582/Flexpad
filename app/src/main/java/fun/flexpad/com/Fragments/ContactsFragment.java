@@ -112,11 +112,11 @@ public class ContactsFragment extends Fragment {
         cur.close();
 
         DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users");
-        contacts_reference.addValueEventListener(new ValueEventListener() {
+        contacts_reference.orderByChild("search").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mContacts.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     for (String num : phones) {
                         assert user != null;
