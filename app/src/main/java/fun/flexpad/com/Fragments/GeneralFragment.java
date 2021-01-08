@@ -52,7 +52,7 @@ public class GeneralFragment extends Fragment {
 
         //final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
-        reference.orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
+        reference.orderByChild("messageCount").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

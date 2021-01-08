@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fun.flexpad.com.GamesActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
@@ -118,6 +119,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
                         Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
                 //this opens random roomChatActivity, which it should not
+                mContext.startActivity(new Intent(mContext, GamesActivity.class));
             }
             return false;
         }

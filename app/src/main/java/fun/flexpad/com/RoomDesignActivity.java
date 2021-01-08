@@ -141,6 +141,7 @@ public class RoomDesignActivity extends AppCompatActivity {
         nmap.put("dateCreated", timeCreated);
         nmap.put("lastMessageTime", timeCreated);
         nmap.put("lastMsgTimeStamp", System.currentTimeMillis());
+        nmap.put("messageCount", 0);
         room_reference.setValue(nmap);
 
         final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);

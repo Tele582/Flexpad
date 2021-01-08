@@ -52,15 +52,12 @@ import java.util.UUID;
 
 import fun.flexpad.com.Adapters.VoiceAdapter;
 import fun.flexpad.com.Fragments.APIService;
-import fun.flexpad.com.Fragments.RoomAPIService;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.Notifications.Client;
 import fun.flexpad.com.Notifications.Data;
 import fun.flexpad.com.Notifications.MyResponse;
-import fun.flexpad.com.Notifications.RoomData;
-import fun.flexpad.com.Notifications.RoomSender;
 import fun.flexpad.com.Notifications.Sender;
 import fun.flexpad.com.Notifications.Token;
 import retrofit2.Call;
@@ -433,8 +430,49 @@ public class RoomChatActivity extends AppCompatActivity {
                             }
                         });
 
+
+
                         reference.child("Rooms").child(roomId).child("lastMessageTime").setValue(sendingTime);
                         reference.child("Rooms").child(roomId).child("lastMsgTimeStamp").setValue(System.currentTimeMillis());
+
+                        reference.child("Rooms").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ArrayList<Room> roomList = new ArrayList<>();
+                                roomList.clear();
+                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                                    Room room = dataSnapshot1.getValue(Room.class);
+                                    roomList.add(room);
+                                }
+//
+                                reference.child("VoiceClips").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (Room eachRoom : roomList) {
+                                            int msgCount = 0;
+                                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                Voice voice = dataSnapshot.getValue(Voice.class);
+                                                assert voice != null;
+                                                if ((voice.getRoomID() != null) && voice.getRoomID().equals(roomId)) {
+                                                    msgCount++;
+                                                }
+                                            }
+                                            reference.child("Rooms").child(roomId).child("messageCount").setValue(msgCount);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 }
             });
