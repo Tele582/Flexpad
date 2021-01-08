@@ -41,12 +41,12 @@ public class ChatsFragment extends Fragment {
     private RecyclerView recyclerSenderView;
 
     private UserAdapter userAdapter;
-    private List<User> mUsers;
+    private ArrayList<User> mUsers;
 
     private FirebaseUser fuser;
     private DatabaseReference reference;
 
-    private List<Chatlist> usersList;
+    private ArrayList<Chatlist> usersList;
 
 //    String userid;
 //    Intent intent;
@@ -59,7 +59,9 @@ public class ChatsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.chats_recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
 
         usersList = new ArrayList<>();
@@ -88,8 +90,8 @@ public class ChatsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid());
-        reference.addValueEventListener(new ValueEventListener() { //add orderbychild here
+        reference = FirebaseDatabase.getInstance().getReference("Chatlist");
+        reference.child(fuser.getUid()).orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
@@ -124,7 +126,7 @@ public class ChatsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
 
-                    for (Chatlist chatlist : usersList){
+                    for (Chatlist chatlist : usersList) {
                         assert user != null;
                         if (user.getId().equals(chatlist.getId())){
                             mUsers.add(user);
