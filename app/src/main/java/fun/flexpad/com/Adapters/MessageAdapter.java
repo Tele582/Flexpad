@@ -1,6 +1,7 @@
 package fun.flexpad.com.Adapters;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -47,6 +48,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -98,8 +101,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             } else {
                 holder.txt_seen.setText("Delivered");
             }
+            if (chat.getTime() != null) {
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+                Calendar currentCal = Calendar.getInstance();
+                final String currentDay = dateFormat.format(currentCal.getTime());
+                String ttt = chat.getTime();
+                if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
+                    holder.sendingTime.setText(String.format("%.5s", ttt) + ". ");
+                } else if (((ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) &&
+                        ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                .equals(Integer.toString(Integer.parseInt(String.format("%.2s", ttt.substring(ttt.length() - 12))))))) {
+                    holder.sendingTime.setText(String.format("%.5s", ttt) + ", Yesterday. ");
+                } else {
+                    holder.sendingTime.setText(String.format("%.5s", ttt) + ", " + ttt.substring(ttt.length() - 12) + ". ");
+                }
+            } else {
+                holder.sendingTime.setText("");
+            }
         } else {
             holder.txt_seen.setVisibility(View.GONE);
+            holder.sendingTime.setVisibility(View.GONE);
         }
 
         //either use holder.show_message or holder.messageLAyout
@@ -129,7 +151,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         ImageButton btn_play;
         ImageButton btn_stop;
         public ImageView profile_image;
-        TextView txt_seen;
+        TextView txt_seen, sendingTime;
         TextToSpeech textToSpeech;
         Translate translate;
         String newmessage;
@@ -144,6 +166,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             btn_stop = itemView.findViewById(R.id.btn_stop);
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
+            sendingTime = itemView.findViewById(R.id.sending_time);
             messageLAyout = itemView.findViewById(R.id.messageLayout);
             //messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image);
             //messageSenderPicture = itemView.findViewById(R.id.message_sender_image);

@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import fun.flexpad.com.Adapters.RoomAdapter;
@@ -38,7 +39,9 @@ public class ForYouFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_for_you, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         //mRooms = new ArrayList<>();
@@ -50,7 +53,7 @@ public class ForYouFragment extends Fragment {
         mRooms = new ArrayList<>();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Rooms");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

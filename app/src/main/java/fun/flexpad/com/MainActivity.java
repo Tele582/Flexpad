@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 } else {
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats ("+unread+")");
                 }
-                viewPagerAdapter.addFragment(new ContactsFragment(), "Contacts");
                 viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+
                 viewPagerAdapter.addFragment(new UsersFragment(), "Users");
 
                 viewPager.setAdapter(viewPagerAdapter);
@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (item.getItemId() == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             //might cause app to crash;
+            status("offline");
             startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             return true;
         }
@@ -319,13 +320,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 User user = dataSnapshot.getValue(User.class);
                 assert user != null;
                 username.setText(user.getUsername());
-                if (user.getImageURI().equals("default")){
-                    profile_image.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                    Glide.with(getApplicationContext()).load(user.getImageURI()).into(profile_image);
-                }
                 if (user.getVerified().equals("true")) {
                     verification_image.setVisibility(View.VISIBLE);
+                }
+                try {
+                    if (user.getImageURI().equals("default")) {
+                        profile_image.setImageResource(R.mipmap.ic_launcher);
+                    } else {
+                        Glide.with(getApplicationContext()).load(user.getImageURI()).into(profile_image);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 profile_image.setOnClickListener(v -> {
                     if (user.getImageURI().equals("default")){

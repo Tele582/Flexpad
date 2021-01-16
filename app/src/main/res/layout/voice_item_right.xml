@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/voice_layout">
+
+    <RelativeLayout
+        android:id="@+id/show_voice"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/white_duolingable"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            tools:text="Duration: "
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="normal" />
+
+
+        <ImageButton
+            android:id="@+id/btn_play"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_below="@id/username"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@drawable/ic_play_rr" />
+
+        <ImageButton
+            android:id="@+id/btn_pause"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_below="@id/username"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:visibility="invisible"
+            android:background="@drawable/ic_pause_rr_foreground" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:id="@+id/seekbar"
+            android:progressTint="@color/colorPrimaryDark"
+            android:layout_toEndOf="@id/btn_play"
+            android:layout_toStartOf="@id/profile_image"
+            android:layout_below="@id/username"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            app:civ_border_color="@color/colorPrimaryDark"
+            android:layout_below="@id/username"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:id="@+id/profile_image"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/orange_duolingable"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/hello"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sending_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="48dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            tools:text="sendingTime"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="normal" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+

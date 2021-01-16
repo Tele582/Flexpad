@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp"
-    android:background="#ffffff"
+    android:padding="4dp"
+    android:background="@drawable/ripple_effect_white_ish"
     app:backgroundTint="#ffffff"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:src="@mipmap/ic_launcher"/>
 
@@ -26,7 +26,7 @@
         android:layout_marginStart="8dp"
         android:layout_centerVertical="true"
         android:textColor="@color/colorBlack"
-        android:textSize="20sp"
+        android:textSize="18sp"
         tools:ignore="HardcodedText" />
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -70,9 +70,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/username"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/profile_image"
         android:maxLines="1"
         android:textColor="@color/colorPrimaryDark" />
@@ -81,26 +81,38 @@
         android:id="@+id/btn_follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@id/unread_msg_view"
+        android:layout_marginEnd="2dp"
+        android:layout_toStartOf="@id/last_msg_time"
         android:minWidth="48dp"
         android:maxLines="1"
-        android:text="@string/follow"
+        android:visibility="gone"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:backgroundTint="@color/colorPrimaryDark"
         app:strokeColor="@color/colorPrimaryDark"
         app:strokeWidth="2dp" />
 
+    <TextView
+        android:id="@+id/last_msg_time"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:maxLines="1"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/unread_msg_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="10dp"
         android:layout_alignParentEnd="true"
-        app:cardBackgroundColor="#ffffff"
-        android:layout_centerVertical="true">
+        android:layout_below="@id/last_msg_time"
+        android:layout_toEndOf="@id/btn_follow"
+        android:layout_centerHorizontal="true"
+        app:cardBackgroundColor="#ffffff">
 
         <TextView
             android:id="@+id/unread_msg_no"

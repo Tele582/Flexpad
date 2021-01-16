@@ -30,33 +30,28 @@ import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.RoomDesignActivity;
+import fun.flexpad.com.databinding.FragmentRoomsBinding;
 
 public class RoomsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private FirebaseUser fuser;
-
-    Button create_room;
     DatabaseReference reference;
+    FragmentRoomsBinding fragmentRoomsBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_rooms, container, false);
+        fragmentRoomsBinding = FragmentRoomsBinding.inflate(inflater, container, false);
 
-        create_room = view.findViewById(R.id.create_room);
+        return fragmentRoomsBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        create_room.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
-
-//        String message_to_main = "messageToMain";
-//        final String textFromPrevActivity = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("textFromMessageToMainActivity");
-//        if (textFromPrevActivity.equals(message_to_main)) {
-//            Navigation.findNavController(requireView()).navigate(R.id.action_roomsFragment_to_chatsFragment);
-//        }
-        final TabLayout tabLayout = view.findViewById(R.id.room_tab_layout);
-        final ViewPager viewPager = view.findViewById(R.id.room_view_pager);
+        fragmentRoomsBinding.createRoom.setOnClickListener(view1 -> startActivity(new Intent(getContext(), RoomDesignActivity.class)));
 
         reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
         reference.addValueEventListener(new ValueEventListener() {
@@ -64,81 +59,81 @@ public class RoomsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try { ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager()); //ViewPagerAdapter vPA = new ViewPagerAdapter(getFragmentManager());
 
-                        DatabaseReference followReference = FirebaseDatabase.getInstance().getReference();
-                        followReference.child("FollowList").child(fuser.getUid()).child("following")
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        ArrayList<String> followingList = new ArrayList<>();
+                    DatabaseReference followReference = FirebaseDatabase.getInstance().getReference();
+                    followReference.child("FollowList").child(fuser.getUid()).child("following")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ArrayList<String> followingList = new ArrayList<>();
 
-                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                            String followed = dataSnapshot.getKey();
-                                            followingList.add(followed);
-                                        }
+                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        String followed = dataSnapshot.getKey();
+                                        followingList.add(followed);
+                                    }
 
-                                        followReference.child("Rooms").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                ArrayList<String> roomFollowListID = new ArrayList<>();
-                                                roomFollowListID.clear();
-                                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
-                                                    Room room = dataSnapshot1.getValue(Room.class);
-                                                    String roomCreator = snapshot.child(room.getRoomKey()).child("creator").getValue(String.class); // or //String roomCreator = snapshot.child(room.getRoomKey()).child("creator").getValue(String.class);
+                                    followReference.child("Rooms").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            ArrayList<String> roomFollowListID = new ArrayList<>();
+                                            roomFollowListID.clear();
+                                            for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                                                Room room = dataSnapshot1.getValue(Room.class);
+                                                String roomCreator = snapshot.child(room.getRoomKey()).child("creator").getValue(String.class); // or //String roomCreator = snapshot.child(room.getRoomKey()).child("creator").getValue(String.class);
 
-                                                    if (followingList.contains(roomCreator) || roomCreator.equals(fuser.getUid()))
-                                                        roomFollowListID.add(room.getRoomKey());
+                                                if (followingList.contains(roomCreator) || roomCreator.equals(fuser.getUid()))
+                                                    roomFollowListID.add(room.getRoomKey());
+                                            }
+
+                                            ArrayList<String> seenUsersList = new ArrayList<>();
+                                            followReference.child("VoiceClips").addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    int unread = 0;
+                                                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                                                        Voice voice = snapshot1.getValue(Voice.class);
+                                                        assert voice != null;
+
+                                                        for (DataSnapshot dataSnapshot2 : snapshot1.child("seenBy").getChildren()) {
+                                                            seenUsersList.add(dataSnapshot2.getKey());
+                                                        }
+
+                                                        if (!seenUsersList.contains(fuser.getUid()) && roomFollowListID.contains(voice.getRoomID())) {
+                                                            unread++;
+                                                        }
+                                                        seenUsersList.clear();
+                                                    }
+
+                                                    viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
+                                                    if (unread == 0) {
+                                                        viewPagerAdapter.addFragment(new FollowingFragment(), "Following");
+                                                    } else {
+                                                        viewPagerAdapter.addFragment(new FollowingFragment(), "Following ("+unread+")");
+                                                    }
+                                                    viewPagerAdapter.addFragment(new GeneralFragment(), "General");
+
+                                                    fragmentRoomsBinding.roomViewPager.setAdapter(viewPagerAdapter);
+                                                    fragmentRoomsBinding.roomTabLayout.setupWithViewPager(fragmentRoomsBinding.roomViewPager);
                                                 }
 
-                                                ArrayList<String> seenUsersList = new ArrayList<>();
-                                                followReference.child("VoiceClips").addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        int unread = 0;
-                                                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                                                            Voice voice = snapshot1.getValue(Voice.class);
-                                                            assert voice != null;
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                                            for (DataSnapshot dataSnapshot2 : snapshot1.child("seenBy").getChildren()) {
-                                                                seenUsersList.add(dataSnapshot2.getKey());
-                                                            }
+                                                }
+                                            });
+                                        }
 
-                                                            if (!seenUsersList.contains(fuser.getUid()) && roomFollowListID.contains(voice.getRoomID())) {
-                                                                unread++;
-                                                            }
-                                                            seenUsersList.clear();
-                                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                                        viewPagerAdapter.addFragment(new ForYouFragment(), "For You");
-                                                        if (unread == 0) {
-                                                            viewPagerAdapter.addFragment(new FollowingFragment(), "Following ("+unread+")");
-                                                        } else {
-                                                            viewPagerAdapter.addFragment(new FollowingFragment(), "Following ("+unread+")");
-                                                        }
-                                                        viewPagerAdapter.addFragment(new GeneralFragment(), "General");
+                                        }
+                                    });
+                                }
 
-                                                        viewPager.setAdapter(viewPagerAdapter);
-                                                        tabLayout.setupWithViewPager(viewPager);
-                                                    }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
+                                }
+                            });
 
 
                 } catch (Exception e) {e.getStackTrace();}
@@ -149,7 +144,6 @@ public class RoomsFragment extends Fragment {
 
             }
         });
-        return view;
     }
 
     public static class  ViewPagerAdapter extends FragmentPagerAdapter {

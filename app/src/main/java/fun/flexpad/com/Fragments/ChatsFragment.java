@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,12 +41,12 @@ public class ChatsFragment extends Fragment {
     private RecyclerView recyclerSenderView;
 
     private UserAdapter userAdapter;
-    private List<User> mUsers;
+    private ArrayList<User> mUsers;
 
     private FirebaseUser fuser;
     private DatabaseReference reference;
 
-    private List<Chatlist> usersList;
+    private ArrayList<Chatlist> usersList;
 
 //    String userid;
 //    Intent intent;
@@ -58,9 +59,10 @@ public class ChatsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.chats_recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         usersList = new ArrayList<>();
 
@@ -80,8 +82,16 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Chatlist");
+        reference.child(fuser.getUid()).orderByChild("lastMsgTimeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
@@ -100,7 +110,6 @@ public class ChatsFragment extends Fragment {
         });
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
-        return view;
     }
 
     private void searchUsers(String s) {
@@ -117,7 +126,7 @@ public class ChatsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
 
-                    for (Chatlist chatlist : usersList){
+                    for (Chatlist chatlist : usersList) {
                         assert user != null;
                         if (user.getId().equals(chatlist.getId())){
                             mUsers.add(user);

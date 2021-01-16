@@ -53,5 +53,7 @@
     <string name="following_number">Following:</string>
     <string name="already_have_an_account">Already have an account? Login Here:</string>
     <string name="onboarding_text">Ready for some audio-streaming?\nAfter register/login, click \'➕\' to create group, any group name to pop in and listen, and \'🎙️\' to record.</string>
+    <string name="followerssssssss">Followers</string>
+    <string name="followingsssssss">Following</string>
 
 </resources>

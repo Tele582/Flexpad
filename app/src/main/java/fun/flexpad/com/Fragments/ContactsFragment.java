@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -57,12 +58,27 @@ public class ContactsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+        EditText search_contacts = view.findViewById(R.id.search_contacts);
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_GRANTED) {
             // You can use the API that requires the permission.
             addContacts();
+            search_contacts.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    searchUsers(s.toString().toLowerCase());
+                }
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         } else {
             // You can directly ask for the permission.
             ActivityCompat.requestPermissions((Activity) requireContext(),
@@ -70,22 +86,13 @@ public class ContactsFragment extends Fragment {
                     Constants.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }
 
-        EditText search_contacts = view.findViewById(R.id.search_contacts);
-        search_contacts.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchUsers(s.toString().toLowerCase());
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void addContacts() {
@@ -105,11 +112,11 @@ public class ContactsFragment extends Fragment {
         cur.close();
 
         DatabaseReference contacts_reference = FirebaseDatabase.getInstance().getReference("Users");
-        contacts_reference.addValueEventListener(new ValueEventListener() {
+        contacts_reference.orderByChild("search").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mContacts.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     for (String num : phones) {
                         assert user != null;

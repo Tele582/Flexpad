@@ -2,6 +2,7 @@ package fun.flexpad.com.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -33,11 +34,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
 
 public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> {
+
+    private static final int MSG_TYPE_LEFT = 0;
+    private static final int MSG_TYPE_RIGHT = 1;
 
     private Context mContext;
     private final List<Voice> mVoice;
@@ -51,7 +56,12 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     @NonNull
     @Override
     public VoiceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.voice_item, parent, false);
+        View view;
+        if (viewType == MSG_TYPE_RIGHT) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.voice_item_right, parent, false);
+        } else {
+            view = LayoutInflater.from(mContext).inflate(R.layout.voice_item, parent, false);
+        }
         return new ViewHolder(view);
     }
 
@@ -61,6 +71,10 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         Voice voice = mVoice.get(position);
         final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users").child(voice.getSender());
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+        Calendar currentCal = Calendar.getInstance();
+        final String currentDay = dateFormat.format(currentCal.getTime());
 
         user_reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -71,16 +85,12 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                     holder.userName.setText(user.getUsername());
                     holder.duration.setText(voice.getDuration()); //"Duration: " +
 
-                    @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
-                    Calendar currentCal = Calendar.getInstance();
-                    final String currentDay = dateFormat.format(currentCal.getTime());
-                    String ttt = voice.getTime();
+                    final String ttt = voice.getTime();
                     if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", Today");
-                    } else if ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
-                            .equals(String.format("%.2s", ttt.substring(ttt.length() - 12))) &&
-                            (ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) {
+                    } else if (((ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) &&
+                            ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                    .equals(Integer.toString(Integer.parseInt(String.format("%.2s", ttt.substring(ttt.length() - 12))))))) {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", Yesterday");
                     } else {
                         holder.sendingTime.setText(String.format("%.5s", ttt) + ", " + ttt.substring(ttt.length() - 12));
@@ -93,6 +103,17 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                             Glide.with(mContext).load(user.getImageURI()).into(holder.profile_image);
                         } catch (Exception e) {e.printStackTrace(); }
                     }
+
+                    holder.userName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!user.getId().equals(fuser.getUid())) {
+                                Intent intent = new Intent(mContext, MessageActivity.class);
+                                intent.putExtra("userid", user.getId());
+                                mContext.startActivity(intent);
+                            }
+                        }
+                    });
                 }
             }
 
@@ -227,6 +248,16 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             }
 
             handler.postDelayed(runnable, 1000);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        if(mVoice.get(position).getSender().equals(fuser.getUid())){
+            return MSG_TYPE_RIGHT;
+        } else {
+            return MSG_TYPE_LEFT;
         }
     }
 }

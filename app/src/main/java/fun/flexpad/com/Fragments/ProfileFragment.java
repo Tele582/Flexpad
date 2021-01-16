@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,18 +34,13 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.R;
-import fun.flexpad.com.PaymentActivity;
+import fun.flexpad.com.databinding.FragmentProfileBinding;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
-
-    private CircleImageView image_profile;
-    private TextView username;
-    private TextView followersList, followingList;
 
     private DatabaseReference reference;
     private FirebaseUser fuser;
@@ -55,57 +49,23 @@ public class ProfileFragment extends Fragment {
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
     private StorageTask uploadTask;
+    FragmentProfileBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        image_profile = view.findViewById(R.id.profile_image);
-        username = view.findViewById(R.id.username);
-        followersList = view.findViewById(R.id.followers_list);
-        followingList = view.findViewById(R.id.following_list);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
 
 //        Button group_payment = view.findViewById(R.id.group_pay);
-//
-//        group_payment.setOnClickListener(new View.OnClickListener() {
+//        binding.groupPay.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                startActivity(new Intent(getContext(), PaymentActivity.class));
 //            }
 //        });
 
-        storageReference = FirebaseStorage.getInstance().getReference("Profile Uploads");
-
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                assert user != null;
-                username.setText(user.getUsername());
-                if (user.getImageURI().equals("default")){
-                    image_profile.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                    if (isAdded()) {
-                        Glide.with(requireContext()).load(user.getImageURI()).into(image_profile);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        showFollowerShip(fuser.getUid());
-        image_profile.setOnClickListener(v -> openImage());
-        return view;
+        return binding.getRoot();
     }
 
     private void openImage() {
@@ -187,14 +147,31 @@ public class ProfileFragment extends Fragment {
         followRef.child("followers").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.child("unfollowed").exists()) {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount() - 1);
-                    followersList.setText("Followers: " + followersNumber);
-                } else {
-                    final String followersNumber = Long.toString(snapshot.getChildrenCount());
-                    followersList.setText("Followers: " + followersNumber);
+                underFollowersList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String follower = dataSnapshot.getKey();
+                    underFollowersList.add(follower);
                 }
+                ArrayList<User> followersNamesList = new ArrayList<>();
+                FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int followersNumber = 0;
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            User user = dataSnapshot.getValue(User.class);
+                            assert user != null;
+                            if (underFollowersList.contains(user.getId())) {
+                                followersNumber++;
+                            }
+                        }
+                        binding.followersList.setText("Followers: " + followersNumber);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -207,19 +184,85 @@ public class ProfileFragment extends Fragment {
         followRef.child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.child("unfollowed").exists()) {
-                    final String followingNumber = Long.toString(snapshot.getChildrenCount() - 1 );
-                    followingList.setText("Following: " + followingNumber);
-                } else {
-                    final String followingNumber = Long.toString(snapshot.getChildrenCount());
-                    followingList.setText("Following: " + followingNumber);
+                underFollowingList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String following = dataSnapshot.getKey();
+                    underFollowingList.add(following);
                 }
+                FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int followingNumber = 0;
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            User user = dataSnapshot.getValue(User.class);
+                            assert user != null;
+                            if (underFollowingList.contains(user.getId())) {
+                                followingNumber++;
+                            }
+                        }
+                        binding.followingList.setText("Following: " + followingNumber);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        storageReference = FirebaseStorage.getInstance().getReference("Profile Uploads");
+
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                assert user != null;
+                binding.username.setText(user.getUsername());
+                if (user.getImageURI().equals("default")){
+                    binding.profileImage.setImageResource(R.mipmap.ic_launcher);
+                } else {
+                    if (isAdded()) {
+                        Glide.with(requireContext()).load(user.getImageURI()).into(binding.profileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        showFollowerShip(fuser.getUid());
+        binding.profileImage.setOnClickListener(v -> openImage());
+
+        binding.followersList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.action_profileFragment_to_followerListFragment);
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.profile_details, new FollowerListFragment()).addToBackStack(null).commit();
+            }
+        });
+        binding.followingList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.profile_details, new FollowingListFragment()).addToBackStack(null).commit();
             }
         });
     }

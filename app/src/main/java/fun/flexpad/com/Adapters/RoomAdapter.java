@@ -1,5 +1,6 @@
 package fun.flexpad.com.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -21,10 +22,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fun.flexpad.com.GamesActivity;
 import fun.flexpad.com.Model.Room;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
@@ -35,6 +39,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
     private final Context mContext;
     private final ArrayList<Room> mRooms;
+    private String theLastMessage, lastMessageTime;
 
     public RoomAdapter(Context mContext, ArrayList<Room> mRooms) {
         this.mContext = mContext;
@@ -55,6 +60,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         holder.mineShowView(holder.mine, holder.creator);
         holder.showPopupAndVerification();
         holder.unseenMessageNo(holder.unseen_msg_no);
+
+        holder.lastMessage(holder.lastMsgTime);
 
         try {
             holder.itemView.setOnClickListener(v -> {
@@ -86,6 +93,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         public TextView creator;
         public CircleImageView verification;
         private final TextView unseen_msg_no;
+        private TextView lastMsgTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -94,6 +102,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             creator = itemView.findViewById(R.id.creator_view);
             verification = itemView.findViewById(R.id.verification_image);
             unseen_msg_no = itemView.findViewById(R.id.unseen_msg_no);
+            lastMsgTime = itemView.findViewById(R.id.last_msg_time);
         }
 
         private void showPopup(View view) {
@@ -110,6 +119,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 room_delete_reference.child(mRooms.get(getAdapterPosition()).getRoomKey()).removeValue().addOnSuccessListener(aVoid ->
                         Toast.makeText(mContext.getApplicationContext(), "Room Successfully Deleted!", Toast.LENGTH_SHORT).show());
                 //this opens random roomChatActivity, which it should not
+                mContext.startActivity(new Intent(mContext, GamesActivity.class));
             }
             return false;
         }
@@ -205,6 +215,60 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                         }
                         seenUsersList.clear();
                     }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        private void lastMessage(final TextView lastMsgTime) {
+            theLastMessage = "default";
+            lastMessageTime = "";
+            final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("VoiceClips");
+            final Room roomL = mRooms.get(getAdapterPosition());
+
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Voice voice = snapshot.getValue(Voice.class);
+                        assert voice != null;
+                        try {
+                            if (voice != null && (roomL.getRoomKey().equals(voice.getRoomID()))) {
+                                theLastMessage = voice.getMessagekey();
+                                if (voice.getTime() != null ) {
+                                    @SuppressLint("SimpleDateFormat")
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+                                    Calendar currentCal = Calendar.getInstance();
+                                    final String currentDay = dateFormat.format(currentCal.getTime());
+                                    final String ttt = voice.getTime();
+                                    if (currentDay.equals(ttt.substring(ttt.length() - 12))) {
+                                        lastMessageTime = (String.format("%.5s", ttt));
+                                    } else if (((ttt.substring(ttt.length() - 9)).equals(currentDay.substring(currentDay.length() - 9))) &&
+                                            ((Integer.toString(Integer.parseInt(String.format("%.2s", currentDay)) - 1))
+                                                    .equals(Integer.toString(Integer.parseInt(String.format("%.2s", ttt.substring(ttt.length() - 12))))))) {
+                                        lastMessageTime = ("Yesterday");
+                                    } else {
+                                        lastMessageTime = String.format("%.6s", ttt.substring(ttt.length() - 12));
+                                    }
+                                } else {
+                                    lastMessageTime = "";
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.getStackTrace();
+                        }
+                    }
+                    if ("default".equals(theLastMessage)) {
+                        lastMsgTime.setText("");
+                    } else {
+                        lastMsgTime.setText(lastMessageTime);
+                    }
+                    theLastMessage = "default";
                 }
 
                 @Override
