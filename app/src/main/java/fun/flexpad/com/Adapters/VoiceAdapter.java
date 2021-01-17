@@ -114,6 +114,18 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                             }
                         }
                     });
+
+                    holder.voiceLayout.setOnClickListener(v -> {
+                        if (user.getId().equals(fuser.getUid())) {
+                            try {
+                                if (voice.getType().equals("audio (3gp)")) {
+                                    holder.showNonTextPopup(v);
+                                }
+                            } catch (Exception exception) {
+                                exception.getStackTrace();
+                            }
+                        }
+                    });
                 }
             }
 
@@ -151,13 +163,6 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             holder.mediaPlayer.pause();
             holder.btn_pause.setVisibility(View.INVISIBLE);
             holder.btn_play.setVisibility(View.VISIBLE);
-        });
-
-        holder.voiceLayout.setOnClickListener(v -> {
-            try {
-                if (voice.getType().equals("audio (3gp)")) {holder.showNonTextPopup(v);}
-            }
-            catch (Exception exception) {exception.getStackTrace();}
         });
     }
 
