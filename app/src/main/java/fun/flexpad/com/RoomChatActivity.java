@@ -93,7 +93,7 @@ public class RoomChatActivity extends AppCompatActivity {
     DatabaseReference tokens, referenceNotify;
     StorageReference filePath;
     DatabaseReference voiceRef;
-    String roomId, roomTitle;
+    String roomId, roomTitle, roomCreatorId;
 
 //    static {
 //        System.loadLibrary("cpp_code");
@@ -130,6 +130,7 @@ public class RoomChatActivity extends AppCompatActivity {
 //        final String randomRoomTitle = getIntent().getStringExtra("Random_Room_Name");
 //        roomTextview.setText(randomRoomTitle);
         roomId = getIntent().getStringExtra("Room_ID"); ////////////////////////////////////////////////
+        roomCreatorId = getIntent().getStringExtra("Room_Creator");
 
         mStorage = FirebaseStorage.getInstance().getReference("Room Audio Clips");
         mProgress = new ProgressDialog(this);
@@ -366,6 +367,7 @@ public class RoomChatActivity extends AppCompatActivity {
                         hashMap.put("sender", firebaseUser.getUid());
                         hashMap.put("roomname", roomTitle);
                         hashMap.put("roomID", roomId);
+                        hashMap.put("roomCreatorID", roomCreatorId);
                         hashMap.put("time", sendingTime);
                         hashMap.put("messagelabel", messagelabel);
                         hashMap.put("type", "audio (3gp)");

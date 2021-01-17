@@ -147,6 +147,7 @@ public class RoomDesignActivity extends AppCompatActivity {
         final Intent intent = new Intent(RoomDesignActivity.this, RoomChatActivity.class);
         intent.putExtra("Room_Name", roomname);
         intent.putExtra("Room_ID", roomKey);
+        intent.putExtra("Room_Creator", creatorId);
         Toast.makeText(RoomDesignActivity.this, "Creating room..", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }

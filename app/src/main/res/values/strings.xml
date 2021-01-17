@@ -52,8 +52,10 @@
     <string name="followers_number">Followers:</string>
     <string name="following_number">Following:</string>
     <string name="already_have_an_account">Already have an account? Login Here:</string>
-    <string name="onboarding_text">Ready for some audio-streaming?\nAfter register/login, click \'➕\' to create group, any group name to pop in and listen, and \'🎙️\' to record.</string>
+    <string name="onboarding_text">Ready for some audio-streaming?\nAfter register/login, click \'➕\' to create room, or click any room name to pop in and listen, and \'🎙️\' to record.</string>
     <string name="followerssssssss">Followers</string>
     <string name="followingsssssss">Following</string>
+    <string name="room_name_hints">e.g, ManuLIV, Trump, ASUU, BBNaija</string>
+    <string name="create_ruum">Create</string>
 
 </resources>
