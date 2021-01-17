@@ -33,8 +33,9 @@
     <EditText
         android:id="@+id/room_name"
         android:layout_margin="16dp"
-        android:hint="e.g, ManU-LIV, FakeNews, ASUU, BBNaija"
+        android:hint="@string/room_name_hints"
         android:maxLength="32"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890()[] "
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -44,7 +45,7 @@
         android:layout_marginTop="96dp"
         android:layout_margin="48dp"
         android:background="@drawable/orange_duolingable"
-        android:text="Create"
+        android:text="@string/create_ruum"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="22sp"
