@@ -38,6 +38,7 @@ import fun.flexpad.com.MessageActivity;
 import fun.flexpad.com.Model.User;
 import fun.flexpad.com.Model.Voice;
 import fun.flexpad.com.R;
+import fun.flexpad.com.RoomChatActivity;
 
 public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> {
 
@@ -70,13 +71,13 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         Voice voice = mVoice.get(position);
-        final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users").child(voice.getSender());
+        final DatabaseReference user_reference = FirebaseDatabase.getInstance().getReference("Users");
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
         Calendar currentCal = Calendar.getInstance();
         final String currentDay = dateFormat.format(currentCal.getTime());
 
-        user_reference.addValueEventListener(new ValueEventListener() {
+        user_reference.child(voice.getSender()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
@@ -116,7 +117,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                     });
 
                     holder.voiceLayout.setOnClickListener(v -> {
-                        if (user.getId().equals(fuser.getUid())) {
+                        if (user.getId().equals(fuser.getUid()) || (voice.getRoomCreatorID() != null
+                                && voice.getRoomCreatorID().equals(fuser.getUid()))) {
                             try {
                                 if (voice.getType().equals("audio (3gp)")) {
                                     holder.showNonTextPopup(v);
