@@ -237,9 +237,9 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             final Voice voice = mVoice.get(getAdapterPosition());
             switch (item.getItemId()) {
                 case R.id.item1:
+                    voiceLayout.setVisibility(View.GONE);
                     message_delete_reference.child(voice.getMessagekey()).removeValue().addOnSuccessListener(aVoid ->
                             Toast.makeText(mContext.getApplicationContext(), "Voice Message Deleted!", Toast.LENGTH_SHORT).show());
-                    voiceLayout.setVisibility(View.GONE);
                     return true;
 
                 default:
