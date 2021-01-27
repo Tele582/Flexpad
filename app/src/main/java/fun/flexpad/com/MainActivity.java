@@ -28,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import com.bumptech.glide.Glide;
 import fun.flexpad.com.Fragments.ChatsFragment;
 import fun.flexpad.com.Fragments.ContactsFragment;
@@ -46,6 +48,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -384,6 +389,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+
+        MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, "54602622084fc8728d515e900abc09e3");
+        mixpanelAPI.track("On Resume", null);
+
+        mixpanelAPI.flush();
+
+        try {
+
+            final JSONObject properties = new JSONObject();
+            properties.put("Gender", "Female");
+
+            mixpanelAPI.track("User Details", properties);
+        } catch (final JSONException e) { e.printStackTrace(); }
+
         status("online");
         if (isAccelerometerSensorAvailable) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -402,6 +421,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (isAccelerometerSensorAvailable) {
             sensorManager.unregisterListener(this);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     //@Override
